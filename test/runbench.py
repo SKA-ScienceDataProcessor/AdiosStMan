@@ -26,7 +26,8 @@
 
 
 
-
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import commands
 import numpy
@@ -109,7 +110,7 @@ for i in range(iters):   # loop for iterations
 			for n in namesStMan:   # loop for testing different storage managers
 				os.system("rm -rf *.casa")   # delete any existing casa files / directories
 				filename = filepath + '{0}_{1}rows_{2}size.casa'.format(n, r, s)
-				cmdline = "./bench {0} {1} {2} {3} {4}".format(r, s, s, n, filename)   # generate command line
+				cmdline = "mpirun ./bench {0} {1} {2} {3} {4}".format(r, s, s, n, filename)   # generate command line
 				status, output = commands.getstatusoutput(cmdline)   # run command line and get output
 				print cmdline + ' ---------  time = ' + output + ' seconds'
 				output = output.split('\n')[-1]   # to skip the error lines that ADIOS possibly printed out
