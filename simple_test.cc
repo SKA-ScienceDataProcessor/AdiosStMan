@@ -1,3 +1,4 @@
+#include <mpi.h>
 // headers for table creation 
 #include <tables/Tables/TableDesc.h>
 #include <tables/Tables/SetupNewTab.h>
@@ -16,7 +17,7 @@
 // headers for casa namespaces
 #include <casa/namespace.h>
 
-int main (int argc, const char* argv[]){
+int main (int argc, char* argv[]){
 
 	// define a storage manager
 	AdiosStMan stman;
@@ -33,19 +34,21 @@ int main (int argc, const char* argv[]){
 
 	// define column objects and link them to the table
 	ScalarColumn<uInt> index (tab, "index");
-	ArrayColumn<Complex> data (tab, "data");
+//	ArrayColumn<Complex> data (tab, "data");
 
 	// define data arrays that actually hold the data
-	Array<Complex> data_origin(IPosition(2,128,64));
+//	Array<Complex> data_origin(IPosition(2,128,64));
 
 	// put some data in
-	indgen (data_origin);
+//	indgen (data_origin);
 
 	// write data into the column objects
 	for (uInt i=0; i<10; i++) {
 		index.put (i, i);
-		data.put(i, data_origin);
+//		data.put(i, data_origin);
 	}
 
+	return 0;
 }
+
 

@@ -25,166 +25,64 @@
 //#
 //# $Id: AdiosStMan.h 20551 2009-03-25 00:11:33Z Malte.Marquarding $
 
-#ifndef TABLES_STANDARDSTMAN_H
-#define TABLES_STANDARDSTMAN_H
+#ifndef ADIOSSTMAN_H
+#define ADIOSSTMAN_H
 
-//# Includes
 #include <casa/aips.h>
-#include <tables/Tables/SSMBase.h>
+#include <tables/Tables/DataManager.h>
+#include <casa/Containers/Block.h>
+#include <adios.h>
 
 
 namespace casa { //# NAMESPACE CASA - BEGIN
 
-// <summary>
-// The Standard Storage Manager
-// </summary>
+	class AdiosStManColumn;
 
-// <use visibility=export>
+	class AdiosStMan : public DataManager
+	{
+		public:
 
-// <reviewed reviewer="UNKNOWN" date="before2004/08/25" tests="tAdiosStMan.cc">
-// </reviewed>
+			AdiosStMan();
+			AdiosStMan(int rank, int size);
+			~AdiosStMan();
 
-// <prerequisite>
-//# Classes you should understand before using this one.
-//   <li> The Table Data Managers concept as described in module file
-//        <linkto module="Tables:Data Managers">Tables.h</linkto>
-//   <li> <linkto class=ROAdiosStManAccessor>
-//        ROAdiosStManAccessor</linkto>
-//        for a discussion of the cache size
-// </prerequisite>
+			virtual DataManager* clone() const;
+			virtual String dataManagerType() const;
+			virtual void create (uInt aNrRows);
+			virtual void open (uInt aRowNr, AipsIO&);
+			virtual void resync (uInt aRowNr);
+			virtual Bool flush (AipsIO&, Bool doFsync);
+			virtual DataManagerColumn* makeScalarColumn (const String& aName,
+					int aDataType,
+					const String& aDataTypeID);
+			virtual DataManagerColumn* makeDirArrColumn (const String& aName,
+					int aDataType,
+					const String& aDataTypeID);
+			virtual DataManagerColumn* makeIndArrColumn (const String& aName,
+					int aDataType,
+					const String& aDataTypeID);
+			virtual void deleteManager();
 
-// <etymology>
-// AdiosStMan is the data manager which stores the data in a
-// standard way. I.e. it does not use special techniques like
-// other storage managers do.
-// </etymology>
+			int64_t itsAdiosFile;
 
-// <synopsis>
-// AdiosStMan is meant as the storage manager to be used standardly.
-// Other storage managers like
-// <linkto class=IncrementalStMan>IncrementalStMan</linkto> and the
-// <linkto class=TiledStMan>TiledStMan</linkto> derivatives should
-// only be used when appropriate.
-// <br>
-// Like the other storage managers AdiosStMan uses
-// <linkto class=BucketCache>bucket-based</linkto> access to its data.
-// where a bucket contains the number of columns and rows that fit best.
-// Variable length strings are stored in separate buckets because they do
-// not fit in the fixed bucket layout used for the other columns.
-// Only fixed length strings and strings <= 8 characters are stored directly.
-// Note that, in fact, fixed length string means maximum length strings.
-// It can be set using the <src>setMaxLength</src> function in
-// class <linkto class=ColumnDesc>ColumnDesc</linkto> or
-// class <linkto class=BaseColumnDesc>BaseColumnDesc</linkto>.
-// <p>
-// The file size is at least the size of a bucket, even if only the table
-// contains only a few rows, thus uses only a fraction of a bucket.
-// The default bucketsize is 32 rows. This means that if it is known
-// in advance that the table will contain many more rows, it might make
-// sense to construct the AdiosStMan with a larger bucketsize.
-// <p>
-// AdiosStMan is a robust storage manager. Care has been taken
-// that its index cannot be corrupted in case of exceptions like
-// device full or crash.
-// <p>
-// AdiosStMan supports the following functionality:
-// <ol>
-//  <li> Removal of rows. This leaves some empty space in a bucket.
-//       An empty bucket will be reused.
-//  <li> Addition of rows. This is always done in the last bucket
-//       and a new bucket is added when needed.
-//  <li> Removal of a column. This also leaves empty space, which will
-//       be reused when a newly added column fits in it.
-//  <li> Addition of a column. If available, empty column space is used.
-//       Otherwise it creates as many new buckets as needed.
-// </ol>
-// All direct data (scalars and direct arrays) is stored in the main file.
-// Indirect arrays (except strings) are stored in a second file.
-// Indirect string arrays are also stored in the main file, because in
-// that way frequently rewriting indirect strings arrays wastes far
-// less space.
-// <p>
-// As said above all string arrays and variable length scalar strings
-// are stored in separate string buckets. 
-// </synopsis>
+		private:
 
-// <motivation>
-// StManAipsIO is the standard storage manager used so far.
-// Its major drawback is that it is memory based which makes it
-// not usable for large tables. Furthermore it is not a very robust
-// storage manager. When a system crashes, tables might get corrupted.
-// <br>
-// These drawbacks have been adressed in this new StandardStman.
-// It uses a bucket-based access scheme and makes sure that its
-// indices are stored in a way that they can hardly get corrupted.
-// </motivation>
+			AdiosStMan(const AdiosStMan& that);
 
-// <example>
-// The following example shows how to create a table and how to attach
-// the storage manager to some columns.
-// <srcblock>
-//   SetupNewTable newtab("name.data", tableDesc, Table::New);
-//   AdiosStMan stman;                     // define storage manager
-//   newtab.bindColumn ("column1", stman);    // bind column to st.man.
-//   newtab.bindColumn ("column2", stman);    // bind column to st.man.
-//   Table tab(newtab);                       // actually create table
-// </srcblock>
-//
-// The following example shows how to create a AdiosStMan storage
-// manager for a table with 16 rows. By giving the (expected) nr of rows
-// to the storage manager, it can optimize its bucket size.
-// <srcblock>
-//   SetupNewTable newtab("name.data", tableDesc, Table::New);
-//   AdiosStMan stman(-16);
-//   newtab.bindAll ("column1", stman);       // bind all columns to st.man.
-//   Table tab(newtab);                       // actually create table
-// </srcblock>
-// </example>
+			int64_t itsAdiosGroup;
+			uint64_t itsAdiosBufsize;
+			uint64_t itsAdiosGroupsize;
+			uint64_t itsAdiosTotalsize;
 
-//# <todo asof="$DATE:$">
-//# A List of bugs, limitations, extensions or planned refinements.
-//# </todo>
+			int mpi_rank;
+			int mpi_size; 
 
+			// The assembly of all columns.
+			PtrBlock<AdiosStManColumn*> itsColumnPtrBlk;
 
-class AdiosStMan : public SSMBase
-{
-public:
-    // Create a Standard storage manager with the given name.
-    // If no name is used, it is set to "SSM"
-    // The name can be used to construct a
-    // <linkto class=ROAdiosStManAccessor>ROStandardStManAccessor
-    // </linkto> object (e.g. to set the cache size).
-    // <br>
-    // The cache size has to be given in buckets.
-    // <br>
-    // The bucket size can be given in 2 ways:
-    // <br>- A positive number gives the bucket size in bytes.
-    // The number of rows per bucket will be calculated from it.
-    // <br>- A negative number gives the number of rows per bucket.
-    // The bucket size in bytes will be calculated from it.
-    // Note that in this way the maximum bucketsize is 32768 (minimum is 128).
-    // <br>- The default 0 means that 32 rows will be stored in a bucket.
-    // <br>Note that the default is only suitable for small tables.
-    // In general it makes sense to give the expected number of table rows.
-    // In that way the buckets will be small enough for small tables
-    // and not too small for large tables.
-    // <group>
-    explicit AdiosStMan (Int bucketSize = 0,
-			    uInt cacheSize = 1);
-    explicit AdiosStMan (const String& dataManagerName,
-			    Int bucketSize = 0,
-			    uInt cacheSize = 1);
-    // </group>
-
-    ~AdiosStMan();
-
-private:
-    // Copy constructor cannot be used.
-    AdiosStMan (const AdiosStMan& that);
-
-    // Assignment cannot be used.
-    AdiosStMan& operator= (const AdiosStMan& that);
-};
+			uInt itsNrRows;
+			uInt itsNrCols;
+	};
 
 
 
