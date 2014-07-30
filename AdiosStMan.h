@@ -63,19 +63,22 @@ namespace casa { //# NAMESPACE CASA - BEGIN
 					const String& aDataTypeID);
 			virtual void deleteManager();
 
-			int64_t itsAdiosFile;
+			int64_t getAdiosFile();
 
 		private:
 
 			AdiosStMan(const AdiosStMan& that);
 
+			int64_t itsAdiosFile;
 			int64_t itsAdiosGroup;
 			uint64_t itsAdiosBufsize;
 			uint64_t itsAdiosGroupsize;
 			uint64_t itsAdiosTotalsize;
 
-			int mpi_rank;
-			int mpi_size; 
+
+			int mpiRank;
+			int mpiSize; 
+			bool isMpiInitInternal;
 
 			// The assembly of all columns.
 			PtrBlock<AdiosStManColumn*> itsColumnPtrBlk;

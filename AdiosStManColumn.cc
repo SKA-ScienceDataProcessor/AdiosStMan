@@ -3,15 +3,38 @@
 namespace casa{
 
 	AdiosStManColumn::AdiosStManColumn (AdiosStMan* aParent, int aDataType, uInt aColNr)
-		: StManColumn    (aDataType)
+		:StManColumn (aDataType),
+		itsAdiosWriteIDs (0),
+		itsStManPtr (aParent),
+		itsShape(0)
 	{
-		itsStManPtr = aParent;
+	}
+
+	AdiosStManColumn::~AdiosStManColumn (){
+		if (itsAdiosWriteIDs){
+			delete [] itsAdiosWriteIDs;
+		}
 	}
 
 	void AdiosStManColumn::setShapeColumn (const IPosition& aShape)
 	{
 		itsNrElem = aShape.product();
 		itsShape  = aShape;
+
+//		cout << "AdiosStManColumn::setShapeColumn(), Column: " << columnName() << ", Shape: " << aShape << endl;
+//		cout << itsShape(0) << endl;
+	}
+
+	IPosition AdiosStManColumn::getShapeColumn (){
+		return itsShape;
+	}
+
+	void AdiosStManColumn::initAdiosWriteIDs (uInt NrRows){
+		itsAdiosWriteIDs = new int64_t[NrRows];
+	}
+
+	void AdiosStManColumn::putAdiosWriteIDs(uInt row, int64_t writeID){
+		itsAdiosWriteIDs[row] = writeID;
 	}
 
 	// ------------ array puts -----------------//
@@ -67,11 +90,10 @@ namespace casa{
 	}
 
 	void AdiosStManColumn::putuIntV (uInt rownr, const uInt* dataPtr){
-		
-		int T =1;
-		int X =2;
-		adios_write(itsStManPtr->itsAdiosFile, "T", &T);
-		adios_write(itsStManPtr->itsAdiosFile, "X", &X);
+
+		cout << "rownr = " << rownr << endl;
+		adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , (void*)dataPtr);
+//		adios_write(itsStManPtr->itsAdiosFile, columnName().c_str(), &dataPtr);
 		
 	}
 

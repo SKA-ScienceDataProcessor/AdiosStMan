@@ -16,6 +16,8 @@ namespace casa { //# NAMESPACE CASA - BEGIN
 
 			AdiosStManColumn (AdiosStMan* aParent, int aDataType, uInt aColNr);
 			virtual void setShapeColumn (const IPosition& aShape);
+			IPosition getShapeColumn();
+			~AdiosStManColumn ();
 
 			// Put an array value in the given row.
 			// <group>
@@ -48,13 +50,18 @@ namespace casa { //# NAMESPACE CASA - BEGIN
 			virtual void putStringV   (uInt aRowNr, const String* aDataPtr);
 			// </group>
 
+			void initAdiosWriteIDs(uInt NrRows);
+			void putAdiosWriteIDs(uInt row, int64_t writeID);
+
 		private:
 
-			// Pointer to the parent storage manager.
-			AdiosStMan *itsStManPtr;
+			int64_t *itsAdiosWriteIDs;
 
 			// The shape of the column.
 			IPosition itsShape;
+
+			// Pointer to the parent storage manager.
+			AdiosStMan *itsStManPtr;
 
 			// Number of elements in a value for this column.
 			uInt itsNrElem;

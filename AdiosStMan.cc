@@ -36,25 +36,28 @@ namespace casa { //# NAMESPACE CASA - BEGIN
 
 	AdiosStMan::AdiosStMan ()
 		:DataManager(),
-		itsAdiosFile(0)
+		itsAdiosFile(0),
+		isMpiInitInternal(true)
 	{
 		MPI_Init(0,0);
-		MPI_Comm_rank(MPI_COMM_WORLD, &mpi_rank);
-		MPI_Comm_size(MPI_COMM_WORLD, &mpi_size);
+		MPI_Comm_rank(MPI_COMM_WORLD, &mpiRank);
+		MPI_Comm_size(MPI_COMM_WORLD, &mpiSize);
 
 	}
 
 	AdiosStMan::AdiosStMan (int rank, int size)
 		:DataManager(),
-		itsAdiosFile(0)
+		itsAdiosFile(0),
+		isMpiInitInternal(false)
 	{
-		mpi_rank = rank;
-		mpi_size = size;
+		mpiRank = rank;
+		mpiSize = size;
 	}
 
 	AdiosStMan::AdiosStMan (const AdiosStMan& that)
 		:DataManager(),
-		itsAdiosFile(0)
+		itsAdiosFile(0),
+		isMpiInitInternal(false)
 	{
 	}
 
@@ -62,9 +65,11 @@ namespace casa { //# NAMESPACE CASA - BEGIN
 	{
 		if(itsAdiosFile){
 			adios_close(itsAdiosFile);
+			adios_finalize(mpiRank);
 		}
-		cout << itsAdiosFile <<endl;
-		adios_finalize(mpi_rank);
+		if(isMpiInitInternal){
+			MPI_Finalize();
+		}
 	}
 
 
@@ -78,11 +83,16 @@ namespace casa { //# NAMESPACE CASA - BEGIN
 		return "AdiosStMan";
 	}
 
+	int64_t AdiosStMan::getAdiosFile(){ 
+		return itsAdiosFile;
+	}
+
+
+
 	void AdiosStMan::create (uInt aNrRows)
 	{
 
 		itsNrRows = aNrRows;
-		itsNrCols = ncolumn();
 
 		itsAdiosBufsize = 100;
 		itsAdiosGroupsize = 10000;
@@ -90,26 +100,44 @@ namespace casa { //# NAMESPACE CASA - BEGIN
 		adios_init_noxml(MPI_COMM_WORLD);
 		adios_allocate_buffer(ADIOS_BUFFER_ALLOC_NOW, itsAdiosBufsize);
 
-		adios_declare_group(&itsAdiosGroup, "root", "", adios_flag_yes);
+		adios_declare_group(&itsAdiosGroup, "casatable", "", adios_flag_no);
 		adios_select_method(itsAdiosGroup, "POSIX", "", "");
 
-		adios_define_var(itsAdiosGroup, "T", "", adios_integer, "","","");
-		adios_define_var(itsAdiosGroup, "X", "", adios_integer, "","","");
-		adios_define_var(itsAdiosGroup, "Y", "", adios_integer, "","","");
+		for (int i=0; i<ncolumn(); i++){
 
-//		for(t=0; t<T; t++){
-//			adios_define_var(itsAdiosGroup, "t", "", adios_integer, "","","");
-//			adios_define_var(itsAdiosGroup, "image", "", adios_real, "1,X,Y","T,X,Y","t,0,0");
-//		}
+			string columnName = itsColumnPtrBlk[i]->columnName();
+			itsColumnPtrBlk[i]->initAdiosWriteIDs(itsNrRows);
 
-		adios_open(&itsAdiosFile, "root", fileName().c_str(), "w", MPI_COMM_WORLD);
+			// if scalar column
+			if (itsColumnPtrBlk[i]->getShapeColumn().nelements() == 0){   
+				for (int j=0; j<itsNrRows; j++){
+					stringstream NrRows, RowID;
+					NrRows << itsNrRows;
+					RowID << j;
+					int64_t writeID = adios_define_var(itsAdiosGroup, columnName.c_str(), "", adios_integer, "1", NrRows.str().c_str(), RowID.str().c_str() );
+					itsColumnPtrBlk[i]->putAdiosWriteIDs(j, writeID);
+					cout << "adios_define_var(1, " << NrRows.str() << ", " << RowID.str() << ")" << endl;
+				}
+			}
 
+			// if array column
+			else{
+//				string columnShape = itsColumnPtrBlk[i]->getShapeColumn().toString();
+//				columnShape = columnShape.substr(1, columnShape.length()-2);
+//				adios_define_var(itsAdiosGroup, columnName.c_str(), "", adios_real, "1,X,Y", "T,X,Y", "t,0,0");
+
+			}
+
+
+//			cout << "AdiosStMan::create(), Var: " << columnName << ", Shape: " << itsColumnPtrBlk[i]->getShapeColumn() << endl;
+//			cout << itsColumnPtrBlk[i]->getShapeColumn().nelements() << endl;
+
+		}
+
+
+		adios_open(&itsAdiosFile, "casatable", fileName().c_str(), "w", MPI_COMM_WORLD);
 		adios_group_size(itsAdiosFile, itsAdiosGroupsize, &itsAdiosTotalsize);
 
-//		int T =1;
-//		int X =2;
-//		adios_write(itsAdiosFile, "T", &T);                                              
-//		adios_write(itsAdiosFile, "X", &X);
 
 
 
@@ -134,7 +162,6 @@ namespace casa { //# NAMESPACE CASA - BEGIN
 			int aDataType,
 			const String&)
 	{
-		//# Extend itsPtrColumn block if needed.
 		if (ncolumn() >= itsColumnPtrBlk.nelements()) {
 			itsColumnPtrBlk.resize (itsColumnPtrBlk.nelements() + 32);
 		}
@@ -147,7 +174,7 @@ namespace casa { //# NAMESPACE CASA - BEGIN
 			int aDataType,
 			const String& dataTypeId)
 	{
-		makeDirArrColumn(name, aDataType, dataTypeId);
+		cout << "AdiosStMan error: Indirect array not available at this stage!" << endl;
 	}
 
 
