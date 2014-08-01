@@ -22,32 +22,42 @@ int main (int argc, char* argv[]){
 	// define a storage manager
 	AdiosStMan stman;
 
+	IPosition data_pos = IPosition(2,18,4);
+	IPosition do_pos = IPosition(3,3,6,2);
+
 	// define a table description & add two columns
 	TableDesc td("", "1", TableDesc::Scratch);
-	td.addColumn (ScalarColumnDesc<uInt>("index"));
-	td.addColumn (ArrayColumnDesc<Complex>("data",IPosition(2,128,64),ColumnDesc::Direct));
+	td.addColumn (ScalarColumnDesc<Int>("index"));
+	td.addColumn (ArrayColumnDesc<Complex>("data", data_pos, ColumnDesc::Direct));
+	td.addColumn (ArrayColumnDesc<Int>("do", do_pos, ColumnDesc::Direct));
 
 	// create a table instance, bind it to the storage manager & allocate rows
-	SetupNewTable newtab("tmp.data", td, Table::New);
+	SetupNewTable newtab("v.casa", td, Table::New);
 	newtab.bindAll(stman);
 	Table tab(newtab, 10);
 
 	// define column objects and link them to the table
-	ScalarColumn<uInt> index (tab, "index");
-//	ArrayColumn<Complex> data (tab, "data");
+	ScalarColumn<int> index_col (tab, "index");
+	ArrayColumn<Complex> data_col (tab, "data");
+	ArrayColumn<Int> do_col (tab, "do");
 
 	// define data arrays that actually hold the data
-//	Array<Complex> data_origin(IPosition(2,128,64));
+	Array<Complex> data_arr(data_pos);
+	Array<Int> do_arr(do_pos);
+
+
 
 	// put some data in
-//	indgen (data_origin);
+	indgen (data_arr);
+	indgen (do_arr);
+
 
 	// write data into the column objects
 	for (uInt i=0; i<10; i++) {
-		index.put (i, i);
-//		data.put(i, data_origin);
+		index_col.put (i, i);
+		data_col.put(i, data_arr);
+		do_col.put(i, do_arr);
 	}
-
 	return 0;
 }
 

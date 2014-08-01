@@ -75,20 +75,17 @@ namespace casa { //# NAMESPACE CASA - BEGIN
 			uint64_t itsAdiosGroupsize;
 			uint64_t itsAdiosTotalsize;
 
-
 			int mpiRank;
 			int mpiSize; 
 			bool isMpiInitInternal;
 
-			// The assembly of all columns.
 			PtrBlock<AdiosStManColumn*> itsColumnPtrBlk;
 
 			uInt itsNrRows;
 			uInt itsNrCols;
-	};
 
+	}; // end of class AdiosStMan
 
-
-} //# NAMESPACE CASA - END
+} // end of namespace casa
 
 #endif

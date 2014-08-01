@@ -15,13 +15,15 @@ namespace casa { //# NAMESPACE CASA - BEGIN
 		public:
 
 			AdiosStManColumn (AdiosStMan* aParent, int aDataType, uInt aColNr);
-			virtual void setShapeColumn (const IPosition& aShape);
-			IPosition getShapeColumn();
 			~AdiosStManColumn ();
+			virtual void setShapeColumn (const IPosition& aShape);
+			virtual IPosition shape(uInt RowID);
+
 
 			// Put an array value in the given row.
 			// <group>
 			virtual void putArrayBoolV     (uInt rownr, const Array<Bool>* dataPtr);
+			virtual void putArrayCharV    (uInt rownr, const Array<Char>* dataPtr);
 			virtual void putArrayuCharV    (uInt rownr, const Array<uChar>* dataPtr);
 			virtual void putArrayShortV    (uInt rownr, const Array<Short>* dataPtr);
 			virtual void putArrayuShortV   (uInt rownr, const Array<uShort>* dataPtr);
@@ -50,21 +52,28 @@ namespace casa { //# NAMESPACE CASA - BEGIN
 			virtual void putStringV   (uInt aRowNr, const String* aDataPtr);
 			// </group>
 
+			IPosition getShapeColumn();
+			int getDataTypeSize();
 			void initAdiosWriteIDs(uInt NrRows);
 			void putAdiosWriteIDs(uInt row, int64_t writeID);
+			ADIOS_DATATYPES getAdiosDataType();
+
 
 		private:
 
 			int64_t *itsAdiosWriteIDs;
 
-			// The shape of the column.
 			IPosition itsShape;
 
-			// Pointer to the parent storage manager.
 			AdiosStMan *itsStManPtr;
 
-			// Number of elements in a value for this column.
-			uInt itsNrElem;
+			uint64_t itsNrElem;
+
+			int itsDataTypeSize;
+
+			ADIOS_DATATYPES itsAdiosDataType;
+
+
 	};
 
 

@@ -94,15 +94,15 @@ namespace casa { //# NAMESPACE CASA - BEGIN
 
 		itsNrRows = aNrRows;
 
-		itsAdiosBufsize = 100;
-		itsAdiosGroupsize = 10000;
 
 		adios_init_noxml(MPI_COMM_WORLD);
-		adios_allocate_buffer(ADIOS_BUFFER_ALLOC_NOW, itsAdiosBufsize);
 
 		adios_declare_group(&itsAdiosGroup, "casatable", "", adios_flag_no);
 		adios_select_method(itsAdiosGroup, "POSIX", "", "");
 
+		itsAdiosGroupsize = 0;
+
+		// loop for columns
 		for (int i=0; i<ncolumn(); i++){
 
 			string columnName = itsColumnPtrBlk[i]->columnName();
@@ -110,30 +110,45 @@ namespace casa { //# NAMESPACE CASA - BEGIN
 
 			// if scalar column
 			if (itsColumnPtrBlk[i]->getShapeColumn().nelements() == 0){   
+				// loop for rows
 				for (int j=0; j<itsNrRows; j++){
 					stringstream NrRows, RowID;
 					NrRows << itsNrRows;
 					RowID << j;
-					int64_t writeID = adios_define_var(itsAdiosGroup, columnName.c_str(), "", adios_integer, "1", NrRows.str().c_str(), RowID.str().c_str() );
+					int64_t writeID = adios_define_var(itsAdiosGroup, columnName.c_str(), "", itsColumnPtrBlk[i]->getAdiosDataType(), "1", NrRows.str().c_str(), RowID.str().c_str() );
 					itsColumnPtrBlk[i]->putAdiosWriteIDs(j, writeID);
-					cout << "adios_define_var(1, " << NrRows.str() << ", " << RowID.str() << ")" << endl;
 				}
+				itsAdiosGroupsize = itsAdiosGroupsize + itsNrRows * itsColumnPtrBlk[i]->getDataTypeSize();
 			}
 
 			// if array column
 			else{
-//				string columnShape = itsColumnPtrBlk[i]->getShapeColumn().toString();
-//				columnShape = columnShape.substr(1, columnShape.length()-2);
-//				adios_define_var(itsAdiosGroup, columnName.c_str(), "", adios_real, "1,X,Y", "T,X,Y", "t,0,0");
+				string columnShape = itsColumnPtrBlk[i]->getShapeColumn().toString();
+				columnShape = columnShape.substr(1, columnShape.length()-2);
 
+				// loop for rows
+				for (int j=0; j<itsNrRows; j++){
+					stringstream NrRows, RowID;
+					NrRows << itsNrRows;
+					RowID << j;
+					string dimensions = "1, " + columnShape;
+					string global_dimensions = NrRows.str() + ", " + columnShape;
+					string local_offsets = RowID.str(); 
+					for (int k=0; k<itsColumnPtrBlk[i]->getShapeColumn().nelements(); k++){
+						local_offsets += " ,0";
+					}
+					int64_t writeID = adios_define_var(itsAdiosGroup, columnName.c_str(), "", itsColumnPtrBlk[i]->getAdiosDataType(), dimensions.c_str(), global_dimensions.c_str(), local_offsets.c_str());
+					itsColumnPtrBlk[i]->putAdiosWriteIDs(j, writeID);
+				}
+				itsAdiosGroupsize = itsAdiosGroupsize + itsNrRows * itsColumnPtrBlk[i]->getDataTypeSize() * itsColumnPtrBlk[i]->getShapeColumn().product();
 			}
 
 
-//			cout << "AdiosStMan::create(), Var: " << columnName << ", Shape: " << itsColumnPtrBlk[i]->getShapeColumn() << endl;
-//			cout << itsColumnPtrBlk[i]->getShapeColumn().nelements() << endl;
 
 		}
 
+		itsAdiosBufsize = 100;
+		adios_allocate_buffer(ADIOS_BUFFER_ALLOC_NOW, itsAdiosBufsize);
 
 		adios_open(&itsAdiosFile, "casatable", fileName().c_str(), "w", MPI_COMM_WORLD);
 		adios_group_size(itsAdiosFile, itsAdiosGroupsize, &itsAdiosTotalsize);
