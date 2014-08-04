@@ -1,3 +1,27 @@
+//    AdiosStManColumn.cc: DataManagerColumn class for AdiosStMan
+//
+//    (c) University of Western Australia
+//    International Centre of Radio Astronomy Research
+//    M468, 35 Stirling Hwy
+//    Crawley, Perth WA 6009
+//    Australia
+//
+//    This library is free software: you can redistribute it and/or
+//    modify it under the terms of the GNU General Public License as published
+//    by the Free Software Foundation, either version 3 of the License, or
+//    (at your option) any later version.
+//   
+//    This library is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//    GNU General Public License for more details.
+//   
+//    You should have received a copy of the GNU General Public License along
+//    with this library. If not, see <http://www.gnu.org/licenses/>.
+//
+//    Any bugs, questions, concerns and/or suggestions please email to
+//    jason.wang@icrar.org
+
 #include "AdiosStManColumn.h"
 #include <casa/Arrays/Array.h>
 #include <casa/Utilities/DataType.h>
@@ -118,13 +142,6 @@ namespace casa{
 		dataPtr->freeStorage (data, deleteIt);
 	}
 
-	void AdiosStManColumn::putArrayCharV (uInt rownr, const Array<Char>* dataPtr){
-		Bool deleteIt;
-		const Char* data = dataPtr->getStorage (deleteIt);
-		adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , (void*)data);
-		dataPtr->freeStorage (data, deleteIt);
-	}
-
 	void AdiosStManColumn::putArrayuCharV (uInt rownr, const Array<uChar>* dataPtr){
 		Bool deleteIt;
 		const uChar* data = dataPtr->getStorage (deleteIt);
@@ -189,10 +206,7 @@ namespace casa{
 	}
 
 	void AdiosStManColumn::putArrayStringV (uInt rownr, const Array<String>* dataPtr){
-		Bool deleteIt;
-		const String* data = dataPtr->getStorage (deleteIt);
-		adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , (void*)data);
-		dataPtr->freeStorage (data, deleteIt);
+		cout << "AdiosStManColumn Error: Sorry, AdiosStMan does not support string type at the moment!" << endl;
 	}
 	// ------------ array puts -----------------//
 
@@ -239,7 +253,7 @@ namespace casa{
 	}
 
 	void AdiosStManColumn::putStringV (uInt rownr, const String* dataPtr){
-		adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , (void*)dataPtr);
+		cout << "AdiosStManColumn Error: Sorry, AdiosStMan does not support string type at the moment!" << endl;
 	}
 	// ------------ scalar puts -----------------//
 

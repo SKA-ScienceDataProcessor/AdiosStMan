@@ -1,38 +1,33 @@
-//# AdiosStMan.cc: The Standard Storage Manager
-//# Copyright (C) 2000
-//# Associated Universities, Inc. Washington DC, USA.
-//#
-//# This library is free software; you can redistribute it and/or modify it
-//# under the terms of the GNU Library General Public License as published by
-//# the Free Software Foundation; either version 2 of the License, or (at your
-//# option) any later version.
-//#
-//# This library is distributed in the hope that it will be useful, but WITHOUT
-//# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-//# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
-//# License for more details.
-//#
-//# You should have received a copy of the GNU Library General Public License
-//# along with this library; if not, write to the Free Software Foundation,
-//# Inc., 675 Massachusetts Ave, Cambridge, MA 02139, USA.
-//#
-//# Correspondence concerning AIPS++ should be addressed as follows:
-//#        Internet email: aips2-request@nrao.edu.
-//#        Postal address: AIPS++ Project Office
-//#                        National Radio Astronomy Observatory
-//#                        520 Edgemont Road
-//#                        Charlottesville, VA 22903-2475 USA
-//#
-//# $Id: AdiosStMan.cc 20551 2009-03-25 00:11:33Z Malte.Marquarding $
-
+//    AdiosStMan.cc: Storage Manager for general CASA tables using ADIOS
+//    as the underlying IO & storage library
+//
+//    (c) University of Western Australia
+//    International Centre of Radio Astronomy Research
+//    M468, 35 Stirling Hwy
+//    Crawley, Perth WA 6009
+//    Australia
+//
+//    This library is free software: you can redistribute it and/or
+//    modify it under the terms of the GNU General Public License as published
+//    by the Free Software Foundation, either version 3 of the License, or
+//    (at your option) any later version.
+//   
+//    This library is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//    GNU General Public License for more details.
+//   
+//    You should have received a copy of the GNU General Public License along
+//    with this library. If not, see <http://www.gnu.org/licenses/>.
+//
+//    Any bugs, questions, concerns and/or suggestions please email to
+//    jason.wang@icrar.org
 
 #include "AdiosStMan.h"
 #include "AdiosStManColumn.h"
 
 
-namespace casa { //# NAMESPACE CASA - BEGIN
-
-
+namespace casa { 
 
 	AdiosStMan::AdiosStMan ()
 		:DataManager(),
@@ -42,7 +37,6 @@ namespace casa { //# NAMESPACE CASA - BEGIN
 		MPI_Init(0,0);
 		MPI_Comm_rank(MPI_COMM_WORLD, &mpiRank);
 		MPI_Comm_size(MPI_COMM_WORLD, &mpiSize);
-
 	}
 
 	AdiosStMan::AdiosStMan (int rank, int size)
@@ -87,13 +81,10 @@ namespace casa { //# NAMESPACE CASA - BEGIN
 		return itsAdiosFile;
 	}
 
-
-
 	void AdiosStMan::create (uInt aNrRows)
 	{
 
 		itsNrRows = aNrRows;
-
 
 		adios_init_noxml(MPI_COMM_WORLD);
 
@@ -142,9 +133,6 @@ namespace casa { //# NAMESPACE CASA - BEGIN
 				}
 				itsAdiosGroupsize = itsAdiosGroupsize + itsNrRows * itsColumnPtrBlk[i]->getDataTypeSize() * itsColumnPtrBlk[i]->getShapeColumn().product();
 			}
-
-
-
 		}
 
 		itsAdiosBufsize = 100;
@@ -152,10 +140,6 @@ namespace casa { //# NAMESPACE CASA - BEGIN
 
 		adios_open(&itsAdiosFile, "casatable", fileName().c_str(), "w", MPI_COMM_WORLD);
 		adios_group_size(itsAdiosFile, itsAdiosGroupsize, &itsAdiosTotalsize);
-
-
-
-
 	}
 
 	void AdiosStMan::deleteManager()
@@ -167,11 +151,8 @@ namespace casa { //# NAMESPACE CASA - BEGIN
 			int aDataType,
 			const String& dataTypeId)
 	{
-
 		makeDirArrColumn(name, aDataType, dataTypeId);
-
 	}
-
 
 	DataManagerColumn* AdiosStMan::makeDirArrColumn (const String&,
 			int aDataType,
@@ -189,15 +170,13 @@ namespace casa { //# NAMESPACE CASA - BEGIN
 			int aDataType,
 			const String& dataTypeId)
 	{
-		cout << "AdiosStMan error: Indirect array not available at this stage!" << endl;
+		cout << "AdiosStMan error: Indirect arrays are currently not supported in AdiosStMan!" << endl;
 	}
-
 
 	void AdiosStMan::open (uInt aRowNr, AipsIO& ios)
 	{
 
 	}
-
 
 	void AdiosStMan::resync (uInt aNrRows)
 	{
@@ -209,6 +188,5 @@ namespace casa { //# NAMESPACE CASA - BEGIN
 
 	}
 
-
-} //# NAMESPACE CASA - END
+} // end of namespace casa
 

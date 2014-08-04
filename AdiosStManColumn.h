@@ -1,3 +1,26 @@
+//    AdiosStManColumn.h: DataManagerColumn class for AdiosStMan
+//
+//    (c) University of Western Australia
+//    International Centre of Radio Astronomy Research
+//    M468, 35 Stirling Hwy
+//    Crawley, Perth WA 6009
+//    Australia
+//
+//    This library is free software: you can redistribute it and/or
+//    modify it under the terms of the GNU General Public License as published
+//    by the Free Software Foundation, either version 3 of the License, or
+//    (at your option) any later version.
+//   
+//    This library is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//    GNU General Public License for more details.
+//   
+//    You should have received a copy of the GNU General Public License along
+//    with this library. If not, see <http://www.gnu.org/licenses/>.
+//
+//    Any bugs, questions, concerns and/or suggestions please email to
+//    jason.wang@icrar.org
 
 #ifndef ADIOSSTMANCOLUMN_H
 #define ADIOSSTMANCOLUMN_H
@@ -23,14 +46,13 @@ namespace casa { //# NAMESPACE CASA - BEGIN
 			// Put an array value in the given row.
 			// <group>
 			virtual void putArrayBoolV     (uInt rownr, const Array<Bool>* dataPtr);
-			virtual void putArrayCharV    (uInt rownr, const Array<Char>* dataPtr);
 			virtual void putArrayuCharV    (uInt rownr, const Array<uChar>* dataPtr);
 			virtual void putArrayShortV    (uInt rownr, const Array<Short>* dataPtr);
 			virtual void putArrayuShortV   (uInt rownr, const Array<uShort>* dataPtr);
 			virtual void putArrayIntV      (uInt rownr, const Array<Int>* dataPtr);
 			virtual void putArrayuIntV     (uInt rownr, const Array<uInt>* dataPtr);
-			virtual void putArrayfloatV    (uInt rownr, const Array<float>* dataPtr);
-			virtual void putArraydoubleV   (uInt rownr, const Array<double>* dataPtr);
+			virtual void putArrayfloatV    (uInt rownr, const Array<Float>* dataPtr);
+			virtual void putArraydoubleV   (uInt rownr, const Array<Double>* dataPtr);
 			virtual void putArrayComplexV  (uInt rownr, const Array<Complex>* dataPtr);
 			virtual void putArrayDComplexV (uInt rownr, const Array<DComplex>* dataPtr);
 			virtual void putArrayStringV   (uInt rownr, const Array<String>* dataPtr);
@@ -45,8 +67,8 @@ namespace casa { //# NAMESPACE CASA - BEGIN
 			virtual void putuShortV   (uInt aRowNr, const uShort* aDataPtr);
 			virtual void putIntV      (uInt aRowNr, const Int* aDataPtr);
 			virtual void putuIntV     (uInt aRowNr, const uInt* aDataPtr);
-			virtual void putfloatV    (uInt aRowNr, const float* aDataPtr);
-			virtual void putdoubleV   (uInt aRowNr, const double* aDataPtr);
+			virtual void putfloatV    (uInt aRowNr, const Float* aDataPtr);
+			virtual void putdoubleV   (uInt aRowNr, const Double* aDataPtr);
 			virtual void putComplexV  (uInt aRowNr, const Complex* aDataPtr);
 			virtual void putDComplexV (uInt aRowNr, const DComplex* aDataPtr);
 			virtual void putStringV   (uInt aRowNr, const String* aDataPtr);

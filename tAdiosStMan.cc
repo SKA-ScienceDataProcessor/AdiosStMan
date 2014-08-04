@@ -1,4 +1,3 @@
-#include <mpi.h>
 // headers for table creation 
 #include <tables/Tables/TableDesc.h>
 #include <tables/Tables/SetupNewTab.h>
@@ -17,19 +16,18 @@
 // headers for casa namespaces
 #include <casa/namespace.h>
 
-int main (int argc, char* argv[]){
+int main (){
 
 	// define a storage manager
 	AdiosStMan stman;
 
-	IPosition data_pos = IPosition(2,18,4);
-	IPosition do_pos = IPosition(3,3,6,2);
+	// define a dimension object for the array column
+	IPosition data_pos = IPosition(2,4,4);
 
-	// define a table description & add two columns
+	// define a table description & add a scalar column and an array column
 	TableDesc td("", "1", TableDesc::Scratch);
-	td.addColumn (ScalarColumnDesc<Int>("index"));
-	td.addColumn (ArrayColumnDesc<Complex>("data", data_pos, ColumnDesc::Direct));
-	td.addColumn (ArrayColumnDesc<Int>("do", do_pos, ColumnDesc::Direct));
+	td.addColumn (ScalarColumnDesc<int>("index"));
+	td.addColumn (ArrayColumnDesc<float>("data", data_pos, ColumnDesc::Direct));
 
 	// create a table instance, bind it to the storage manager & allocate rows
 	SetupNewTable newtab("v.casa", td, Table::New);
@@ -38,26 +36,20 @@ int main (int argc, char* argv[]){
 
 	// define column objects and link them to the table
 	ScalarColumn<int> index_col (tab, "index");
-	ArrayColumn<Complex> data_col (tab, "data");
-	ArrayColumn<Int> do_col (tab, "do");
+	ArrayColumn<float> data_col (tab, "data");
 
 	// define data arrays that actually hold the data
-	Array<Complex> data_arr(data_pos);
-	Array<Int> do_arr(do_pos);
-
-
+	Array<float> data_arr(data_pos);
 
 	// put some data in
 	indgen (data_arr);
-	indgen (do_arr);
-
 
 	// write data into the column objects
 	for (uInt i=0; i<10; i++) {
 		index_col.put (i, i);
 		data_col.put(i, data_arr);
-		do_col.put(i, do_arr);
 	}
+
 	return 0;
 }
 
