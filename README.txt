@@ -7,6 +7,8 @@ This project is to implement a CASA storage manager using ADIOS (Adaptive IO Sys
 ============================================
 
 Version History:
+v0.1.5 - Added a automated benchmark routine in Python 
+---------------------
 v0.1.4 - Fixed the bug that causes a failure when writing an array larger than 80MB
 ---------------------
 v0.1.3 - Added a simple bench mark code to compare storage managers. Put all testing/benchmarking code into ./test
