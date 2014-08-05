@@ -7,17 +7,15 @@ This project is to implement a CASA storage manager using ADIOS (Adaptive IO Sys
 ============================================
 
 Version History:
-
+v0.1.3
+Added a simple bench mark code to compare storage managers. Put all testing/benchmarking code into ./test
+---------------------
 v0.1.2
 Added README.txt with version history. 
-
 ---------------------
-
 v0.1.1
 Trivial changes to v0.1. Pushed to SDP github.
-
 ---------------------
-
 v0.1
 The first release. This version only supports writing a CASA table with scalar columns and/or direct array columns in numeric data types to ADIOS files. Reading operations, indirect arrays and the string data type are not supported in this version. 
 

@@ -3,7 +3,7 @@
 #include <tables/Tables/SetupNewTab.h>
 
 // headers for storage manager
-#include "AdiosStMan.h"
+#include "../AdiosStMan.h"
 
 // headers for scalar column
 #include <tables/Tables/ScaColDesc.h>
@@ -15,6 +15,7 @@
 
 // headers for casa namespaces
 #include <casa/namespace.h>
+
 
 int main (){
 
