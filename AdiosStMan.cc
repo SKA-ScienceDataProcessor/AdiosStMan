@@ -133,9 +133,10 @@ namespace casa {
 				}
 				itsAdiosGroupsize = itsAdiosGroupsize + itsNrRows * itsColumnPtrBlk[i]->getDataTypeSize() * itsColumnPtrBlk[i]->getShapeColumn().product();
 			}
+			cout << itsAdiosGroupsize << endl;
 		}
 
-		itsAdiosBufsize = 100;
+		itsAdiosBufsize = itsAdiosGroupsize * 1.05 / 1000000;
 		adios_allocate_buffer(ADIOS_BUFFER_ALLOC_NOW, itsAdiosBufsize);
 
 		adios_open(&itsAdiosFile, "casatable", fileName().c_str(), "w", MPI_COMM_WORLD);

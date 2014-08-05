@@ -19,7 +19,11 @@
 
 #include "tictak.h"
 
-IPosition data_pos(2,2000,1000);
+// shape of the array column
+IPosition data_pos(2,2000,2000);
+
+// number of rows
+int nrRows = 50;
 
 void bench(DataManager *stman, Array<float> *data_arr, string filename){
 
@@ -31,14 +35,14 @@ void bench(DataManager *stman, Array<float> *data_arr, string filename){
 	// create a table instance, bind it to the storage manager & allocate rows
 	SetupNewTable newtab(filename, td, Table::New);
 	newtab.bindAll(*stman);
-	Table tab(newtab, 20);
+	Table tab(newtab, nrRows);
 
 	// define column objects and link them to the table
 	ScalarColumn<int> index_col (tab, "index");
 	ArrayColumn<float> data_col (tab, "data");
 
 	// write data into the column objects
-	for (uInt i=0; i<10; i++) {
+	for (uInt i=0; i<nrRows; i++) {
 		index_col.put (i, i);
 		data_col.put(i, *data_arr);
 	}
@@ -48,7 +52,6 @@ int main (){
 
 	Array<float> data_arr(data_pos);
 	indgen (data_arr);
-	
 	
 	AdiosStMan *stman1 = new AdiosStMan;
 	tictak_add((char*)"adios",0);
