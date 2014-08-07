@@ -16,14 +16,15 @@
 // headers for casa namespaces
 #include <casa/namespace.h>
 
+// define a dimension object for the array column
+IPosition data_pos = IPosition(3,120,120,10);
+
+int NrRows = 10;
 
 int main (){
 
 	// define a storage manager
 	AdiosStMan stman;
-
-	// define a dimension object for the array column
-	IPosition data_pos = IPosition(2,4,4);
 
 	// define a table description & add a scalar column and an array column
 	TableDesc td("", "1", TableDesc::Scratch);
@@ -33,7 +34,7 @@ int main (){
 	// create a table instance, bind it to the storage manager & allocate rows
 	SetupNewTable newtab("v.casa", td, Table::New);
 	newtab.bindAll(stman);
-	Table tab(newtab, 10);
+	Table tab(newtab, NrRows);
 
 	// define column objects and link them to the table
 	ScalarColumn<int> index_col (tab, "index");
@@ -46,7 +47,7 @@ int main (){
 	indgen (data_arr);
 
 	// write data into the column objects
-	for (uInt i=0; i<10; i++) {
+	for (uInt i=0; i<NrRows; i++) {
 		index_col.put (i, i);
 		data_col.put(i, data_arr);
 	}

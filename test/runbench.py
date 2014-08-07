@@ -39,8 +39,8 @@ import os
 namesStMan = ['AdiosStMan', 'TiledShapeStMan', 'StandardStMan']
 nrRows = range(10, 100, 30)
 arrayS = range(100, 600, 400)
-iters  = 1 
-filepath = '/scratch/tmp/'
+iters  = 1
+filepath = '/tmp/'
 
 
 #  ----------------- initialisation
@@ -80,7 +80,10 @@ def print_row():
 			pltptr.append(ptr)
 		plt.legend (pltptr, namesStMan, loc = 2)
 		plt.grid()
-		plt.savefig('row-MBps-{0}.png'.format(int(s)))
+		plt.xlabel('number of rows')
+		plt.ylabel('throughput in MB/s')
+		plt.figtext(.40, .92, "side length of array = {0}\narray size = {1} MB".format(s, float(s * s * 4 / 1000000) ))
+		plt.savefig('row-MBps-{0}.png'.format(s))
 
 def print_arrsize():
 	Ir = -1
@@ -95,7 +98,10 @@ def print_arrsize():
 			pltptr.append(ptr)
 		plt.legend (pltptr, namesStMan, loc = 2)
 		plt.grid()
-		plt.savefig('arrsize-MBps-{0}.png'.format(int(r)))
+		plt.xlabel('side length of the square array for each cell')
+		plt.ylabel('throughput in MB/s')
+		plt.figtext(.40, .92, "number of rows = {0}".format(r))
+		plt.savefig('arrsize-MBps-{0}.png'.format(r))
 
 
 #  ----------------- main flow
@@ -108,8 +114,9 @@ for i in range(iters):   # loop for iterations
 		for s in arrayS:   # loop for testing different array sizes 
 			Is = Is + 1
 			for n in namesStMan:   # loop for testing different storage managers
-				os.system("rm -rf *.casa")   # delete any existing casa files / directories
+#				os.system("rm -rf *.casa")   # delete any existing casa files / directories
 				filename = filepath + '{0}_{1}rows_{2}size_{3}iter.casa'.format(n, r, s, i)
+#				cmdline = "mpirun --mca btl self,openib -np 1 ./bench {0} {1} {2} {3} {4}".format(r, s, s, n, filename)   # generate command line
 				cmdline = "mpirun -np 1 ./bench {0} {1} {2} {3} {4}".format(r, s, s, n, filename)   # generate command line
 				status, output = commands.getstatusoutput(cmdline)   # run command line and get output
 				outputlist = output.split('\n')   # to skip the error lines that ADIOS possibly printed out
@@ -125,4 +132,4 @@ for i in range(iters):   # loop for iterations
 print_row()
 print_arrsize()
 
-os.system("rm -rf *.casa")
+#os.system("rm -rf *.casa")
