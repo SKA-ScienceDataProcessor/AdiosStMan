@@ -7,6 +7,8 @@ This project is to implement a CASA storage manager using ADIOS (Adaptive IO Sys
 ============================================
 
 Version History:
+v0.1.7 - Changed an ADIOS dimension string to avoid a strlen_sse() seg fault for some libc versions
+---------------------
 v0.1.6 - Minor changes for the Python benckmark running on Ubuntu Linux
 ---------------------
 v0.1.5 - Added an automated benchmark routine in Python 

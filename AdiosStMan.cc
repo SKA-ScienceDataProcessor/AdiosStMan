@@ -126,14 +126,13 @@ namespace casa {
 					string global_dimensions = NrRows.str() + ", " + columnShape;
 					string local_offsets = RowID.str(); 
 					for (int k=0; k<itsColumnPtrBlk[i]->getShapeColumn().nelements(); k++){
-						local_offsets += " ,0";
+						local_offsets += ", 0";
 					}
 					int64_t writeID = adios_define_var(itsAdiosGroup, columnName.c_str(), "", itsColumnPtrBlk[i]->getAdiosDataType(), dimensions.c_str(), global_dimensions.c_str(), local_offsets.c_str());
 					itsColumnPtrBlk[i]->putAdiosWriteIDs(j, writeID);
 				}
 				itsAdiosGroupsize = itsAdiosGroupsize + itsNrRows * itsColumnPtrBlk[i]->getDataTypeSize() * itsColumnPtrBlk[i]->getShapeColumn().product();
 			}
-//			cout << itsAdiosGroupsize << endl;
 		}
 
 		itsAdiosBufsize = itsAdiosGroupsize * 1.05 / 1000000;

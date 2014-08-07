@@ -40,7 +40,7 @@ namesStMan = ['AdiosStMan', 'TiledShapeStMan', 'StandardStMan']
 nrRows = range(10, 100, 30)
 arrayS = range(100, 600, 400)
 iters  = 1 
-filepath = '/tmp/'
+filepath = '/scratch/tmp/'
 
 
 #  ----------------- initialisation
@@ -109,15 +109,18 @@ for i in range(iters):   # loop for iterations
 			Is = Is + 1
 			for n in namesStMan:   # loop for testing different storage managers
 				os.system("rm -rf *.casa")   # delete any existing casa files / directories
-				filename = filepath + '{0}_{1}rows_{2}size.casa'.format(n, r, s)
-				cmdline = "mpirun ./bench {0} {1} {2} {3} {4}".format(r, s, s, n, filename)   # generate command line
+				filename = filepath + '{0}_{1}rows_{2}size_{3}iter.casa'.format(n, r, s, i)
+				cmdline = "mpirun -np 1 ./bench {0} {1} {2} {3} {4}".format(r, s, s, n, filename)   # generate command line
 				status, output = commands.getstatusoutput(cmdline)   # run command line and get output
-				print cmdline + ' ---------  time = ' + output + ' seconds'
-				output = output.split('\n')[-1]   # to skip the error lines that ADIOS possibly printed out
-				if is_number(output):
-					eval(n+'_time')[i, Ir, Is] = float(output)
+				outputlist = output.split('\n')   # to skip the error lines that ADIOS possibly printed out
+				output1 = outputlist[-1]
+				print cmdline + ' ---------  time = ' + output1 + ' seconds'
+				if len(outputlist) > 1:
+					print output
+				if is_number(output1):
+					eval(n+'_time')[i, Ir, Is] = float(output1)
 					eval(n+'_size')[i, Ir, Is] = r * s * s * 4 / 1000000
-					eval(n+'_MBps')[i, Ir, Is] = r * s * s * 4 / float(output) / 1000000
+					eval(n+'_MBps')[i, Ir, Is] = r * s * s * 4 / float(output1) / 1000000
 
 print_row()
 print_arrsize()
