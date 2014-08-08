@@ -37,10 +37,11 @@ import os
 #  ----------------- testing configuration
 #
 namesStMan = ['AdiosStMan', 'TiledShapeStMan', 'StandardStMan']
-nrRows = range(10, 100, 30)
-arrayS = range(100, 600, 400)
+nrRows = range(10, 1000, 20)
+arrayS = range(100, 4000, 200)
 iters  = 1
 filepath = '/tmp/'
+cleaning_threshould = 90  # in GB / if there is less disk space than this number, all casa files will be deleted upon writing requests
 
 
 #  ----------------- initialisation
@@ -106,6 +107,9 @@ def print_arrsize():
 
 #  ----------------- main flow
 #
+
+os.system("rm -rf {0}*.casa".format(filepath))
+
 for i in range(iters):   # loop for iterations
 	Ir = -1 
 	for r in nrRows:   # loop for testing different numbers of rows in a CASA table
@@ -114,7 +118,14 @@ for i in range(iters):   # loop for iterations
 		for s in arrayS:   # loop for testing different array sizes 
 			Is = Is + 1
 			for n in namesStMan:   # loop for testing different storage managers
-#				os.system("rm -rf *.casa")   # delete any existing casa files / directories
+
+				disk = os.statvfs(filepath)
+				freespace = disk.f_frsize * disk.f_bfree / 1024 / 1024 / 1024
+				print "Available disk space is {0} GB. Will clean up all casa files when there is less than {1} GB.".format(freespace, cleaning_threshould)
+				if freespace < cleaning_threshould:   # if the free disk space is less than a given number of GB
+					print "Reached the cleaning threshold. All casa files deleted!"
+					os.system("rm -rf {0}*.casa".format(filepath))   # delete any existing casa files / directories
+
 				filename = filepath + '{0}_{1}rows_{2}size_{3}iter.casa'.format(n, r, s, i)
 #				cmdline = "mpirun --mca btl self,openib -np 1 ./bench {0} {1} {2} {3} {4}".format(r, s, s, n, filename)   # generate command line
 				cmdline = "mpirun -np 1 ./bench {0} {1} {2} {3} {4}".format(r, s, s, n, filename)   # generate command line
@@ -132,4 +143,4 @@ for i in range(iters):   # loop for iterations
 print_row()
 print_arrsize()
 
-#os.system("rm -rf *.casa")
+os.system("rm -rf {0}*.casa".format(filepath))

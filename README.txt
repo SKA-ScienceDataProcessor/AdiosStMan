@@ -7,6 +7,8 @@ This project is to implement a CASA storage manager using ADIOS (Adaptive IO Sys
 ============================================
 
 Version History:
+v0.1.9 - The python benchmark script now automatically cleans up all CASA files when disk is full
+---------------------
 v0.1.8 - Twisted for HPC machines at ICRAR & iVEC, ready for extensive testing
 ---------------------
 v0.1.7 - Changed an ADIOS dimension string to avoid a strlen_sse() seg fault for some libc versions
