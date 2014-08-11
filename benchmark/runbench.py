@@ -37,8 +37,8 @@ import os
 #  ----------------- testing configuration
 #
 namesStMan = ['AdiosStMan', 'TiledShapeStMan', 'StandardStMan']
-nrRows = range(10, 1000, 20)
-arrayS = range(100, 4000, 200)
+nrRows = range(10, 100, 20)
+arrayS = range(100, 1000, 200)
 iters  = 1
 filepath = '/tmp/'
 cleaning_threshould = 90  # in GB / if there is less disk space than this number, all casa files will be deleted upon writing requests
@@ -126,9 +126,10 @@ for i in range(iters):   # loop for iterations
 					print "Reached the cleaning threshold. All casa files deleted!"
 					os.system("rm -rf {0}*.casa".format(filepath))   # delete any existing casa files / directories
 
-				filename = filepath + '{0}_{1}rows_{2}size_{3}iter.casa'.format(n, r, s, i)
-#				cmdline = "mpirun --mca btl self,openib -np 1 ./bench {0} {1} {2} {3} {4}".format(r, s, s, n, filename)   # generate command line
-				cmdline = "mpirun -np 1 ./bench_serial_array {0} {1} {2} {3} {4}".format(r, s, s, n, filename)   # generate command line
+				filename = '{0}_rows{1}_size{2}_iter{3}.casa'.format(n, r, s, i)
+				filepathname = filepath + filename
+#				cmdline = "mpirun -np 1 ./bench_serial_array {0} {1} {2} {3} {4}".format(r, s, s, n, filepathname)   # generate command line
+				cmdline = "mpirun -np 1 ../tools/ioprofiler-trace.sh -o {3}.log ./bench_serial_array {0} {1} {1} {2} {4}".format(r, s, n, filename, filepathname)   # generate command line
 				status, output = commands.getstatusoutput(cmdline)   # run command line and get output
 				outputlist = output.split('\n')   # to skip the error lines that ADIOS possibly printed out
 				output1 = outputlist[-1]
