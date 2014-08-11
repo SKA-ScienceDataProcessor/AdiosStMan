@@ -37,6 +37,7 @@ namespace casa {
 		MPI_Init(0,0);
 		MPI_Comm_rank(MPI_COMM_WORLD, &mpiRank);
 		MPI_Comm_size(MPI_COMM_WORLD, &mpiSize);
+		cout << "AdiosStMan::AdiosStMan() | rank = " << mpiRank << endl;
 	}
 
 	AdiosStMan::AdiosStMan (int rank, int size)
@@ -46,13 +47,17 @@ namespace casa {
 	{
 		mpiRank = rank;
 		mpiSize = size;
+		cout << "AdiosStMan::AdiosStMan(int,int) | rank = " << mpiRank << endl;
 	}
 
 	AdiosStMan::AdiosStMan (const AdiosStMan& that)
 		:DataManager(),
 		itsAdiosFile(0),
+//		mpiRank(that.mpiRank),
+//		mpiSize(that.mpiSize),
 		isMpiInitInternal(false)
 	{
+		cout << "AdiosStMan::AdiosStMan(const AdiosStMan&) | rank = " << mpiRank << endl;
 	}
 
 	AdiosStMan::~AdiosStMan ()
@@ -69,6 +74,7 @@ namespace casa {
 
 	DataManager* AdiosStMan::clone() const
 	{
+		cout << "AdiosStMan::clone | rank = " << mpiRank << endl;
 		return new AdiosStMan (*this);
 	}
 
@@ -95,7 +101,6 @@ namespace casa {
 
 		// loop for columns
 		for (int i=0; i<ncolumn(); i++){
-
 			string columnName = itsColumnPtrBlk[i]->columnName();
 			itsColumnPtrBlk[i]->initAdiosWriteIDs(itsNrRows);
 
@@ -111,6 +116,7 @@ namespace casa {
 				}
 				itsAdiosGroupsize = itsAdiosGroupsize + itsNrRows * itsColumnPtrBlk[i]->getDataTypeSize();
 			}
+
 
 			// if array column
 			else{
@@ -140,7 +146,9 @@ namespace casa {
 		adios_allocate_buffer(ADIOS_BUFFER_ALLOC_NOW, itsAdiosBufsize);
 
 		adios_open(&itsAdiosFile, "casatable", fileName().c_str(), "w", MPI_COMM_WORLD);
+
 		adios_group_size(itsAdiosFile, itsAdiosGroupsize, &itsAdiosTotalsize);
+
 	}
 
 	void AdiosStMan::deleteManager()
@@ -152,6 +160,7 @@ namespace casa {
 			int aDataType,
 			const String& dataTypeId)
 	{
+		cout << "AdiosStMan::makeScalarColumn | rank = " << mpiRank << endl;
 		makeDirArrColumn(name, aDataType, dataTypeId);
 	}
 
@@ -159,6 +168,7 @@ namespace casa {
 			int aDataType,
 			const String&)
 	{
+		cout << "AdiosStMan::makeDirArrColumn | rank = " << mpiRank << endl;
 		if (ncolumn() >= itsColumnPtrBlk.nelements()) {
 			itsColumnPtrBlk.resize (itsColumnPtrBlk.nelements() + 32);
 		}
@@ -176,7 +186,10 @@ namespace casa {
 
 	void AdiosStMan::open (uInt aRowNr, AipsIO& ios)
 	{
+		cout << "AdiosStMan::open" << endl;
 
+		adios_init_noxml(MPI_COMM_WORLD);
+		adios_open(&itsAdiosFile, "casatable", fileName().c_str(), "w", MPI_COMM_WORLD);
 	}
 
 	void AdiosStMan::resync (uInt aNrRows)

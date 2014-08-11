@@ -1,6 +1,6 @@
 #!/usr/bin/python
-#    runBench.py: This file calls bench (tBench.cc) to benchmark
-#    storage managers.
+#    runbench.py: Python script for benchmarking storage managers,
+#	 collecting & plotting results
 #
 #    (c) University of Western Australia
 #    International Centre of Radio Astronomy Research
@@ -128,7 +128,7 @@ for i in range(iters):   # loop for iterations
 
 				filename = filepath + '{0}_{1}rows_{2}size_{3}iter.casa'.format(n, r, s, i)
 #				cmdline = "mpirun --mca btl self,openib -np 1 ./bench {0} {1} {2} {3} {4}".format(r, s, s, n, filename)   # generate command line
-				cmdline = "mpirun -np 1 ./bench {0} {1} {2} {3} {4}".format(r, s, s, n, filename)   # generate command line
+				cmdline = "mpirun -np 1 ./bench_serial_array {0} {1} {2} {3} {4}".format(r, s, s, n, filename)   # generate command line
 				status, output = commands.getstatusoutput(cmdline)   # run command line and get output
 				outputlist = output.split('\n')   # to skip the error lines that ADIOS possibly printed out
 				output1 = outputlist[-1]
