@@ -74,26 +74,70 @@ namespace casa { //# NAMESPACE CASA - BEGIN
 			virtual void putStringV   (uInt aRowNr, const String* aDataPtr);
 			// </group>
 
+			// Get an array value in the given row.
+			// <group>
+			virtual void getArrayBoolV     (uInt rownr, Array<Bool>* dataPtr);
+			virtual void getArrayuCharV    (uInt rownr, Array<uChar>* dataPtr);
+			virtual void getArrayShortV    (uInt rownr, Array<Short>* dataPtr);
+			virtual void getArrayuShortV   (uInt rownr, Array<uShort>* dataPtr);
+			virtual void getArrayIntV      (uInt rownr, Array<Int>* dataPtr);
+			virtual void getArrayuIntV     (uInt rownr, Array<uInt>* dataPtr);
+			virtual void getArrayfloatV    (uInt rownr, Array<float>* dataPtr);
+			virtual void getArraydoubleV   (uInt rownr, Array<double>* dataPtr);
+			virtual void getArrayComplexV  (uInt rownr, Array<Complex>* dataPtr);
+			virtual void getArrayDComplexV (uInt rownr, Array<DComplex>* dataPtr);
+			virtual void getArrayStringV   (uInt rownr, Array<String>* dataPtr);
+			// </group>
+
+
+			// Get the scalar value in the given row.
+			// <group>
+			virtual void getBoolV     (uInt aRowNr, Bool* aDataPtr);
+			virtual void getuCharV    (uInt aRowNr, uChar* aDataPtr);
+			virtual void getShortV    (uInt aRowNr, Short* aDataPtr);
+			virtual void getuShortV   (uInt aRowNr, uShort* aDataPtr);
+			virtual void getIntV      (uInt aRowNr, Int* aDataPtr);
+			virtual void getuIntV     (uInt aRowNr, uInt* aDataPtr);
+			virtual void getfloatV    (uInt aRowNr, float* aDataPtr);
+			virtual void getdoubleV   (uInt aRowNr, double* aDataPtr);
+			virtual void getComplexV  (uInt aRowNr, Complex* aDataPtr);
+			virtual void getDComplexV (uInt aRowNr, DComplex* aDataPtr);
+			virtual void getStringV   (uInt aRowNr, String* aDataPtr);
+			// </group>
+
+
+
+
 			IPosition getShapeColumn();
 			int getDataTypeSize();
 			void initAdiosWriteIDs(uInt NrRows);
 			void putAdiosWriteIDs(uInt row, int64_t writeID);
 			ADIOS_DATATYPES getAdiosDataType();
+			void setColumnName(String aName);
+			void setAdiosFile(int64_t aAdiosFile);
+			void setAdiosReadFile(ADIOS_FILE* aAdiosReadFile);
 
 
 		private:
 
+			void getGeneralV(uInt aRowNr, void* aDataPtr);
+			void getArrayGeneralV (uInt aRowNr,	void* data);
+
 			int64_t *itsAdiosWriteIDs;
-
 			IPosition itsShape;
-
 			AdiosStMan *itsStManPtr;
-
 			uint64_t itsNrElem;
-
 			int itsDataTypeSize;
-
 			ADIOS_DATATYPES itsAdiosDataType;
+			String itsColumnName;
+
+			ADIOS_FILE *itsAdiosReadFile;
+			ADIOS_VARINFO *itsAdiosVarInfo;
+			int64_t itsAdiosFile;
+
+			uint64_t *readStart;
+			uint64_t *readCount;
+
 
 
 	};

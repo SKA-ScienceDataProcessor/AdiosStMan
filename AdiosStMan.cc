@@ -23,6 +23,7 @@
 //    Any bugs, questions, concerns and/or suggestions please email to
 //    jason.wang@icrar.org
 
+#include <casa/IO/AipsIO.h>
 #include "AdiosStMan.h"
 #include "AdiosStManColumn.h"
 
@@ -32,33 +33,36 @@ namespace casa {
 	AdiosStMan::AdiosStMan ()
 		:DataManager(),
 		itsAdiosFile(0),
-		isMpiInitInternal(true)
-	{
-		MPI_Init(0,0);
-		MPI_Comm_rank(MPI_COMM_WORLD, &mpiRank);
-		MPI_Comm_size(MPI_COMM_WORLD, &mpiSize);
-		cout << "AdiosStMan::AdiosStMan() | rank = " << mpiRank << endl;
-	}
-
-	AdiosStMan::AdiosStMan (int rank, int size)
-		:DataManager(),
-		itsAdiosFile(0),
+		itsAdiosReadFile(0),
 		isMpiInitInternal(false)
 	{
-		mpiRank = rank;
-		mpiSize = size;
-		cout << "AdiosStMan::AdiosStMan(int,int) | rank = " << mpiRank << endl;
+		int isMpiInitialized;
+		MPI_Initialized(&isMpiInitialized);
+		if(!isMpiInitialized){
+			MPI_Init(0,0);
+			isMpiInitInternal = true;
+		}
+		MPI_Comm_rank(MPI_COMM_WORLD, &mpiRank);
+		MPI_Comm_size(MPI_COMM_WORLD, &mpiSize);
 	}
+
 
 	AdiosStMan::AdiosStMan (const AdiosStMan& that)
 		:DataManager(),
 		itsAdiosFile(0),
-//		mpiRank(that.mpiRank),
-//		mpiSize(that.mpiSize),
+		itsAdiosReadFile(0),
+		mpiRank(that.mpiRank),
+		mpiSize(that.mpiSize),
 		isMpiInitInternal(false)
 	{
-		cout << "AdiosStMan::AdiosStMan(const AdiosStMan&) | rank = " << mpiRank << endl;
 	}
+
+
+	DataManager* AdiosStMan::makeObject (const casa::String& aDataManType, const casa::Record& spec){
+		return new AdiosStMan();
+	}
+
+
 
 	AdiosStMan::~AdiosStMan ()
 	{
@@ -66,7 +70,16 @@ namespace casa {
 			adios_close(itsAdiosFile);
 			adios_finalize(mpiRank);
 		}
-		if(isMpiInitInternal){
+
+		if(itsAdiosReadFile){
+			adios_read_close(itsAdiosReadFile);
+			MPI_Barrier(MPI_COMM_WORLD);
+			adios_read_finalize_method(ADIOS_READ_METHOD_BP);
+		}
+
+		int isMpiInitialized;
+		MPI_Initialized(&isMpiInitialized);
+		if(isMpiInitInternal && isMpiInitialized){
 			MPI_Finalize();
 		}
 	}
@@ -74,7 +87,6 @@ namespace casa {
 
 	DataManager* AdiosStMan::clone() const
 	{
-		cout << "AdiosStMan::clone | rank = " << mpiRank << endl;
 		return new AdiosStMan (*this);
 	}
 
@@ -83,8 +95,13 @@ namespace casa {
 		return "AdiosStMan";
 	}
 
-	int64_t AdiosStMan::getAdiosFile(){ 
+
+	const int64_t AdiosStMan::getAdiosFile(){ 
 		return itsAdiosFile;
+	}
+
+	ADIOS_FILE* AdiosStMan::getAdiosReadFile(){
+		return itsAdiosReadFile;
 	}
 
 	void AdiosStMan::create (uInt aNrRows)
@@ -151,6 +168,15 @@ namespace casa {
 
 	}
 
+	void AdiosStMan::open (uInt aRowNr, AipsIO& ios){
+		adios_read_init_method (ADIOS_READ_METHOD_BP, MPI_COMM_WORLD, "verbose=3");
+		itsAdiosReadFile = adios_read_open (fileName().c_str(), ADIOS_READ_METHOD_BP, MPI_COMM_WORLD, ADIOS_LOCKMODE_NONE, 0);
+
+		for (int i=0; i<ncolumn(); i++){
+			itsColumnPtrBlk[i]->setAdiosReadFile(itsAdiosReadFile);
+		}
+	}
+
 	void AdiosStMan::deleteManager()
 	{
 
@@ -160,47 +186,34 @@ namespace casa {
 			int aDataType,
 			const String& dataTypeId)
 	{
-		cout << "AdiosStMan::makeScalarColumn | rank = " << mpiRank << endl;
 		makeDirArrColumn(name, aDataType, dataTypeId);
 	}
 
-	DataManagerColumn* AdiosStMan::makeDirArrColumn (const String&,
-			int aDataType,
-			const String&)
-	{
-		cout << "AdiosStMan::makeDirArrColumn | rank = " << mpiRank << endl;
+	DataManagerColumn* AdiosStMan::makeDirArrColumn (const String& name, int aDataType,	const String& dataTypeId){
 		if (ncolumn() >= itsColumnPtrBlk.nelements()) {
 			itsColumnPtrBlk.resize (itsColumnPtrBlk.nelements() + 32);
 		}
 		AdiosStManColumn* aColumn = new AdiosStManColumn (this, aDataType, ncolumn());
+		aColumn->setColumnName(name);
 		itsColumnPtrBlk[ncolumn()] = aColumn;
 		return aColumn;
 	}
 
 	DataManagerColumn* AdiosStMan::makeIndArrColumn (const String& name,
 			int aDataType,
-			const String& dataTypeId)
-	{
+			const String& dataTypeId){
 		cout << "AdiosStMan error: Indirect arrays are currently not supported in AdiosStMan!" << endl;
 	}
 
-	void AdiosStMan::open (uInt aRowNr, AipsIO& ios)
-	{
-		cout << "AdiosStMan::open" << endl;
 
-		adios_init_noxml(MPI_COMM_WORLD);
-		adios_open(&itsAdiosFile, "casatable", fileName().c_str(), "w", MPI_COMM_WORLD);
+	void AdiosStMan::resync (uInt aNrRows){
 	}
 
-	void AdiosStMan::resync (uInt aNrRows)
-	{
-
+	Bool AdiosStMan::flush (AipsIO& ios, Bool doFsync){
 	}
 
-	Bool AdiosStMan::flush (AipsIO& ios, Bool doFsync)
-	{
-
+	void register_adiosstman(){
+		DataManager::registerCtor ("AdiosStMan", AdiosStMan::makeObject);
 	}
-
 } // end of namespace casa
 

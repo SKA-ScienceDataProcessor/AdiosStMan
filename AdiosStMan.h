@@ -30,6 +30,7 @@
 #include <tables/Tables/DataManager.h>
 #include <casa/Containers/Block.h>
 #include <adios.h>
+#include <adios_read.h>
 
 
 namespace casa { 
@@ -41,7 +42,6 @@ namespace casa {
 		public:
 
 			AdiosStMan();
-			AdiosStMan(int rank, int size);
 			~AdiosStMan();
 
 			virtual DataManager* clone() const;
@@ -61,7 +61,13 @@ namespace casa {
 					const String& aDataTypeID);
 			virtual void deleteManager();
 
-			int64_t getAdiosFile();
+			const int64_t getAdiosFile();
+			ADIOS_FILE* getAdiosReadFile();
+
+			static DataManager* makeObject (const casa::String& aDataManType,
+					const casa::Record& spec);
+
+
 
 		private:
 
@@ -73,6 +79,8 @@ namespace casa {
 			uint64_t itsAdiosGroupsize;
 			uint64_t itsAdiosTotalsize;
 
+			ADIOS_FILE *itsAdiosReadFile;
+
 			int mpiRank;
 			int mpiSize; 
 			bool isMpiInitInternal;
@@ -82,8 +90,10 @@ namespace casa {
 			uInt itsNrRows;
 			uInt itsNrCols;
 
+
 	}; // end of class AdiosStMan
 
+	extern "C" void register_adiosstman();
 } // end of namespace casa
 
 #endif

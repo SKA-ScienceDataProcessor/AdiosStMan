@@ -31,6 +31,11 @@ namespace casa{
 	AdiosStManColumn::AdiosStManColumn (AdiosStMan* aParent, int aDataType, uInt aColNr)
 		:StManColumn (aDataType),
 		itsAdiosWriteIDs (0),
+		itsAdiosReadFile (0),
+		itsAdiosFile (0),
+		readStart (0),
+		readCount (0),
+		itsAdiosVarInfo (0),
 		itsStManPtr (aParent),
 		itsShape(0)
 	{
@@ -98,6 +103,26 @@ namespace casa{
 		}
 	}
 
+	void AdiosStManColumn::setAdiosFile(int64_t aAdiosFile){
+		itsAdiosFile = aAdiosFile;
+	}
+
+	void AdiosStManColumn::setAdiosReadFile(ADIOS_FILE *aAdiosReadFile){
+		itsAdiosReadFile = aAdiosReadFile;
+		itsAdiosVarInfo = adios_inq_var(itsAdiosReadFile, itsColumnName.c_str());
+		int ndim = itsShape.size();
+		if (ndim > 0){
+			readStart = new uint64_t[ndim+1];
+			readCount = new uint64_t[ndim+1];
+		}
+	
+		cout << itsShape(0) << endl;
+		cout << itsShape(1) << endl;
+		cout << itsShape(2) << endl;
+		
+
+	}
+
 	ADIOS_DATATYPES AdiosStManColumn::getAdiosDataType(){
 		return itsAdiosDataType;
 	}
@@ -107,15 +132,18 @@ namespace casa{
 	}
 
 	AdiosStManColumn::~AdiosStManColumn (){
-		if (itsAdiosWriteIDs){
-			delete [] itsAdiosWriteIDs;
-		}
+		if (readStart)   delete [] readStart;
+		if (readCount)   delete [] readCount;
+		if (itsAdiosWriteIDs)	delete [] itsAdiosWriteIDs;
 	}
 
-	void AdiosStManColumn::setShapeColumn (const IPosition& aShape)
-	{
+	void AdiosStManColumn::setShapeColumn (const IPosition& aShape){
 		itsNrElem = aShape.product();
 		itsShape  = aShape;
+	}
+
+	void AdiosStManColumn::setColumnName (String aName){
+		itsColumnName = aName;
 	}
 
 	IPosition AdiosStManColumn::getShapeColumn (){
@@ -208,6 +236,8 @@ namespace casa{
 	void AdiosStManColumn::putArrayStringV (uInt rownr, const Array<String>* dataPtr){
 		cout << "AdiosStManColumn Error: Sorry, AdiosStMan does not support string type at the moment!" << endl;
 	}
+
+
 	// ------------ array puts -----------------//
 
 
@@ -258,8 +288,146 @@ namespace casa{
 	// ------------ scalar puts -----------------//
 
 
+	void AdiosStManColumn::getArrayBoolV (uInt aRowNr, Array<Bool>* aDataPtr){
+		Bool deleteIt;
+		Bool* data = aDataPtr->getStorage (deleteIt);
+		getArrayGeneralV(aRowNr, data);
+		aDataPtr->putStorage (data, deleteIt);
+	}
+
+	void AdiosStManColumn::getArrayuCharV (uInt aRowNr, Array<uChar>* aDataPtr){
+		Bool deleteIt;
+		uChar* data = aDataPtr->getStorage (deleteIt);
+		getArrayGeneralV(aRowNr, data);
+		aDataPtr->putStorage (data, deleteIt);
+	}
+
+	void AdiosStManColumn::getArrayShortV (uInt aRowNr, Array<Short>* aDataPtr){
+		Bool deleteIt;
+		Short* data = aDataPtr->getStorage (deleteIt);
+		getArrayGeneralV(aRowNr, data);
+		aDataPtr->putStorage (data, deleteIt);
+	}
+
+	void AdiosStManColumn::getArrayuShortV (uInt aRowNr, Array<uShort>* aDataPtr){
+		Bool deleteIt;
+		uShort* data = aDataPtr->getStorage (deleteIt);
+		getArrayGeneralV(aRowNr, data);
+		aDataPtr->putStorage (data, deleteIt);
+	}
+
+	void AdiosStManColumn::getArrayIntV (uInt aRowNr, Array<Int>* aDataPtr){
+		Bool deleteIt;
+		Int* data = aDataPtr->getStorage (deleteIt);
+		getArrayGeneralV(aRowNr, data);
+		aDataPtr->putStorage (data, deleteIt);
+	}
+
+	void AdiosStManColumn::getArrayuIntV (uInt aRowNr, Array<uInt>* aDataPtr){
+		Bool deleteIt;
+		uInt* data = aDataPtr->getStorage (deleteIt);
+		getArrayGeneralV(aRowNr, data);
+		aDataPtr->putStorage (data, deleteIt);
+	}
+
+	void AdiosStManColumn::getArrayfloatV (uInt aRowNr,	Array<float>* aDataPtr){
+		Bool deleteIt;
+		float* data = aDataPtr->getStorage (deleteIt);
+		getArrayGeneralV(aRowNr, data);
+		aDataPtr->putStorage (data, deleteIt);
+	}
 
 
+	void AdiosStManColumn::getArraydoubleV (uInt aRowNr, Array<double>* aDataPtr){
+
+		Bool deleteIt;
+		double* data = aDataPtr->getStorage (deleteIt);
+		getArrayGeneralV(aRowNr, data);
+		aDataPtr->putStorage (data, deleteIt);
+	}
+
+	void AdiosStManColumn::getArrayComplexV (uInt aRowNr, Array<Complex>* aDataPtr){
+		Bool deleteIt;
+		Complex* data = aDataPtr->getStorage (deleteIt);
+		getArrayGeneralV(aRowNr, data);
+		aDataPtr->putStorage (data, deleteIt);
+	}
+
+	void AdiosStManColumn::getArrayDComplexV (uInt aRowNr, Array<DComplex>* aDataPtr){
+		Bool deleteIt;
+		DComplex* data = aDataPtr->getStorage (deleteIt);
+		getArrayGeneralV(aRowNr, data);
+		aDataPtr->putStorage (data, deleteIt);
+	}
+
+	void AdiosStManColumn::getArrayStringV (uInt aRowNr, Array<String>* aDataPtr){
+		cout << "AdiosStManColumn Error: Sorry, AdiosStMan does not support string type at the moment!" << endl;
+	}
+
+
+	void AdiosStManColumn::getArrayGeneralV (uInt aRowNr, void* data){
+
+		readStart[0] = aRowNr;
+		readCount[0] = 1;
+
+		for (int i=1; i<=itsShape.size(); i++){
+			readStart[i] = 0;
+			readCount[i] = itsShape(i-1);
+		}
+
+		ADIOS_SELECTION *sel = adios_selection_boundingbox (itsAdiosVarInfo->ndim, readStart, readCount);
+		adios_schedule_read (itsAdiosReadFile, sel, itsColumnName.c_str(), 0, 1, data);
+		adios_perform_reads (itsAdiosReadFile, 1);
+
+	}
+
+
+
+
+	//////////
+
+	void AdiosStManColumn::getBoolV (uInt aRowNr, Bool* aValue){
+		getGeneralV(aRowNr, aValue);
+	}
+	void AdiosStManColumn::getuCharV (uInt aRowNr, uChar* aValue){
+		getGeneralV(aRowNr, aValue);
+	}
+	void AdiosStManColumn::getShortV (uInt aRowNr, Short* aValue){
+		getGeneralV(aRowNr, aValue);
+	}
+	void AdiosStManColumn::getuShortV (uInt aRowNr, uShort* aValue){
+		getGeneralV(aRowNr, aValue);
+	}
+	void AdiosStManColumn::getIntV (uInt aRowNr, Int* aValue){
+		getGeneralV(aRowNr, aValue);
+	}
+	void AdiosStManColumn::getuIntV (uInt aRowNr, uInt* aValue){
+		getGeneralV(aRowNr, aValue);
+	}
+	void AdiosStManColumn::getfloatV (uInt aRowNr, float* aValue){
+		getGeneralV(aRowNr, aValue);
+	}
+	void AdiosStManColumn::getdoubleV (uInt aRowNr, double* aValue){
+		getGeneralV(aRowNr, aValue);
+	}
+	void AdiosStManColumn::getComplexV (uInt aRowNr, Complex* aValue){
+		getGeneralV(aRowNr, aValue);
+	}
+	void AdiosStManColumn::getDComplexV (uInt aRowNr,DComplex* aValue){
+		getGeneralV(aRowNr, aValue);
+	}
+	void AdiosStManColumn::getStringV (uInt aRowNr, String* aValue){
+		cout << "AdiosStManColumn Error: Sorry, AdiosStMan does not support string type at the moment!" << endl;
+	}
+
+	
+	void AdiosStManColumn::getGeneralV (uInt aRowNr, void* aValue){
+		uint64_t rowid = aRowNr;
+		ADIOS_SELECTION *sel = adios_selection_points (itsAdiosVarInfo->ndim, 1, &rowid);
+		adios_schedule_read (itsAdiosReadFile, sel, itsColumnName.c_str(), 0, 1, aValue);
+		adios_perform_reads (itsAdiosReadFile, 1);
+	}
+	
 }
 
 

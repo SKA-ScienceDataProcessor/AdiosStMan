@@ -24,7 +24,7 @@ int NrRows = 10;
 int main (){
 
 	// define a storage manager
-//	AdiosStMan stman;
+	AdiosStMan stman;
 
 	// define a table description & add a scalar column and an array column
 	TableDesc td("", "1", TableDesc::Scratch);
@@ -33,7 +33,7 @@ int main (){
 
 	// create a table instance, bind it to the storage manager & allocate rows
 	SetupNewTable newtab("v.casa", td, Table::New);
-//	newtab.bindAll(stman);
+	newtab.bindAll(stman);
 	Table tab(newtab, NrRows);
 
 	// define column objects and link them to the table

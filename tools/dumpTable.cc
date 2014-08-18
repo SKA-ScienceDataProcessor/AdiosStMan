@@ -87,41 +87,31 @@ int main(int argc, char** argv){
 
 
 	
-	// called in ColumnDesc.cc
-	cout << "Called in ColumnDesc.cc  -----------" << endl;
+	// called in ColumnSet.cc
+	cout << "Called in ColumnSet.cc  ------------" << endl;
 
-	ios >> version;
-	ios >> tp;
-	cout << "version = " << version << endl;
-	cout << "column type = " << tp << endl;
+	Int version1;
+	uInt i, nr, seqnr, nrman, nrrow_p;
+	String str;
+
+	ios >> version1;
+	if (version1 < 0) {
+		version1 = -version1;
+		ios >> nrrow_p;
+	}else{
+		nrrow_p = version1;
+		version1 = 1;
+	}
+	ios >> nrman;
+	ios >> nr;
+
+	cout << "version = " << version1 << endl;
+	cout << "nrrow = " << nrrow_p << endl;
+	cout << "nrman = " << nrman << endl;
+	cout << "nr = " << nr << endl;
+
 	cout << "------------------------------------" << endl << endl;
 
-
-	// called in BaseColDesc.cc
-	cout << "Called in BaseColDesc.cc  -----------" << endl;
-
-	String         colName_p;            //# column name
-	String         comment_p;            //# comment
-	String         dataManType_p;        //# default data manager type
-	String         dataManGroup_p;       //# data manager group
-	DataType       dtype_p;              //# datatype
-	Int dtype;
-
-	ios >> version;
-	cout << "version = " << version << endl;
-	ios >> colName_p;
-	cout << "colName_p = " << colName_p << endl;
-	ios >> comment_p;
-/*	
-	ios >> dataManType_p;
-	ios >> dataManGroup_p;
-
-	ios >> dtype;
-
-	*/
-	cout << "------------------------------------" << endl << endl;
-
-	
 
 	return 0;
 
