@@ -2,9 +2,6 @@
 #include <tables/Tables/TableDesc.h>
 #include <tables/Tables/SetupNewTab.h>
 
-// headers for storage manager
-#include "../AdiosStMan.h"
-
 // headers for scalar column
 #include <tables/Tables/ScaColDesc.h>
 #include <tables/Tables/ScalarColumn.h>

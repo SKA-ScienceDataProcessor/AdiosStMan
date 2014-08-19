@@ -166,7 +166,7 @@ namespace casa {
 
 		adios_group_size(itsAdiosFile, itsAdiosGroupsize, &itsAdiosTotalsize);
 
-	}
+	} // end of void AdiosStMan::create (uInt aNrRows)
 
 	void AdiosStMan::open (uInt aRowNr, AipsIO& ios){
 		adios_read_init_method (ADIOS_READ_METHOD_BP, MPI_COMM_WORLD, "verbose=3");
@@ -182,10 +182,7 @@ namespace casa {
 
 	}
 
-	DataManagerColumn* AdiosStMan::makeScalarColumn (const String& name,
-			int aDataType,
-			const String& dataTypeId)
-	{
+	DataManagerColumn* AdiosStMan::makeScalarColumn (const String& name, int aDataType,	const String& dataTypeId){
 		makeDirArrColumn(name, aDataType, dataTypeId);
 	}
 
@@ -199,12 +196,10 @@ namespace casa {
 		return aColumn;
 	}
 
-	DataManagerColumn* AdiosStMan::makeIndArrColumn (const String& name,
-			int aDataType,
-			const String& dataTypeId){
-		cout << "AdiosStMan error: Indirect arrays are currently not supported in AdiosStMan!" << endl;
+	DataManagerColumn* AdiosStMan::makeIndArrColumn (const String& name, int aDataType,	const String& dataTypeId){
+		cout << "AdiosStMan warning: Support of indirect arrays is currently under development, and it may not behave as expected!" << endl;
+		makeDirArrColumn(name, aDataType, dataTypeId);
 	}
-
 
 	void AdiosStMan::resync (uInt aNrRows){
 	}
