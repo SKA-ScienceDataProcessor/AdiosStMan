@@ -7,6 +7,8 @@ This project is to implement a CASA storage manager using ADIOS (Adaptive IO Sys
 ============================================
 
 Version History:
+v0.2.1 - Slightly changed makefiles to work with a variety of Linux systems
+---------------------
 v0.2 - Read functions added. AdiosStMan now supports writing and reading a CASA table with scalar and / or direct array columns
 ============================================
 v0.1.11 - Tuned the IO profiling tool to work with MPI and the python benchmarking script on various machines

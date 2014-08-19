@@ -1,14 +1,14 @@
 CC = mpic++
-CCFLAGS = -g
+CCFLAGS = 
 LDFLAGS = -lcasa_tables -lcasa_casa -ladios -lhdf5 -lmxml -lz
 #STMANFILES = ../AdiosStMan.cc ../AdiosStManColumn.cc
-STMANFILES = -lAdiosStMan
+STMANFILES = libAdiosStMan.so
 TARGET = wAdiosStMan rAdiosStMan wAdiosStManMPI
 
 all: ${TARGET} cl
 
 ${TARGET}: ${TARGET:=.cc} libAdiosStMan.so
-	$(CC) $(STMANFILES) $@.cc -o $@ $(CCFLAGS) $(LDFLAGS) 
+	$(CC) $@.cc -o $@ $(CCFLAGS) $(LDFLAGS) $(STMANFILES) 
 
 libAdiosStMan.so:  
 	cd ..; make; mv *.so examples 
