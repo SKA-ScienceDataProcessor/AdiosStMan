@@ -107,15 +107,13 @@ namespace casa { //# NAMESPACE CASA - BEGIN
 
 
 
+			int getDataTypeSize();
 
 			IPosition getShapeColumn();
-			int getDataTypeSize();
-			void initAdiosWriteIDs(uInt NrRows);
-			void putAdiosWriteIDs(uInt row, int64_t writeID);
-			ADIOS_DATATYPES getAdiosDataType();
 			void setColumnName(String aName);
-			void setAdiosFile(int64_t aAdiosFile);
-			void setAdiosReadFile(ADIOS_FILE* aAdiosReadFile);
+
+			void initAdiosWrite(uInt aNrRows);
+			void initAdiosRead();
 
 
 		private:
@@ -123,20 +121,26 @@ namespace casa { //# NAMESPACE CASA - BEGIN
 			void getGeneralV(uInt aRowNr, void* aDataPtr);
 			void getArrayGeneralV (uInt aRowNr,	void* data);
 
-			int64_t *itsAdiosWriteIDs;
-			IPosition itsShape;
+			// StMan pointer
 			AdiosStMan *itsStManPtr;
+
+			// Column property
+			String itsColumnName;
+			IPosition itsShape;
 			uint64_t itsNrElem;
 			int itsDataTypeSize;
-			ADIOS_DATATYPES itsAdiosDataType;
-			String itsColumnName;
 
-			ADIOS_FILE *itsAdiosReadFile;
+			// ADIOS read
 			ADIOS_VARINFO *itsAdiosVarInfo;
-			int64_t itsAdiosFile;
-
 			uint64_t *readStart;
 			uint64_t *readCount;
+
+			// ADIOS write
+			ADIOS_DATATYPES itsAdiosDataType;
+			int64_t *itsAdiosWriteIDs;
+			uint64_t itsNrIDs;                  // number of ADIOS write IDs that have been defined
+			uint64_t itsNrIDsAllocated;			// number of ADIOS write IDs that have been allocated 
+
 
 
 

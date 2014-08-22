@@ -27,11 +27,13 @@ int main (){
 	Array<uInt> index_arr = index_col.getColumn();
 	Array<float> data_arr = data_col.getColumn();
 
-	uInt *index_data = index_arr.data();
-	float *data_data = data_arr.data();
+	Vector<float> data_vec = data_arr.reform(IPosition(1,data_arr.nelements()));
 
-	for (int i=0; i<1000; i++){
-		cout << data_data[i] << endl;
+	for (int i=0; i<data_arr.nelements(); i++){
+		cout << data_vec[i] << "  ";
+		if ((i+1) % (data_arr.shape())(0) == 0)
+			cout << endl;
+
 	}
 
 	return 0;

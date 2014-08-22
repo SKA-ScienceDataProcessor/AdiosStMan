@@ -34,6 +34,8 @@ namespace casa {
 		:DataManager(),
 		itsAdiosFile(0),
 		itsAdiosReadFile(0),
+		itsNrAdiosFiles(0),
+		itsNrRowsPerFile(1000),
 		isMpiInitInternal(false)
 	{
 		int isMpiInitialized;
@@ -51,12 +53,17 @@ namespace casa {
 		:DataManager(),
 		itsAdiosFile(0),
 		itsAdiosReadFile(0),
-		mpiRank(that.mpiRank),
-		mpiSize(that.mpiSize),
+		itsNrAdiosFiles(0),
+		itsNrRowsPerFile(1000),
 		isMpiInitInternal(false)
 	{
+		MPI_Comm_rank(MPI_COMM_WORLD, &mpiRank);
+		MPI_Comm_size(MPI_COMM_WORLD, &mpiSize);
 	}
 
+	const uint64_t AdiosStMan::getNrRowsPerFile(){
+		return itsNrRowsPerFile;
+	}
 
 	DataManager* AdiosStMan::makeObject (const casa::String& aDataManType, const casa::Record& spec){
 		return new AdiosStMan();
@@ -95,6 +102,9 @@ namespace casa {
 		return "AdiosStMan";
 	}
 
+	const int64_t AdiosStMan::getAdiosGroup(){ 
+		return itsAdiosGroup;
+	}
 
 	const int64_t AdiosStMan::getAdiosFile(){ 
 		return itsAdiosFile;
@@ -104,10 +114,21 @@ namespace casa {
 		return itsAdiosReadFile;
 	}
 
+	void AdiosStMan::addRow (uInt aNrRows){
+
+		itsNrRows += aNrRows;
+
+
+
+		for (int i=0; i<ncolumn(); i++){
+			itsColumnPtrBlk[i]->initAdiosWrite(aNrRows);
+		}
+
+	}
+
 	void AdiosStMan::create (uInt aNrRows)
 	{
 
-		itsNrRows = aNrRows;
 
 		adios_init_noxml(MPI_COMM_WORLD);
 
@@ -116,45 +137,16 @@ namespace casa {
 
 		itsAdiosGroupsize = 0;
 
-		// loop for columns
-		for (int i=0; i<ncolumn(); i++){
-			string columnName = itsColumnPtrBlk[i]->columnName();
-			itsColumnPtrBlk[i]->initAdiosWriteIDs(itsNrRows);
+		addRow(aNrRows);
 
+		for (int i=0; i<ncolumn(); i++){
 			// if scalar column
 			if (itsColumnPtrBlk[i]->getShapeColumn().nelements() == 0){   
-				// loop for rows
-				for (int j=0; j<itsNrRows; j++){
-					stringstream NrRows, RowID;
-					NrRows << itsNrRows;
-					RowID << j;
-					int64_t writeID = adios_define_var(itsAdiosGroup, columnName.c_str(), "", itsColumnPtrBlk[i]->getAdiosDataType(), "1", NrRows.str().c_str(), RowID.str().c_str() );
-					itsColumnPtrBlk[i]->putAdiosWriteIDs(j, writeID);
-				}
-				itsAdiosGroupsize = itsAdiosGroupsize + itsNrRows * itsColumnPtrBlk[i]->getDataTypeSize();
+				itsAdiosGroupsize = itsAdiosGroupsize + itsNrRowsPerFile * itsColumnPtrBlk[i]->getDataTypeSize();
 			}
-
-
 			// if array column
 			else{
-				string columnShape = itsColumnPtrBlk[i]->getShapeColumn().toString();
-				columnShape = columnShape.substr(1, columnShape.length()-2);
-
-				// loop for rows
-				for (int j=0; j<itsNrRows; j++){
-					stringstream NrRows, RowID;
-					NrRows << itsNrRows;
-					RowID << j;
-					string dimensions = "1," + columnShape;
-					string global_dimensions = NrRows.str() + "," + columnShape;
-					string local_offsets = RowID.str(); 
-					for (int k=0; k<itsColumnPtrBlk[i]->getShapeColumn().nelements(); k++){
-						local_offsets += ",0";
-					}
-					int64_t writeID = adios_define_var(itsAdiosGroup, columnName.c_str(), "", itsColumnPtrBlk[i]->getAdiosDataType(), dimensions.c_str(), global_dimensions.c_str(), local_offsets.c_str());
-					itsColumnPtrBlk[i]->putAdiosWriteIDs(j, writeID);
-				}
-				itsAdiosGroupsize = itsAdiosGroupsize + itsNrRows * itsColumnPtrBlk[i]->getDataTypeSize() * itsColumnPtrBlk[i]->getShapeColumn().product();
+				itsAdiosGroupsize = itsAdiosGroupsize + itsNrRowsPerFile * itsColumnPtrBlk[i]->getDataTypeSize() * itsColumnPtrBlk[i]->getShapeColumn().product();
 			}
 		}
 
@@ -173,17 +165,15 @@ namespace casa {
 		itsAdiosReadFile = adios_read_open (fileName().c_str(), ADIOS_READ_METHOD_BP, MPI_COMM_WORLD, ADIOS_LOCKMODE_NONE, 0);
 
 		for (int i=0; i<ncolumn(); i++){
-			itsColumnPtrBlk[i]->setAdiosReadFile(itsAdiosReadFile);
+			itsColumnPtrBlk[i]->initAdiosRead();
 		}
 	}
 
-	void AdiosStMan::deleteManager()
-	{
-
+	void AdiosStMan::deleteManager(){
 	}
 
 	DataManagerColumn* AdiosStMan::makeScalarColumn (const String& name, int aDataType,	const String& dataTypeId){
-		makeDirArrColumn(name, aDataType, dataTypeId);
+		return makeDirArrColumn(name, aDataType, dataTypeId);
 	}
 
 	DataManagerColumn* AdiosStMan::makeDirArrColumn (const String& name, int aDataType,	const String& dataTypeId){
@@ -198,7 +188,7 @@ namespace casa {
 
 	DataManagerColumn* AdiosStMan::makeIndArrColumn (const String& name, int aDataType,	const String& dataTypeId){
 		cout << "AdiosStMan warning: Support of indirect arrays is currently under development, and it may not behave as expected!" << endl;
-		makeDirArrColumn(name, aDataType, dataTypeId);
+		return makeDirArrColumn(name, aDataType, dataTypeId);
 	}
 
 	void AdiosStMan::resync (uInt aNrRows){

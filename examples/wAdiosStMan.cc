@@ -17,9 +17,9 @@
 #include <casa/namespace.h>
 
 // define a dimension object for the array column
-IPosition data_pos = IPosition(2,10,10);
+IPosition data_pos = IPosition(2,5,6);
 
-int NrRows = 10;
+int NrRows = 4;
 
 int main (){
 
@@ -36,6 +36,7 @@ int main (){
 	newtab.bindAll(stman);
 	Table tab(newtab, NrRows);
 
+	tab.addRow(2);
 	// define column objects and link them to the table
 	ScalarColumn<uInt> index_col (tab, "index");
 	ArrayColumn<float> data_col (tab, "data");
@@ -47,7 +48,7 @@ int main (){
 	indgen (data_arr);
 
 	// write data into the column objects
-	for (uInt i=0; i<NrRows; i++) {
+	for (uInt i=0; i<NrRows+2; i++) {
 		index_col.put (i, i);
 		data_col.put(i, data_arr);
 	}

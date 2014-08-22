@@ -60,13 +60,16 @@ namespace casa {
 					int aDataType,
 					const String& aDataTypeID);
 			virtual void deleteManager();
+			virtual void addRow (uInt aNrRows);
 
 			const int64_t getAdiosFile();
+			const int64_t getAdiosGroup();
 			ADIOS_FILE* getAdiosReadFile();
 
 			static DataManager* makeObject (const casa::String& aDataManType,
 					const casa::Record& spec);
 
+			const uint64_t getNrRowsPerFile();
 
 
 		private:
@@ -75,9 +78,11 @@ namespace casa {
 
 			int64_t itsAdiosFile;
 			int64_t itsAdiosGroup;
+			uint64_t itsNrAdiosFiles;
 			uint64_t itsAdiosBufsize;
 			uint64_t itsAdiosGroupsize;
 			uint64_t itsAdiosTotalsize;
+			uint64_t itsNrRowsPerFile;
 
 			ADIOS_FILE *itsAdiosReadFile;
 
@@ -88,7 +93,6 @@ namespace casa {
 			PtrBlock<AdiosStManColumn*> itsColumnPtrBlk;
 
 			uInt itsNrRows;
-			uInt itsNrCols;
 
 
 	}; // end of class AdiosStMan

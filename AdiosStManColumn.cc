@@ -31,8 +31,8 @@ namespace casa{
 	AdiosStManColumn::AdiosStManColumn (AdiosStMan* aParent, int aDataType, uInt aColNr)
 		:StManColumn (aDataType),
 		itsAdiosWriteIDs (0),
-		itsAdiosReadFile (0),
-		itsAdiosFile (0),
+		itsNrIDs (0),
+		itsNrIDsAllocated (0),
 		readStart (0),
 		readCount (0),
 		itsAdiosVarInfo (0),
@@ -103,28 +103,17 @@ namespace casa{
 		}
 	}
 
-	void AdiosStManColumn::setAdiosFile(int64_t aAdiosFile){
-		itsAdiosFile = aAdiosFile;
-	}
 
-	void AdiosStManColumn::setAdiosReadFile(ADIOS_FILE *aAdiosReadFile){
-		itsAdiosReadFile = aAdiosReadFile;
-		itsAdiosVarInfo = adios_inq_var(itsAdiosReadFile, itsColumnName.c_str());
+	void AdiosStManColumn::initAdiosRead(){
+
+		itsAdiosVarInfo = adios_inq_var(itsStManPtr->getAdiosReadFile(), itsColumnName.c_str());
+
 		int ndim = itsShape.size();
+		// if array column, allocate dimension vectors 
 		if (ndim > 0){
 			readStart = new uint64_t[ndim+1];
 			readCount = new uint64_t[ndim+1];
 		}
-	
-		cout << itsShape(0) << endl;
-		cout << itsShape(1) << endl;
-		cout << itsShape(2) << endl;
-		
-
-	}
-
-	ADIOS_DATATYPES AdiosStManColumn::getAdiosDataType(){
-		return itsAdiosDataType;
 	}
 
 	int AdiosStManColumn::getDataTypeSize(){
@@ -134,7 +123,7 @@ namespace casa{
 	AdiosStManColumn::~AdiosStManColumn (){
 		if (readStart)   delete [] readStart;
 		if (readCount)   delete [] readCount;
-		if (itsAdiosWriteIDs)	delete [] itsAdiosWriteIDs;
+		if (itsAdiosWriteIDs)	free(itsAdiosWriteIDs);
 	}
 
 	void AdiosStManColumn::setShapeColumn (const IPosition& aShape){
@@ -154,12 +143,40 @@ namespace casa{
 		return itsShape;
 	}
 
-	void AdiosStManColumn::initAdiosWriteIDs (uInt NrRows){
-		itsAdiosWriteIDs = new int64_t[NrRows];
-	}
 
-	void AdiosStManColumn::putAdiosWriteIDs(uInt row, int64_t writeID){
-		itsAdiosWriteIDs[row] = writeID;
+	void AdiosStManColumn::initAdiosWrite(uInt aNrRows){
+
+		for(int j=0; j<aNrRows; j++){
+			// if not allocated
+			if(itsAdiosWriteIDs == 0){
+				itsNrIDsAllocated = itsStManPtr->getNrRowsPerFile();
+				itsAdiosWriteIDs = (int64_t*) malloc(sizeof(int64_t) * itsNrIDsAllocated);
+			}
+			// resize 
+			if(itsNrIDs == itsNrIDsAllocated){
+				itsNrIDsAllocated += itsStManPtr->getNrRowsPerFile();
+				itsAdiosWriteIDs = (int64_t*) realloc(itsAdiosWriteIDs, sizeof(int64_t) * itsNrIDsAllocated);
+			}
+
+			stringstream NrRows, RowID;
+			NrRows << itsStManPtr->getNrRowsPerFile();
+			RowID << itsNrIDs;
+
+			if (itsShape.nelements() == 0){   
+				itsAdiosWriteIDs[itsNrIDs] = adios_define_var(itsStManPtr->getAdiosGroup(), itsColumnName.c_str(), "", itsAdiosDataType, "1", NrRows.str().c_str(), RowID.str().c_str() ); ////
+			}
+			else{
+				string columnShape = itsShape.toString().substr(1, itsShape.toString().length()-2);
+				string dimensions = "1," + columnShape;
+				string global_dimensions = NrRows.str() + "," + columnShape;
+				string local_offsets = RowID.str(); 
+				for (int k=0; k<itsShape.nelements(); k++){
+					local_offsets += ",0";
+				}
+				itsAdiosWriteIDs[itsNrIDs] = adios_define_var(itsStManPtr->getAdiosGroup(), itsColumnName.c_str(), "", itsAdiosDataType, dimensions.c_str(), global_dimensions.c_str(), local_offsets.c_str());
+			}
+			itsNrIDs++;
+		}
 	}
 
 	// ------------ array puts -----------------//
@@ -376,8 +393,8 @@ namespace casa{
 		}
 
 		ADIOS_SELECTION *sel = adios_selection_boundingbox (itsAdiosVarInfo->ndim, readStart, readCount);
-		adios_schedule_read (itsAdiosReadFile, sel, itsColumnName.c_str(), 0, 1, data);
-		adios_perform_reads (itsAdiosReadFile, 1);
+		adios_schedule_read (itsStManPtr->getAdiosReadFile(), sel, itsColumnName.c_str(), 0, 1, data);
+		adios_perform_reads (itsStManPtr->getAdiosReadFile(), 1);
 
 	}
 
@@ -424,8 +441,8 @@ namespace casa{
 	void AdiosStManColumn::getGeneralV (uInt aRowNr, void* aValue){
 		uint64_t rowid = aRowNr;
 		ADIOS_SELECTION *sel = adios_selection_points (itsAdiosVarInfo->ndim, 1, &rowid);
-		adios_schedule_read (itsAdiosReadFile, sel, itsColumnName.c_str(), 0, 1, aValue);
-		adios_perform_reads (itsAdiosReadFile, 1);
+		adios_schedule_read (itsStManPtr->getAdiosReadFile(), sel, itsColumnName.c_str(), 0, 1, aValue);
+		adios_perform_reads (itsStManPtr->getAdiosReadFile(), 1);
 	}
 	
 }

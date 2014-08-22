@@ -1,6 +1,6 @@
 CC = mpic++
-CCFLAGS = 
-LDFLAGS = -lcasa_tables -lcasa_casa -ladios -lhdf5 -lmxml -lz
+CCFLAGS = -g
+LDFLAGS = -lcasa_tables -lcasa_casa 
 #STMANFILES = ../AdiosStMan.cc ../AdiosStManColumn.cc
 STMANFILES = libadiosstman.so
 TARGET = wAdiosStMan rAdiosStMan wAdiosStManMPI
