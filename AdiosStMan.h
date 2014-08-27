@@ -69,7 +69,7 @@ namespace casa {
 			static DataManager* makeObject (const casa::String& aDataManType,
 					const casa::Record& spec);
 
-			const uint64_t getNrRowsPerFile();
+			void adiosOpen();
 
 
 		private:
@@ -82,17 +82,18 @@ namespace casa {
 			uint64_t itsAdiosBufsize;
 			uint64_t itsAdiosGroupsize;
 			uint64_t itsAdiosTotalsize;
-			uint64_t itsNrRowsPerFile;
 
 			ADIOS_FILE *itsAdiosReadFile;
 
 			int mpiRank;
 			int mpiSize; 
 			bool isMpiInitInternal;
+			bool isAdiosOpened;
 
 			PtrBlock<AdiosStManColumn*> itsColumnPtrBlk;
 
 			uInt itsNrRows;
+			MPI_Comm itsMpiComm;
 
 
 	}; // end of class AdiosStMan

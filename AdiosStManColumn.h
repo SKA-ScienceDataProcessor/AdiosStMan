@@ -121,6 +121,8 @@ namespace casa { //# NAMESPACE CASA - BEGIN
 			void getGeneralV(uInt aRowNr, void* aDataPtr);
 			void getArrayGeneralV (uInt aRowNr,	void* data);
 
+			void putGeneralV(uInt aRowNr, const void* aDataPtr);
+
 			// StMan pointer
 			AdiosStMan *itsStManPtr;
 

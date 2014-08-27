@@ -35,7 +35,8 @@ namespace casa {
 		itsAdiosFile(0),
 		itsAdiosReadFile(0),
 		itsNrAdiosFiles(0),
-		itsNrRowsPerFile(1000),
+		itsMpiComm(MPI_COMM_WORLD),
+		isAdiosOpened(false),
 		isMpiInitInternal(false)
 	{
 		int isMpiInitialized;
@@ -54,16 +55,14 @@ namespace casa {
 		itsAdiosFile(0),
 		itsAdiosReadFile(0),
 		itsNrAdiosFiles(0),
-		itsNrRowsPerFile(1000),
+		itsMpiComm(MPI_COMM_WORLD),
+		isAdiosOpened(false),
 		isMpiInitInternal(false)
 	{
 		MPI_Comm_rank(MPI_COMM_WORLD, &mpiRank);
 		MPI_Comm_size(MPI_COMM_WORLD, &mpiSize);
 	}
 
-	const uint64_t AdiosStMan::getNrRowsPerFile(){
-		return itsNrRowsPerFile;
-	}
 
 	DataManager* AdiosStMan::makeObject (const casa::String& aDataManType, const casa::Record& spec){
 		return new AdiosStMan();
@@ -116,37 +115,71 @@ namespace casa {
 
 	void AdiosStMan::addRow (uInt aNrRows){
 
-		itsNrRows += aNrRows;
 
+	}
 
+	void AdiosStMan::adiosOpen(){
+		if(!isAdiosOpened){
 
-		for (int i=0; i<ncolumn(); i++){
-			itsColumnPtrBlk[i]->initAdiosWrite(aNrRows);
+			string itsFileName;
+			int itsFileNameLen;
+
+			if(mpiRank == 0){
+				itsFileName = fileName();
+				itsFileNameLen = itsFileName.length();
+			}
+
+			// broadcast the length of the filename string for allocating 
+			// memory on slave ranks
+			MPI_Bcast(&itsFileNameLen, 1, MPI_INT, 0, itsMpiComm);
+
+			cout << "rank = " << mpiRank << ", length = "<<itsFileNameLen<<endl;
+
+			char *itsFileNameChar = new char [itsFileNameLen + 1];
+			sprintf(itsFileNameChar, itsFileName.c_str());
+
+			// broadcast the filename string from the master to slaves.
+			MPI_Bcast(itsFileNameChar, itsFileNameLen + 1, MPI_CHAR, 0, itsMpiComm);
+
+			cout << "rank = " << mpiRank << ", fileName = "<<itsFileNameChar<<endl;
+
+			adios_open(&itsAdiosFile, "casatable", itsFileNameChar, "w", itsMpiComm);
+
+			delete [] itsFileNameChar;
+
+			adios_group_size(itsAdiosFile, itsAdiosGroupsize, &itsAdiosTotalsize);
+
+			isAdiosOpened = true;
 		}
-
 	}
 
 	void AdiosStMan::create (uInt aNrRows)
 	{
+		itsNrRows = aNrRows;
 
-
-		adios_init_noxml(MPI_COMM_WORLD);
+		adios_init_noxml(itsMpiComm);
 
 		adios_declare_group(&itsAdiosGroup, "casatable", "", adios_flag_no);
 		adios_select_method(itsAdiosGroup, "POSIX", "", "");
 
 		itsAdiosGroupsize = 0;
 
-		addRow(aNrRows);
+		uInt NrCols = ncolumn();
+		MPI_Bcast(&NrCols, 1, MPI_UNSIGNED, 0, itsMpiComm);
 
-		for (int i=0; i<ncolumn(); i++){
+		for (uInt i=0; i<NrCols; i++){
+			cout << "initAdiosWrite from AdiosStMan::create, rank = " << mpiRank << endl;
+			itsColumnPtrBlk[i]->initAdiosWrite(aNrRows);
+		}
+
+		for (uInt i=0; i<NrCols; i++){
 			// if scalar column
 			if (itsColumnPtrBlk[i]->getShapeColumn().nelements() == 0){   
-				itsAdiosGroupsize = itsAdiosGroupsize + itsNrRowsPerFile * itsColumnPtrBlk[i]->getDataTypeSize();
+				itsAdiosGroupsize = itsAdiosGroupsize + aNrRows * itsColumnPtrBlk[i]->getDataTypeSize();
 			}
 			// if array column
 			else{
-				itsAdiosGroupsize = itsAdiosGroupsize + itsNrRowsPerFile * itsColumnPtrBlk[i]->getDataTypeSize() * itsColumnPtrBlk[i]->getShapeColumn().product();
+				itsAdiosGroupsize = itsAdiosGroupsize + aNrRows * itsColumnPtrBlk[i]->getDataTypeSize() * itsColumnPtrBlk[i]->getShapeColumn().product();
 			}
 		}
 
@@ -154,19 +187,26 @@ namespace casa {
 		if(itsAdiosBufsize < 100) itsAdiosBufsize = 100;
 		adios_allocate_buffer(ADIOS_BUFFER_ALLOC_NOW, itsAdiosBufsize);
 
-		adios_open(&itsAdiosFile, "casatable", fileName().c_str(), "w", MPI_COMM_WORLD);
-
-		adios_group_size(itsAdiosFile, itsAdiosGroupsize, &itsAdiosTotalsize);
-
 	} // end of void AdiosStMan::create (uInt aNrRows)
 
-	void AdiosStMan::open (uInt aRowNr, AipsIO& ios){
+	void AdiosStMan::open (uInt aNrRows, AipsIO& ios){
+
+		itsNrRows = aNrRows;
+
 		adios_read_init_method (ADIOS_READ_METHOD_BP, MPI_COMM_WORLD, "verbose=3");
 		itsAdiosReadFile = adios_read_open (fileName().c_str(), ADIOS_READ_METHOD_BP, MPI_COMM_WORLD, ADIOS_LOCKMODE_NONE, 0);
 
-		for (int i=0; i<ncolumn(); i++){
-			itsColumnPtrBlk[i]->initAdiosRead();
+		if(itsAdiosReadFile){
+			for (int i=0; i<ncolumn(); i++){
+				itsColumnPtrBlk[i]->initAdiosRead();
+			}
 		}
+		else{
+			cout << "AdiosStMan : Couldn't find ADIOS file. Creating new file." << endl;
+			create(aNrRows);
+		}
+
+
 	}
 
 	void AdiosStMan::deleteManager(){

@@ -149,17 +149,12 @@ namespace casa{
 		for(int j=0; j<aNrRows; j++){
 			// if not allocated
 			if(itsAdiosWriteIDs == 0){
-				itsNrIDsAllocated = itsStManPtr->getNrRowsPerFile();
+				itsNrIDsAllocated = aNrRows;
 				itsAdiosWriteIDs = (int64_t*) malloc(sizeof(int64_t) * itsNrIDsAllocated);
-			}
-			// resize 
-			if(itsNrIDs == itsNrIDsAllocated){
-				itsNrIDsAllocated += itsStManPtr->getNrRowsPerFile();
-				itsAdiosWriteIDs = (int64_t*) realloc(itsAdiosWriteIDs, sizeof(int64_t) * itsNrIDsAllocated);
 			}
 
 			stringstream NrRows, RowID;
-			NrRows << itsStManPtr->getNrRowsPerFile();
+			NrRows << aNrRows;
 			RowID << itsNrIDs;
 
 			if (itsShape.nelements() == 0){   
@@ -183,6 +178,7 @@ namespace casa{
 	void AdiosStManColumn::putArrayBoolV (uInt rownr, const Array<Bool>* dataPtr){
 		Bool deleteIt;
 		const Bool* data = dataPtr->getStorage (deleteIt);
+		itsStManPtr->adiosOpen();
 		adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , (void*)data);
 		dataPtr->freeStorage (data, deleteIt);
 	}
@@ -190,6 +186,7 @@ namespace casa{
 	void AdiosStManColumn::putArrayuCharV (uInt rownr, const Array<uChar>* dataPtr){
 		Bool deleteIt;
 		const uChar* data = dataPtr->getStorage (deleteIt);
+		itsStManPtr->adiosOpen();
 		adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , (void*)data);
 		dataPtr->freeStorage (data, deleteIt);
 	}
@@ -197,6 +194,7 @@ namespace casa{
 	void AdiosStManColumn::putArrayShortV (uInt rownr, const Array<Short>* dataPtr){
 		Bool deleteIt;
 		const Short* data = dataPtr->getStorage (deleteIt);
+		itsStManPtr->adiosOpen();
 		adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , (void*)data);
 		dataPtr->freeStorage (data, deleteIt);
 	}
@@ -204,6 +202,7 @@ namespace casa{
 	void AdiosStManColumn::putArrayuShortV (uInt rownr, const Array<uShort>* dataPtr){
 		Bool deleteIt;
 		const uShort* data = dataPtr->getStorage (deleteIt);
+		itsStManPtr->adiosOpen();
 		adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , (void*)data);
 		dataPtr->freeStorage (data, deleteIt);
 	}
@@ -211,6 +210,7 @@ namespace casa{
 	void AdiosStManColumn::putArrayIntV (uInt rownr, const Array<Int>* dataPtr){
 		Bool deleteIt;
 		const Int* data = dataPtr->getStorage (deleteIt);
+		itsStManPtr->adiosOpen();
 		adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , (void*)data);
 		dataPtr->freeStorage (data, deleteIt);
 	}
@@ -218,13 +218,16 @@ namespace casa{
 	void AdiosStManColumn::putArrayuIntV (uInt rownr, const Array<uInt>* dataPtr){
 		Bool deleteIt;
 		const uInt* data = dataPtr->getStorage (deleteIt);
+		itsStManPtr->adiosOpen();
 		adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , (void*)data);
 		dataPtr->freeStorage (data, deleteIt);
 	}
 
 	void AdiosStManColumn::putArrayfloatV (uInt rownr, const Array<Float>* dataPtr){
+		cout <<"putArrayfloatV"<<endl;
 		Bool deleteIt;
 		const Float* data = dataPtr->getStorage (deleteIt);
+		itsStManPtr->adiosOpen();
 		adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , (void*)data);
 		dataPtr->freeStorage (data, deleteIt);
 	}
@@ -232,6 +235,7 @@ namespace casa{
 	void AdiosStManColumn::putArraydoubleV (uInt rownr, const Array<Double>* dataPtr){
 		Bool deleteIt;
 		const Double* data = dataPtr->getStorage (deleteIt);
+		itsStManPtr->adiosOpen();
 		adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , (void*)data);
 		dataPtr->freeStorage (data, deleteIt);
 	}
@@ -239,6 +243,7 @@ namespace casa{
 	void AdiosStManColumn::putArrayComplexV (uInt rownr, const Array<Complex>* dataPtr){
 		Bool deleteIt;
 		const Complex* data = dataPtr->getStorage (deleteIt);
+		itsStManPtr->adiosOpen();
 		adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , (void*)data);
 		dataPtr->freeStorage (data, deleteIt);
 	}
@@ -246,6 +251,7 @@ namespace casa{
 	void AdiosStManColumn::putArrayDComplexV (uInt rownr, const Array<DComplex>* dataPtr){
 		Bool deleteIt;
 		const DComplex* data = dataPtr->getStorage (deleteIt);
+		itsStManPtr->adiosOpen();
 		adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , (void*)data);
 		dataPtr->freeStorage (data, deleteIt);
 	}
@@ -260,48 +266,54 @@ namespace casa{
 
 	// ------------ scalar puts -----------------//
 	void AdiosStManColumn::putBoolV (uInt rownr, const Bool* dataPtr){
-		adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , (void*)dataPtr);
+		putGeneralV(rownr, dataPtr);
 	}
 
 	void AdiosStManColumn::putuCharV (uInt rownr, const uChar* dataPtr){
-		adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , (void*)dataPtr);
+		putGeneralV(rownr, dataPtr);
 	}
 
 	void AdiosStManColumn::putShortV (uInt rownr, const Short* dataPtr){
-		adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , (void*)dataPtr);
+		putGeneralV(rownr, dataPtr);
 	}
 
 	void AdiosStManColumn::putuShortV (uInt rownr, const uShort* dataPtr){
-		adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , (void*)dataPtr);
+		putGeneralV(rownr, dataPtr);
 	}
 
 	void AdiosStManColumn::putIntV (uInt rownr, const Int* dataPtr){
-		adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , (void*)dataPtr);
+		putGeneralV(rownr, dataPtr);
 	}
 
 	void AdiosStManColumn::putuIntV (uInt rownr, const uInt* dataPtr){
-		adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , (void*)dataPtr);
+		putGeneralV(rownr, dataPtr);
 	}
 
 	void AdiosStManColumn::putfloatV (uInt rownr, const float* dataPtr){
-		adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , (void*)dataPtr);
+		putGeneralV(rownr, dataPtr);
 	}
 
 	void AdiosStManColumn::putdoubleV (uInt rownr, const double* dataPtr){
-		adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , (void*)dataPtr);
+		putGeneralV(rownr, dataPtr);
 	}
 
 	void AdiosStManColumn::putComplexV (uInt rownr, const Complex* dataPtr){
-		adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , (void*)dataPtr);
+		putGeneralV(rownr, dataPtr);
 	}
 
 	void AdiosStManColumn::putDComplexV (uInt rownr, const DComplex* dataPtr){
-		adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , (void*)dataPtr);
+		putGeneralV(rownr, dataPtr);
 	}
 
 	void AdiosStManColumn::putStringV (uInt rownr, const String* dataPtr){
 		cout << "AdiosStManColumn Error: Sorry, AdiosStMan does not support string type at the moment!" << endl;
 	}
+
+	void AdiosStManColumn::putGeneralV (uInt rownr, const void* dataPtr){
+		itsStManPtr->adiosOpen();
+		adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , (void*)dataPtr);
+	}
+
 	// ------------ scalar puts -----------------//
 
 
@@ -384,22 +396,23 @@ namespace casa{
 
 	void AdiosStManColumn::getArrayGeneralV (uInt aRowNr, void* data){
 
-		readStart[0] = aRowNr;
-		readCount[0] = 1;
+		if(itsStManPtr->getAdiosReadFile()){
+			readStart[0] = aRowNr;
+			readCount[0] = 1;
 
-		for (int i=1; i<=itsShape.size(); i++){
-			readStart[i] = 0;
-			readCount[i] = itsShape(i-1);
+			for (int i=1; i<=itsShape.size(); i++){
+				readStart[i] = 0;
+				readCount[i] = itsShape(i-1);
+			}
+
+			ADIOS_SELECTION *sel = adios_selection_boundingbox (itsAdiosVarInfo->ndim, readStart, readCount);
+			adios_schedule_read (itsStManPtr->getAdiosReadFile(), sel, itsColumnName.c_str(), 0, 1, data);
+			adios_perform_reads (itsStManPtr->getAdiosReadFile(), 1);
 		}
-
-		ADIOS_SELECTION *sel = adios_selection_boundingbox (itsAdiosVarInfo->ndim, readStart, readCount);
-		adios_schedule_read (itsStManPtr->getAdiosReadFile(), sel, itsColumnName.c_str(), 0, 1, data);
-		adios_perform_reads (itsStManPtr->getAdiosReadFile(), 1);
-
+		else{
+			cout << "AdiosStManColumn Error: AdiosStMan is working in write mode!" << endl;
+		}
 	}
-
-
-
 
 	//////////
 
@@ -434,17 +447,21 @@ namespace casa{
 		getGeneralV(aRowNr, aValue);
 	}
 	void AdiosStManColumn::getStringV (uInt aRowNr, String* aValue){
-		cout << "AdiosStManColumn Error: Sorry, AdiosStMan does not support string type at the moment!" << endl;
+		cout << "AdiosStManColumn Error: Sorry, AdiosStMan does not support string type at this point!" << endl;
 	}
 
-	
 	void AdiosStManColumn::getGeneralV (uInt aRowNr, void* aValue){
-		uint64_t rowid = aRowNr;
-		ADIOS_SELECTION *sel = adios_selection_points (itsAdiosVarInfo->ndim, 1, &rowid);
-		adios_schedule_read (itsStManPtr->getAdiosReadFile(), sel, itsColumnName.c_str(), 0, 1, aValue);
-		adios_perform_reads (itsStManPtr->getAdiosReadFile(), 1);
+		if(itsStManPtr->getAdiosReadFile()){
+			uint64_t rowid = aRowNr;
+			ADIOS_SELECTION *sel = adios_selection_points (itsAdiosVarInfo->ndim, 1, &rowid);
+			adios_schedule_read (itsStManPtr->getAdiosReadFile(), sel, itsColumnName.c_str(), 0, 1, aValue);
+			adios_perform_reads (itsStManPtr->getAdiosReadFile(), 1);
+		}
+		else{
+			cout << "AdiosStManColumn Error: AdiosStMan is working in write mode!" << endl;
+		}
 	}
-	
+
 }
 
 

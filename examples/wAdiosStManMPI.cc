@@ -4,6 +4,7 @@
 
 // headers for storage manager
 #include "../AdiosStMan.h"
+#include "../AdiosStManColumn.h"
 
 // headers for scalar column
 #include <tables/Tables/ScaColDesc.h>
@@ -17,49 +18,35 @@
 #include <casa/namespace.h>
 
 IPosition data_pos = IPosition(3,120,120,10);
+
 int NrRows = 10;
 
 string filename = "v.casa";
-
-Table *casa_table;
 
 int mpiRank, mpiSize;
 
 
 
+void write_table_master(){
 
-void create_table(){
-
-	// define a storage manager
 	AdiosStMan stman;
+
+	ScalarColumn<uInt> *index_col;
 
 	// define a table description & add a scalar column and an array column
 	TableDesc td("", "1", TableDesc::Scratch);
-	td.addColumn (ScalarColumnDesc<int>("index"));
-	td.addColumn (ArrayColumnDesc<float>("data", data_pos, ColumnDesc::Direct));
+	td.addColumn (ScalarColumnDesc<uInt>("index"));
+//	td.addColumn (ArrayColumnDesc<float>("data", data_pos, ColumnDesc::Direct));
 
 	// create a table instance, bind it to the storage manager & allocate rows
 	SetupNewTable newtab(filename, td, Table::New);
 	newtab.bindAll(stman);
-	casa_table = new Table(newtab, NrRows);
-
-}
-
-void join_table(){
-
-	casa_table = new Table(filename);    
-	uInt nrrow = casa_table->nrow();
-
-	ScalarColumn<int> index_col(*casa_table, "index");
-	ArrayColumn<float> data_col(*casa_table, "data");
-
-}
-
-void put_data(){
+	Table casa_table(newtab, NrRows);
 
 	// define column objects and link them to the table
-	ScalarColumn<int> index_col(*casa_table, "index");
-	ArrayColumn<float> data_col(*casa_table, "data");
+	index_col = new ScalarColumn<uInt>(casa_table, "index");
+//	ArrayColumn<float> data_col(casa_table, "data");
+
 
 	// define data arrays that actually hold the data
 	Array<float> data_arr(data_pos);
@@ -68,15 +55,35 @@ void put_data(){
 	indgen (data_arr);
 
 	// write data into the column objects
-	for (uInt i=0; i<NrRows; i++) {
-		index_col.put (i, i);
-		data_col.put(i, data_arr);
+	if(mpiRank == 0){
+		for (uInt i=mpiRank; i<NrRows; i+=mpiSize) {
+			index_col->put (i, i);
+//			data_col.put(i, data_arr);
+		}
 	}
+
+	delete index_col;
 
 }
 
-void close_table(){
-	delete casa_table;
+void write_table_slave(){
+
+	AdiosStMan stman;
+
+	DataManagerColumn *index_col;
+
+	uInt *a;
+//	index_col_slave = new AdiosStManColumn(&stman, whatType(a), 0);
+	index_col = stman.makeScalarColumn("index", whatType(a), "");
+
+	stman.create(NrRows);
+
+	for (uInt i=mpiRank; i<NrRows; i+=mpiSize*2) {
+		index_col->put (i, &i);
+//		data_col.put(i, data_arr);
+	}
+
+	delete index_col;
 }
 
 int main (){
@@ -85,23 +92,10 @@ int main (){
 	MPI_Comm_rank(MPI_COMM_WORLD, &mpiRank);
 	MPI_Comm_size(MPI_COMM_WORLD, &mpiSize);
 
-	
-	if(mpiRank == 0){
-		cout << "from master rank = " << mpiRank << endl;
-		create_table();
-		put_data();
-		close_table();
-	}
-
-//	MPI_Barrier(MPI_COMM_WORLD);
-
-	
-	if(mpiRank != 0){
-		cout << "from slave rank = " << mpiRank << endl;
-		join_table();
-	}
-	
-
+	if(mpiRank == 0)
+		write_table_master();
+	else
+		write_table_slave();
 
 	MPI_Finalize();
 

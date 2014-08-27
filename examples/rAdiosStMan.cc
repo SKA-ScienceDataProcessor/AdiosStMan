@@ -31,9 +31,7 @@ int main (){
 
 	for (int i=0; i<data_arr.nelements(); i++){
 		cout << data_vec[i] << "  ";
-		if ((i+1) % (data_arr.shape())(0) == 0)
-			cout << endl;
-
+		if ((i+1) % (data_arr.shape())(0) == 0)	cout << endl;
 	}
 
 	return 0;

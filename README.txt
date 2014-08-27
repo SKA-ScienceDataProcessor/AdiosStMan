@@ -8,6 +8,9 @@ This project is to implement a CASA storage manager using ADIOS (Adaptive IO Sys
 ============================================
 
 Version History:
+v0.3 - AdiosStMan is now able to write a single table from multiple MPI processes in parallel
+=====================
+=====================
 v0.2.3 - Added addRow function
 ---------------------
 v0.2.2 - Modified filename of dynamic library for automatic registration on case sensitive systems
