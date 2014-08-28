@@ -87,7 +87,7 @@ int main (int argc, char** argv){
 	MPI_Comm_size(MPI_COMM_WORLD, &mpiSize);
 
 	if(argc < 5){
-		cout << "./bench (int)nrRows (int)arrayX (int)arrayY (string)filename" << endl;
+		cout << "./parallel_array_write (int)nrRows (int)arrayX (int)arrayY (string)filename" << endl;
 		exit(1);
 	}
 
@@ -110,7 +110,6 @@ int main (int argc, char** argv){
 	MPI_Barrier(MPI_COMM_WORLD);
 	tictak_add((char*)"end",0);
 
-//	cout << "rank = " << mpiRank << ",  " << tictak_total(0) << endl;
 	if(mpiRank == 0){
 
 		float Seconds = tictak_total(0);
@@ -120,13 +119,15 @@ int main (int argc, char** argv){
 
 		cout << "Mps," << Mps;
 		cout << ",Seconds," << Seconds;
+		cout << ",TableSize," << TableSize;
 		cout << ",NrRows," << NrRows;
-		cout << ",CellSize," <<CellSize;
-		cout << ",Xlength," <<atoi(argv[2]); 
-		cout << ",Ylength," <<atoi(argv[3]);
+		cout << ",CellSize," << CellSize;
+		cout << ",MpiSize," << mpiSize;
+		cout << ",Nodes," << mpiSize / 12;
+		cout << ",Xlength," << atoi(argv[2]); 
+		cout << ",Ylength," << atoi(argv[3]);
 		cout << endl;
 	}
-
 
 	MPI_Finalize();
 
