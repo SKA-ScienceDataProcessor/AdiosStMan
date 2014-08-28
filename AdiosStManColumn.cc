@@ -145,6 +145,9 @@ namespace casa{
 
 
 	void AdiosStManColumn::initAdiosWrite(uInt aNrRows){
+		int mpiRank;
+		MPI_Comm_rank(MPI_COMM_WORLD, &mpiRank);  
+
 
 		for(int j=0; j<aNrRows; j++){
 			// if not allocated
@@ -157,10 +160,13 @@ namespace casa{
 			NrRows << aNrRows;
 			RowID << itsNrIDs;
 
+
 			if (itsShape.nelements() == 0){   
+				
 				itsAdiosWriteIDs[itsNrIDs] = adios_define_var(itsStManPtr->getAdiosGroup(), itsColumnName.c_str(), "", itsAdiosDataType, "1", NrRows.str().c_str(), RowID.str().c_str() ); ////
 			}
 			else{
+
 				string columnShape = itsShape.toString().substr(1, itsShape.toString().length()-2);
 				string dimensions = "1," + columnShape;
 				string global_dimensions = NrRows.str() + "," + columnShape;
@@ -174,91 +180,153 @@ namespace casa{
 		}
 	}
 
+	void AdiosStManColumn::put (uInt rownr, const Bool dataPtr){
+		putBoolV(rownr, &dataPtr);
+	}
+	void AdiosStManColumn::put (uInt rownr, const uChar dataPtr){
+		putuCharV(rownr, &dataPtr);
+	}
+	void AdiosStManColumn::put (uInt rownr, const Short dataPtr){
+		putShortV(rownr, &dataPtr);
+	}
+	void AdiosStManColumn::put (uInt rownr, const uShort dataPtr){
+		putuShortV(rownr, &dataPtr);
+	}
+	void AdiosStManColumn::put (uInt rownr, const Int dataPtr){
+		putIntV(rownr, &dataPtr);
+	}
+	void AdiosStManColumn::put (uInt rownr, const uInt dataPtr){
+		putuIntV(rownr, &dataPtr);
+	}
+	void AdiosStManColumn::put (uInt rownr, const Float dataPtr){
+		putfloatV(rownr, &dataPtr);
+	}
+	void AdiosStManColumn::put (uInt rownr, const Double dataPtr){
+		putdoubleV(rownr, &dataPtr);
+	}
+	void AdiosStManColumn::put (uInt rownr, const Complex dataPtr){
+		putComplexV(rownr, &dataPtr);
+	}
+	void AdiosStManColumn::put (uInt rownr, const DComplex dataPtr){
+		putDComplexV(rownr, &dataPtr);
+	}
+	void AdiosStManColumn::put (uInt rownr, const String dataPtr){
+		putStringV(rownr, &dataPtr);
+	}
+
+
+	void AdiosStManColumn::put (uInt rownr, const Array<Bool>* dataPtr){
+		putArrayBoolV(rownr, dataPtr);
+	}
+	void AdiosStManColumn::put (uInt rownr, const Array<uChar>* dataPtr){
+		putArrayuCharV(rownr, dataPtr);
+	}
+	void AdiosStManColumn::put (uInt rownr, const Array<Short>* dataPtr){
+		putArrayShortV(rownr, dataPtr);
+	}
+	void AdiosStManColumn::put (uInt rownr, const Array<uShort>* dataPtr){
+		putArrayuShortV(rownr, dataPtr);
+	}
+	void AdiosStManColumn::put (uInt rownr, const Array<Int>* dataPtr){
+		putArrayIntV(rownr, dataPtr);
+	}
+	void AdiosStManColumn::put (uInt rownr, const Array<uInt>* dataPtr){
+		putArrayuIntV(rownr, dataPtr);
+	}
+	void AdiosStManColumn::put (uInt rownr, const Array<Float>* dataPtr){
+		putArrayfloatV(rownr, dataPtr);
+	}
+	void AdiosStManColumn::put (uInt rownr, const Array<Double>* dataPtr){
+		putArraydoubleV(rownr, dataPtr);
+	}
+	void AdiosStManColumn::put (uInt rownr, const Array<Complex>* dataPtr){
+		putArrayComplexV(rownr, dataPtr);
+	}
+	void AdiosStManColumn::put (uInt rownr, const Array<DComplex>* dataPtr){
+		putArrayDComplexV(rownr, dataPtr);
+	}
+	void AdiosStManColumn::put (uInt rownr, const Array<String>* dataPtr){
+		putArrayStringV(rownr, dataPtr);
+	}
+
+
+
+
 	// ------------ array puts -----------------//
 	void AdiosStManColumn::putArrayBoolV (uInt rownr, const Array<Bool>* dataPtr){
 		Bool deleteIt;
 		const Bool* data = dataPtr->getStorage (deleteIt);
-		itsStManPtr->adiosOpen();
-		adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , (void*)data);
+		putGeneralV(rownr, data);
 		dataPtr->freeStorage (data, deleteIt);
 	}
 
 	void AdiosStManColumn::putArrayuCharV (uInt rownr, const Array<uChar>* dataPtr){
 		Bool deleteIt;
 		const uChar* data = dataPtr->getStorage (deleteIt);
-		itsStManPtr->adiosOpen();
-		adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , (void*)data);
+		putGeneralV(rownr, data);
 		dataPtr->freeStorage (data, deleteIt);
 	}
 
 	void AdiosStManColumn::putArrayShortV (uInt rownr, const Array<Short>* dataPtr){
 		Bool deleteIt;
 		const Short* data = dataPtr->getStorage (deleteIt);
-		itsStManPtr->adiosOpen();
-		adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , (void*)data);
+		putGeneralV(rownr, data);
 		dataPtr->freeStorage (data, deleteIt);
 	}
 
 	void AdiosStManColumn::putArrayuShortV (uInt rownr, const Array<uShort>* dataPtr){
 		Bool deleteIt;
 		const uShort* data = dataPtr->getStorage (deleteIt);
-		itsStManPtr->adiosOpen();
-		adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , (void*)data);
+		putGeneralV(rownr, data);
 		dataPtr->freeStorage (data, deleteIt);
 	}
 
 	void AdiosStManColumn::putArrayIntV (uInt rownr, const Array<Int>* dataPtr){
 		Bool deleteIt;
 		const Int* data = dataPtr->getStorage (deleteIt);
-		itsStManPtr->adiosOpen();
-		adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , (void*)data);
+		putGeneralV(rownr, data);
 		dataPtr->freeStorage (data, deleteIt);
 	}
 
 	void AdiosStManColumn::putArrayuIntV (uInt rownr, const Array<uInt>* dataPtr){
 		Bool deleteIt;
 		const uInt* data = dataPtr->getStorage (deleteIt);
-		itsStManPtr->adiosOpen();
-		adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , (void*)data);
+		putGeneralV(rownr, data);
 		dataPtr->freeStorage (data, deleteIt);
 	}
 
 	void AdiosStManColumn::putArrayfloatV (uInt rownr, const Array<Float>* dataPtr){
-		cout <<"putArrayfloatV"<<endl;
 		Bool deleteIt;
-		const Float* data = dataPtr->getStorage (deleteIt);
-		itsStManPtr->adiosOpen();
-		adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , (void*)data);
+		const float* data = dataPtr->getStorage (deleteIt);
+		putGeneralV(rownr, data);
 		dataPtr->freeStorage (data, deleteIt);
 	}
 
 	void AdiosStManColumn::putArraydoubleV (uInt rownr, const Array<Double>* dataPtr){
 		Bool deleteIt;
 		const Double* data = dataPtr->getStorage (deleteIt);
-		itsStManPtr->adiosOpen();
-		adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , (void*)data);
+		putGeneralV(rownr, data);
 		dataPtr->freeStorage (data, deleteIt);
 	}
 
 	void AdiosStManColumn::putArrayComplexV (uInt rownr, const Array<Complex>* dataPtr){
 		Bool deleteIt;
 		const Complex* data = dataPtr->getStorage (deleteIt);
-		itsStManPtr->adiosOpen();
-		adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , (void*)data);
+		putGeneralV(rownr, data);
 		dataPtr->freeStorage (data, deleteIt);
 	}
 
 	void AdiosStManColumn::putArrayDComplexV (uInt rownr, const Array<DComplex>* dataPtr){
 		Bool deleteIt;
 		const DComplex* data = dataPtr->getStorage (deleteIt);
-		itsStManPtr->adiosOpen();
-		adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , (void*)data);
+		putGeneralV(rownr, data);
 		dataPtr->freeStorage (data, deleteIt);
 	}
 
 	void AdiosStManColumn::putArrayStringV (uInt rownr, const Array<String>* dataPtr){
 		cout << "AdiosStManColumn Error: Sorry, AdiosStMan does not support string type at the moment!" << endl;
 	}
+
 
 
 	// ------------ array puts -----------------//

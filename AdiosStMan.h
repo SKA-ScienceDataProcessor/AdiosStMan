@@ -50,6 +50,13 @@ namespace casa {
 			virtual void open (uInt aRowNr, AipsIO&);
 			virtual void resync (uInt aRowNr);
 			virtual Bool flush (AipsIO&, Bool doFsync);
+
+			AdiosStManColumn* makeScalarColumnSlave (const String& aName,
+					int aDataType);
+			AdiosStManColumn* makeDirArrColumnSlave (const String& aName,
+					int aDataType);
+			AdiosStManColumn* makeIndArrColumnSlave (const String& aName,
+					int aDataType);
 			virtual DataManagerColumn* makeScalarColumn (const String& aName,
 					int aDataType,
 					const String& aDataTypeID);
@@ -93,6 +100,7 @@ namespace casa {
 			PtrBlock<AdiosStManColumn*> itsColumnPtrBlk;
 
 			uInt itsNrRows;
+			uInt itsNrColsSlave;
 			MPI_Comm itsMpiComm;
 
 

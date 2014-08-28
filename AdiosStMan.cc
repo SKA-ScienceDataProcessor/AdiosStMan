@@ -37,6 +37,7 @@ namespace casa {
 		itsNrAdiosFiles(0),
 		itsMpiComm(MPI_COMM_WORLD),
 		isAdiosOpened(false),
+		itsNrColsSlave(0),
 		isMpiInitInternal(false)
 	{
 		int isMpiInitialized;
@@ -57,6 +58,7 @@ namespace casa {
 		itsNrAdiosFiles(0),
 		itsMpiComm(MPI_COMM_WORLD),
 		isAdiosOpened(false),
+		itsNrColsSlave(0),
 		isMpiInitInternal(false)
 	{
 		MPI_Comm_rank(MPI_COMM_WORLD, &mpiRank);
@@ -133,15 +135,11 @@ namespace casa {
 			// memory on slave ranks
 			MPI_Bcast(&itsFileNameLen, 1, MPI_INT, 0, itsMpiComm);
 
-			cout << "rank = " << mpiRank << ", length = "<<itsFileNameLen<<endl;
-
 			char *itsFileNameChar = new char [itsFileNameLen + 1];
 			sprintf(itsFileNameChar, itsFileName.c_str());
 
 			// broadcast the filename string from the master to slaves.
 			MPI_Bcast(itsFileNameChar, itsFileNameLen + 1, MPI_CHAR, 0, itsMpiComm);
-
-			cout << "rank = " << mpiRank << ", fileName = "<<itsFileNameChar<<endl;
 
 			adios_open(&itsAdiosFile, "casatable", itsFileNameChar, "w", itsMpiComm);
 
@@ -164,13 +162,14 @@ namespace casa {
 
 		itsAdiosGroupsize = 0;
 
+
 		uInt NrCols = ncolumn();
 		MPI_Bcast(&NrCols, 1, MPI_UNSIGNED, 0, itsMpiComm);
 
 		for (uInt i=0; i<NrCols; i++){
-			cout << "initAdiosWrite from AdiosStMan::create, rank = " << mpiRank << endl;
 			itsColumnPtrBlk[i]->initAdiosWrite(aNrRows);
 		}
+
 
 		for (uInt i=0; i<NrCols; i++){
 			// if scalar column
@@ -186,6 +185,7 @@ namespace casa {
 		itsAdiosBufsize = itsAdiosGroupsize * 1.05 / 1000000;
 		if(itsAdiosBufsize < 100) itsAdiosBufsize = 100;
 		adios_allocate_buffer(ADIOS_BUFFER_ALLOC_NOW, itsAdiosBufsize);
+
 
 	} // end of void AdiosStMan::create (uInt aNrRows)
 
@@ -212,6 +212,28 @@ namespace casa {
 	void AdiosStMan::deleteManager(){
 	}
 
+	AdiosStManColumn* AdiosStMan::makeScalarColumnSlave (const String& name, int aDataType){
+		return makeDirArrColumnSlave(name, aDataType);
+	}
+
+	AdiosStManColumn* AdiosStMan::makeDirArrColumnSlave (const String& name, int aDataType){
+		if (itsNrColsSlave >= itsColumnPtrBlk.nelements()) {
+			itsColumnPtrBlk.resize (itsColumnPtrBlk.nelements() + 32);
+		}
+		AdiosStManColumn* aColumn = new AdiosStManColumn (this, aDataType, itsNrColsSlave);
+		aColumn->setColumnName(name);
+		itsColumnPtrBlk[itsNrColsSlave] = aColumn;
+		itsNrColsSlave++;
+		return aColumn;
+	}
+
+	AdiosStManColumn* AdiosStMan::makeIndArrColumnSlave (const String& name, int aDataType){
+		cout << "AdiosStMan warning: Support of indirect arrays is currently under development, and it may not behave as expected!" << endl;
+		return makeDirArrColumnSlave(name, aDataType);
+	}
+
+
+	
 	DataManagerColumn* AdiosStMan::makeScalarColumn (const String& name, int aDataType,	const String& dataTypeId){
 		return makeDirArrColumn(name, aDataType, dataTypeId);
 	}
@@ -230,6 +252,7 @@ namespace casa {
 		cout << "AdiosStMan warning: Support of indirect arrays is currently under development, and it may not behave as expected!" << endl;
 		return makeDirArrColumn(name, aDataType, dataTypeId);
 	}
+	
 
 	void AdiosStMan::resync (uInt aNrRows){
 	}
