@@ -8,6 +8,8 @@ This project is to implement a CASA storage manager using ADIOS (Adaptive IO Sys
 ============================================
 
 Version History:
+v0.3.2 - Minor changes on makefiles
+---------------------
 v0.3.1 - Fixed a problem of writing arrays in parallel
 ---------------------
 v0.3 - AdiosStMan is now able to write a single table from multiple MPI processes in parallel

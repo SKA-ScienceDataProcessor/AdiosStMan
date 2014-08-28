@@ -1,5 +1,5 @@
 #!/usr/bin/python
-#    runbench.py: Python script for benchmarking storage managers,
+#    serial_array_write.py: Python script for benchmarking storage managers,
 #	 collecting & plotting results
 #
 #    (c) University of Western Australia
@@ -128,8 +128,8 @@ for i in range(iters):   # loop for iterations
 
 				filename = '{0}_rows{1}_size{2}_iter{3}.casa'.format(n, r, s, i)
 				filepathname = filepath + filename
-#				cmdline = "mpirun -np 1 ./bench_serial_array {0} {1} {2} {3} {4}".format(r, s, s, n, filepathname)   # generate command line
-				cmdline = "mpirun -np 1 ../tools/ioprofiler-trace.sh -o {3}.log ./bench_serial_array {0} {1} {1} {2} {4}".format(r, s, n, filename, filepathname)   # generate command line
+#				cmdline = "mpirun -np 1 ./serial_array_write {0} {1} {2} {3} {4}".format(r, s, s, n, filepathname)   # generate command line
+				cmdline = "mpirun -np 1 ../tools/ioprofiler-trace.sh -o {3}.log ./serial_array_write {0} {1} {1} {2} {4}".format(r, s, n, filename, filepathname)   # generate command line
 				status, output = commands.getstatusoutput(cmdline)   # run command line and get output
 				outputlist = output.split('\n')   # to skip the error lines that ADIOS possibly printed out
 				output1 = outputlist[-1]

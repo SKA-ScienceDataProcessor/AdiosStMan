@@ -1,5 +1,5 @@
-//    tBench.cc: Benchmark code for comparing storage managers.
-//    This is supposed to be used together with runBench.py, 
+//    parallel_array_write.cc: Benchmark code for comparing storage managers.
+//    This is supposed to be used together with parallel_array_write.py, 
 //    which is a python code controlling the benchmark flow.
 //
 //    (c) University of Western Australia
@@ -31,9 +31,8 @@
 #include <tables/Tables/SetupNewTab.h>
 
 // headers for storage manager
-#include <tables/Tables/TiledShapeStMan.h>
-#include <tables/Tables/StandardStMan.h>
 #include "../AdiosStMan.h"
+#include "../AdiosStManColumn.h"
 
 // headers for scalar column
 #include <tables/Tables/ScaColDesc.h>
@@ -46,73 +45,94 @@
 // headers for casa namespaces
 #include <casa/namespace.h>
 
-#include "tictak.h"
-
 // shape of the array column
-IPosition *data_pos = 0;
+IPosition data_pos;
 
 // number of rows
-int nrRows = 0;
+int NrRows;
 
-void writetable(DataManager *stman, Array<float> *data_arr, string filename){
+string filename = "v.casa";
+
+int mpiRank, mpiSize;
+
+Array<Float> data_arr(data_pos);
+
+
+
+
+void write_table_master(){
+
+	AdiosStMan stman;
 
 	// define a table description & add a scalar column and an array column
 	TableDesc td("", "1", TableDesc::Scratch);
-//	td.addColumn (ScalarColumnDesc<int>("index"));
-	td.addColumn (ArrayColumnDesc<float>("data", *data_pos, ColumnDesc::Direct));
+	td.addColumn (ScalarColumnDesc<uInt>("index"));
+	td.addColumn (ArrayColumnDesc<Float>("data", data_pos, ColumnDesc::Direct));
 
 	// create a table instance, bind it to the storage manager & allocate rows
 	SetupNewTable newtab(filename, td, Table::New);
-	newtab.bindAll(*stman);
-	Table tab(newtab, nrRows);
+	newtab.bindAll(stman);
+	Table casa_table(newtab, NrRows);
 
 	// define column objects and link them to the table
-//	ScalarColumn<int> index_col (tab, "index");
-	ArrayColumn<float> data_col (tab, "data");
+	ScalarColumn<uInt> index_col(casa_table, "index");
+	ArrayColumn<Float> data_col(casa_table, "data");
 
 	// write data into the column objects
-	for (uInt i=0; i<nrRows; i++) {
-//		index_col.put (i, i);
-		data_col.put(i, *data_arr);
+	for (uInt i=mpiRank; i<NrRows; i+=mpiSize) {
+		index_col.put (i, i);
+		data_col.put (i, data_arr);
 	}
-}
-
-void bench(DataManager *stman, Array<float> *data_arr, string filename){
-
-	tictak_add((char*)filename.c_str(),0);
-	writetable(stman, data_arr, filename);
-	delete stman;
-	stman = 0;
-	tictak_add((char*)"end",0);
-	cout << tictak_total(0) << endl;
 
 }
 
-int main(int argc, char** argv){
+void write_table_slave(){
 
-	if(argc < 6){
-		cout << "./bench (int)nrRows (int)arrayX (int)arrayY (string)nameStMan" << endl;
+	AdiosStMan stman;
+
+	uInt i;
+
+	AdiosStManColumn *index_col = stman.makeScalarColumnSlave("index", whatType(&i));
+	AdiosStManColumn *data_col = stman.makeScalarColumnSlave("data", whatType(&data_arr));
+
+	data_col->setShapeColumn(data_pos);
+
+	stman.create(NrRows);
+
+	const Array<Float> *data_arr_con = &data_arr;
+
+	for (i=mpiRank; i<NrRows; i+=mpiSize) {
+		index_col->put (i, i);
+		data_col->put (i, data_arr_con);
+	}
+
+	delete index_col;
+	delete data_col;
+}
+
+
+int main (int argc, char **argv){
+
+	if(argc < 5){
+		cout << "./parallel_array_write (int)nrRows (int)arrayX (int)arrayY (string)filename" << endl;
 		exit(1);
 	}
 
-	nrRows = atoi(argv[1]);
-	data_pos = new IPosition(2, atoi(argv[2]), atoi(argv[3]));
+	MPI_Init(0,0);
+	MPI_Comm_rank(MPI_COMM_WORLD, &mpiRank);
+	MPI_Comm_size(MPI_COMM_WORLD, &mpiSize);
 
-	Array<float> data_arr(*data_pos);
+
+	// put some data in
 	indgen (data_arr);
-	
-	string nameStMan = argv[4];
-	string filename = argv[5];
-	DataManager *stman = 0;
 
-	if(nameStMan == "AdiosStMan")  stman = new AdiosStMan;
-	if(nameStMan == "StandardStMan")  stman = new StandardStMan;
-	if(nameStMan == "TiledShapeStMan")  stman = new TiledShapeStMan("data", IPosition(2, (*data_pos)[0] / 10, (*data_pos)[1] / 10));
+	if(mpiRank == 0)
+		write_table_master();
+	else
+		write_table_slave();
 
-	if(stman)  bench(stman, &data_arr, filename);
-	else cout << "invalid nameStMan" << endl;
+	MPI_Finalize();
 
-	if(data_pos) delete data_pos;
 	return 0;
 }
 

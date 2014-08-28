@@ -1,19 +1,22 @@
 CC = mpic++
 CCFLAGS = 
-LDFLAGS = -ladios -lcasa_tables -lcasa_casa -lhdf5 -lmxml -lz
+LDFLAGS = -ladios -lcasa_tables -lcasa_casa
+#STMANFILES = ../AdiosStMan.cc ../AdiosStManColumn.cc
+STMANFILES = libadiosstman.so
+TARGET = serial_array_write parallel_array_write
 
-STMANCCFILES = ../AdiosStMan.cc ../AdiosStManColumn.cc
+all: $(TARGET) cl
 
-TARGET = serial_array
+$(TARGET): $(TARGET:=.cc) $(STMANFILES)
+	$(CC) $@.cc -o $@ $(CCFLAGS) $(LDFLAGS) $(STMANFILES) 
 
-$(TARGET): $(TARGET).cc
-	$(CC) $(STMANCCFILES) $(TARGET).cc -o bench_$(TARGET) $(CFLAGS) $(LDFLAGS) 
-
-
-all: cl $(TARGET)
+${STMANFILES}:  
+	cd ..; make; mv *.so benchmark
 
 cl:
 	rm -rf *.casa *.png *.e* *.o* *.log
 
 clean:cl
-	rm -rf bench_* *.dSYM 
+	rm -rf $(TARGET) *.dSYM  *.so
+
+re: clean all
