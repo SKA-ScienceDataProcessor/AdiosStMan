@@ -42,17 +42,17 @@ namespace casa { //# NAMESPACE CASA - BEGIN
 			virtual void setShapeColumn (const IPosition& aShape);
 			virtual IPosition shape(uInt RowID);
 
-			void put (uInt rownr, const Array<Bool>* dataPtr);
-			void put (uInt rownr, const Array<uChar>* dataPtr);
-			void put (uInt rownr, const Array<Short>* dataPtr);
-			void put (uInt rownr, const Array<uShort>* dataPtr);
-			void put (uInt rownr, const Array<Int>* dataPtr);
-			void put (uInt rownr, const Array<uInt>* dataPtr);
-			void put (uInt rownr, const Array<Float>* dataPtr);
-			void put (uInt rownr, const Array<Double>* dataPtr);
-			void put (uInt rownr, const Array<Complex>* dataPtr);
-			void put (uInt rownr, const Array<DComplex>* dataPtr);
-			void put (uInt rownr, const Array<String>* dataPtr);
+			void put (uInt rownr, const Array<Bool> dataPtr);
+			void put (uInt rownr, const Array<uChar> dataPtr);
+			void put (uInt rownr, const Array<Short> dataPtr);
+			void put (uInt rownr, const Array<uShort> dataPtr);
+			void put (uInt rownr, const Array<Int> dataPtr);
+			void put (uInt rownr, const Array<uInt> dataPtr);
+			void put (uInt rownr, const Array<Float> dataPtr);
+			void put (uInt rownr, const Array<Double> dataPtr);
+			void put (uInt rownr, const Array<Complex> dataPtr);
+			void put (uInt rownr, const Array<DComplex> dataPtr);
+			void put (uInt rownr, const Array<String> dataPtr);
 
 			void put (uInt rownr, const Bool dataPtr);
 			void put (uInt rownr, const uChar dataPtr);

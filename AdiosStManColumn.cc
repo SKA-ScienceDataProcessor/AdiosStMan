@@ -215,38 +215,38 @@ namespace casa{
 	}
 
 
-	void AdiosStManColumn::put (uInt rownr, const Array<Bool>* dataPtr){
-		putArrayBoolV(rownr, dataPtr);
+	void AdiosStManColumn::put (uInt rownr, const Array<Bool> dataPtr){
+		putArrayBoolV(rownr, &dataPtr);
 	}
-	void AdiosStManColumn::put (uInt rownr, const Array<uChar>* dataPtr){
-		putArrayuCharV(rownr, dataPtr);
+	void AdiosStManColumn::put (uInt rownr, const Array<uChar> dataPtr){
+		putArrayuCharV(rownr, &dataPtr);
 	}
-	void AdiosStManColumn::put (uInt rownr, const Array<Short>* dataPtr){
-		putArrayShortV(rownr, dataPtr);
+	void AdiosStManColumn::put (uInt rownr, const Array<Short> dataPtr){
+		putArrayShortV(rownr, &dataPtr);
 	}
-	void AdiosStManColumn::put (uInt rownr, const Array<uShort>* dataPtr){
-		putArrayuShortV(rownr, dataPtr);
+	void AdiosStManColumn::put (uInt rownr, const Array<uShort> dataPtr){
+		putArrayuShortV(rownr, &dataPtr);
 	}
-	void AdiosStManColumn::put (uInt rownr, const Array<Int>* dataPtr){
-		putArrayIntV(rownr, dataPtr);
+	void AdiosStManColumn::put (uInt rownr, const Array<Int> dataPtr){
+		putArrayIntV(rownr, &dataPtr);
 	}
-	void AdiosStManColumn::put (uInt rownr, const Array<uInt>* dataPtr){
-		putArrayuIntV(rownr, dataPtr);
+	void AdiosStManColumn::put (uInt rownr, const Array<uInt> dataPtr){
+		putArrayuIntV(rownr, &dataPtr);
 	}
-	void AdiosStManColumn::put (uInt rownr, const Array<Float>* dataPtr){
-		putArrayfloatV(rownr, dataPtr);
+	void AdiosStManColumn::put (uInt rownr, const Array<Float> dataPtr){
+		putArrayfloatV(rownr, &dataPtr);
 	}
-	void AdiosStManColumn::put (uInt rownr, const Array<Double>* dataPtr){
-		putArraydoubleV(rownr, dataPtr);
+	void AdiosStManColumn::put (uInt rownr, const Array<Double> dataPtr){
+		putArraydoubleV(rownr, &dataPtr);
 	}
-	void AdiosStManColumn::put (uInt rownr, const Array<Complex>* dataPtr){
-		putArrayComplexV(rownr, dataPtr);
+	void AdiosStManColumn::put (uInt rownr, const Array<Complex> dataPtr){
+		putArrayComplexV(rownr, &dataPtr);
 	}
-	void AdiosStManColumn::put (uInt rownr, const Array<DComplex>* dataPtr){
-		putArrayDComplexV(rownr, dataPtr);
+	void AdiosStManColumn::put (uInt rownr, const Array<DComplex> dataPtr){
+		putArrayDComplexV(rownr, &dataPtr);
 	}
-	void AdiosStManColumn::put (uInt rownr, const Array<String>* dataPtr){
-		putArrayStringV(rownr, dataPtr);
+	void AdiosStManColumn::put (uInt rownr, const Array<String> dataPtr){
+		putArrayStringV(rownr, &dataPtr);
 	}
 
 

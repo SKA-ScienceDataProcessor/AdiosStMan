@@ -69,11 +69,9 @@ void write_table_slave(){
 
 	stman.create(NrRows);
 
-	const Array<Float> *data_arr_con = &data_arr;
-
 	for (i=mpiRank; i<NrRows; i+=mpiSize) {
 		index_col->put (i, i);
-		data_col->put (i, data_arr_con);
+		data_col->put (i, data_arr);
 	}
 
 	delete index_col;
