@@ -1,5 +1,5 @@
-//    wAdiosStManMPI.cc: example code for writing a casa table with AdiosStMan
-//    columns from multiple MPI processes in parallel
+//    wAdiosStManMPI2.cc: another example code for writing a casa table
+//    with AdiosStMan columns from multiple MPI processes in parallel
 //
 //    (c) University of Western Australia
 //    International Centre of Radio Astronomy Research
@@ -24,30 +24,13 @@
 //    jason.wang@icrar.org
 
 
-
-// ################################################################################
-// This code creates separate casa table files for each MPI process. 
-// In order to fool the casa table system as if different processes are 
-// dealing with independent casa tables so that one process won't lock
-// the table and/or prevent others from putting data in, only the master MPI process
-// creates casa table files in the intended place, while slave processes 
-// create table files with exactly the same contents in /tmp, which are supposed
-// to be cleaned up once the job is finished.
-//
-// However, the AdiosStMan objects associated with these casa tables are actually all
-// writing data into a single ADIOS container, which is in the same directory where
-// the master MPI process writes casa table files. Therefore, after job is finished,
-// these table files together with ADIOS files will contain all information that is
-// necessary to reproduce the casa table. 
-
-
-
 // headers for table creation 
 #include <tables/Tables/TableDesc.h>
 #include <tables/Tables/SetupNewTab.h>
 
 // headers for storage manager
 #include "../AdiosStMan.h"
+#include "../AdiosStManColumn.h"
 
 // headers for scalar column
 #include <tables/Tables/ScaColDesc.h>
@@ -60,15 +43,20 @@
 // headers for casa namespaces
 #include <casa/namespace.h>
 
-int NrRows = 10;
 IPosition data_pos = IPosition(2,6,5);
+
+int NrRows = 10;
+
 string filename = "v.casa";
 
 int mpiRank, mpiSize;
+
 Array<Float> data_arr(data_pos);
 
 
-void write_table(){
+
+
+void write_table_master(){
 
 	AdiosStMan stman;
 
@@ -86,12 +74,34 @@ void write_table(){
 	ScalarColumn<uInt> index_col(casa_table, "index");
 	ArrayColumn<Float> data_col(casa_table, "data");
 
-	// each mpi rank writes a subset of the data
+	// write data into the column objects
 	for (uInt i=mpiRank; i<NrRows; i+=mpiSize) {
 		index_col.put (i, i);
 		data_col.put (i, data_arr);
 	}
 
+}
+
+void write_table_slave(){
+
+	AdiosStMan stman;
+
+	uInt i;
+
+	AdiosStManColumn *index_col = stman.makeScalarColumnSlave("index", whatType(&i));
+	AdiosStManColumn *data_col = stman.makeScalarColumnSlave("data", whatType(&data_arr));
+
+	data_col->setShapeColumn(data_pos);
+
+	stman.create(NrRows);
+
+	for (i=mpiRank; i<NrRows; i+=mpiSize) {
+		index_col->put (i, i);
+		data_col->put (i, data_arr);
+	}
+
+	delete index_col;
+	delete data_col;
 }
 
 
@@ -101,19 +111,13 @@ int main (){
 	MPI_Comm_rank(MPI_COMM_WORLD, &mpiRank);
 	MPI_Comm_size(MPI_COMM_WORLD, &mpiSize);
 
-	// generate filenames for slave processes
-	// these files are not used later on, so just put them 
-	// into /tmp and clean them up when job is finished
-	if(mpiRank>0){
-		stringstream filename_s;
-		filename_s << "/tmp/v" << mpiRank << ".casa";
-		filename = filename_s.str();
-	}
-
-	// put some data into the data array
+	// put some data in
 	indgen (data_arr);
 
-	write_table();
+	if(mpiRank == 0)
+		write_table_master();
+	else
+		write_table_slave();
 
 	MPI_Finalize();
 

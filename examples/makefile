@@ -3,7 +3,7 @@ CCFLAGS = -g
 LDFLAGS = -lcasa_tables -lcasa_casa 
 #STMANFILES = ../AdiosStMan.cc ../AdiosStManColumn.cc
 STMANFILES = libadiosstman.so
-TARGET = wAdiosStMan rAdiosStMan wAdiosStManMPI
+TARGET = wAdiosStMan rAdiosStMan wAdiosStManMPI wAdiosStManMPI2
 
 all: ${TARGET} cl
 
