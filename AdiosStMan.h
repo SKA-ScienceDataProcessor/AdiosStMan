@@ -69,8 +69,8 @@ namespace casa {
 			virtual void deleteManager();
 			virtual void addRow (uInt aNrRows);
 
-			const int64_t getAdiosFile();
-			const int64_t getAdiosGroup();
+			int64_t getAdiosFile();
+			int64_t getAdiosGroup();
 			ADIOS_FILE* getAdiosReadFile();
 
 			static DataManager* makeObject (const casa::String& aDataManType,

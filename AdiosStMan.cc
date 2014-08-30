@@ -103,11 +103,11 @@ namespace casa {
 		return "AdiosStMan";
 	}
 
-	const int64_t AdiosStMan::getAdiosGroup(){ 
+	int64_t AdiosStMan::getAdiosGroup(){ 
 		return itsAdiosGroup;
 	}
 
-	const int64_t AdiosStMan::getAdiosFile(){ 
+	int64_t AdiosStMan::getAdiosFile(){ 
 		return itsAdiosFile;
 	}
 
@@ -258,6 +258,7 @@ namespace casa {
 	}
 
 	Bool AdiosStMan::flush (AipsIO& ios, Bool doFsync){
+		return true;
 	}
 
 	void register_adiosstman(){

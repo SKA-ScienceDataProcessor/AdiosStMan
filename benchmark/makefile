@@ -17,6 +17,6 @@ cl:
 	rm -rf *.casa *.png *.e* *.o* *.log
 
 clean:cl
-	rm -rf $(TARGET) *.dSYM  *.so
+	rm -rf $(TARGET) *.dSYM  *.so log
 
 re: clean all

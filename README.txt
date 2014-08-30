@@ -8,6 +8,8 @@ This project is to implement a CASA storage manager using ADIOS (Adaptive IO Sys
 ============================================
 
 Version History:
+v0.3.6 - Replaced the parallel benchmark code based on the new example code
+---------------------
 v0.3.5 - Added another example code for MPI parallel write
 ---------------------
 v0.3.4 - Added PBS script for extensive testing of parallel table write

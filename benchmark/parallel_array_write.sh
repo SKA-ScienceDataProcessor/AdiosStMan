@@ -5,9 +5,9 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PBS_O_WORKDIR
 SIZE="1000000000000"
 prefix=/scratch/partner766/jwang
 
-for rows in {200..4000..200}
+for rows in {200..400..200}
 do
-	for length in {200..4000..200}
+	for length in {200..400..200}
 	do
 
 		CHECK=$(du -sb $prefix | cut -f1)
