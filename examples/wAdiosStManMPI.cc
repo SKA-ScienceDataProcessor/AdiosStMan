@@ -60,9 +60,9 @@
 // headers for casa namespaces
 #include <casa/namespace.h>
 
-int NrRows = 10;
-IPosition data_pos = IPosition(2,6,5);
-string filename = "v.casa";
+int NrRows = 10000;
+IPosition data_pos = IPosition(2,500,600);
+string filename = "/tmp/v.casa";
 
 int mpiRank, mpiSize;
 Array<Float> data_arr(data_pos);

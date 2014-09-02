@@ -14,7 +14,7 @@
 #include <casa/namespace.h>
 
 Table *casa_table;
-String filename = "v.casa";
+String filename = "/tmp/v.casa";
 
 int main (){
 
