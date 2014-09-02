@@ -334,34 +334,58 @@ namespace casa{
 
 	// ------------ scalar puts -----------------//
 	void AdiosStManColumn::putBoolV (uInt rownr, const Bool* dataPtr){
+		if (*dataPtr==0){   
+			return;
+		}
 		putGeneralV(rownr, dataPtr);
 	}
 
 	void AdiosStManColumn::putuCharV (uInt rownr, const uChar* dataPtr){
+		if (*dataPtr==0){   
+			return;
+		}
 		putGeneralV(rownr, dataPtr);
 	}
 
 	void AdiosStManColumn::putShortV (uInt rownr, const Short* dataPtr){
+		if (*dataPtr==0){   
+			return;
+		}
 		putGeneralV(rownr, dataPtr);
 	}
 
 	void AdiosStManColumn::putuShortV (uInt rownr, const uShort* dataPtr){
+		if (*dataPtr==0){   
+			return;
+		}
 		putGeneralV(rownr, dataPtr);
 	}
 
 	void AdiosStManColumn::putIntV (uInt rownr, const Int* dataPtr){
+		if (*dataPtr==0){   
+			return;
+		}
 		putGeneralV(rownr, dataPtr);
 	}
 
 	void AdiosStManColumn::putuIntV (uInt rownr, const uInt* dataPtr){
+		if (*dataPtr==0){   
+			return;
+		}
 		putGeneralV(rownr, dataPtr);
 	}
 
 	void AdiosStManColumn::putfloatV (uInt rownr, const float* dataPtr){
+		if (*dataPtr==0){   
+			return;
+		}
 		putGeneralV(rownr, dataPtr);
 	}
 
 	void AdiosStManColumn::putdoubleV (uInt rownr, const double* dataPtr){
+		if (*dataPtr==0){   
+			return;
+		}
 		putGeneralV(rownr, dataPtr);
 	}
 

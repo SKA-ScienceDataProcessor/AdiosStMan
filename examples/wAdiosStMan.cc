@@ -21,6 +21,8 @@ IPosition data_pos = IPosition(2,6,5);
 
 int NrRows = 10;
 
+string filename = "/scratch/tmp/v.casa";
+
 int main (){
 
 	// define a storage manager
@@ -32,7 +34,7 @@ int main (){
 	td.addColumn (ArrayColumnDesc<float>("data", data_pos, ColumnDesc::Direct));
 
 	// create a table instance, bind it to the storage manager & allocate rows
-	SetupNewTable newtab("v.casa", td, Table::New);
+	SetupNewTable newtab(filename, td, Table::New);
 	newtab.bindAll(stman);
 	Table tab(newtab, NrRows);
 

@@ -8,6 +8,8 @@ This project is to implement a CASA storage manager using ADIOS (Adaptive IO Sys
 ============================================
 
 Version History:
+v0.3.8 - Added tools for converting MWA measurement sets using AdiosStMan
+---------------------
 v0.3.7 - Added python script for analysing parallel testing results
 ---------------------
 v0.3.6 - Replaced the parallel benchmark code based on the new example code
