@@ -1,4 +1,4 @@
-//    wAdiosStMan.cc: example code for writing a casa table using AdiosStMan
+//    rAdiosStManSlice.cc: example code for reading a casa table using AdiosStMan
 //
 //    (c) University of Western Australia
 //    International Centre of Radio Astronomy Research
@@ -28,9 +28,6 @@
 #include <tables/Tables/TableDesc.h>
 #include <tables/Tables/SetupNewTab.h>
 
-// headers for storage manager
-#include "../AdiosStMan.h"
-
 // headers for scalar column
 #include <tables/Tables/ScaColDesc.h>
 #include <tables/Tables/ScalarColumn.h>
@@ -42,42 +39,29 @@
 // headers for casa namespaces
 #include <casa/namespace.h>
 
-// define a dimension object for the array column
-IPosition data_pos = IPosition(2,6,5);
-
-int NrRows = 10;
-
-string filename = "/scratch/tmp/v.casa";
+Table *casa_table;
+String filename = "/scratch/tmp/v.casa";
 
 int main (){
 
-	// define a storage manager
-	AdiosStMan stman;
+	casa_table = new Table(filename);    
+	uInt nrrow = casa_table->nrow();
 
-	// define a table description & add a scalar column and an array column
-	TableDesc td("", "1", TableDesc::Scratch);
-	td.addColumn (ScalarColumnDesc<uInt>("index"));
-	td.addColumn (ArrayColumnDesc<float>("data", data_pos, ColumnDesc::Direct));
+	ROScalarColumn<uInt> index_col(*casa_table, "index");
+	ROArrayColumn<float> data_col(*casa_table, "data");
 
-	// create a table instance, bind it to the storage manager & allocate rows
-	SetupNewTable newtab(filename, td, Table::New);
-	newtab.bindAll(stman);
-	Table tab(newtab, NrRows);
+	IPosition start(2,0,0);
+	IPosition end(2,2,5);
+	Slicer sli(start, end);
 
-	// define column objects and link them to the table
-	ScalarColumn<uInt> index_col (tab, "index");
-	ArrayColumn<float> data_col (tab, "data");
+	Array<uInt> index_arr = index_col.getColumn();
+	Array<float> data_arr = data_col.getColumn(sli);
 
-	// define data arrays that actually hold the data
-	Array<float> data_arr(data_pos);
+	Vector<float> data_vec = data_arr.reform(IPosition(1,data_arr.nelements()));
 
-	// put some data in
-	indgen (data_arr);
-
-	// write data into the column objects
-	for (uInt i=0; i<NrRows; i++) {
-		index_col.put (i, i);
-		data_col.put(i, data_arr);
+	for (int i=0; i<data_arr.nelements(); i++){
+		cout << data_vec[i] << "  ";
+		if ((i+1) % (data_arr.shape())(0) == 0)	cout << endl;
 	}
 
 	return 0;

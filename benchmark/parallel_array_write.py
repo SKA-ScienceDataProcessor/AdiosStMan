@@ -71,7 +71,7 @@ def save_fig():
 	plt.ylim([0, 5000])
 	plt.xlabel('Number of Nodes (12 processes per node)')
 	plt.ylabel('Total throughput in MB/s (cache saturated)')
-	plt.figtext(.10, .94, "Parallel AdiosStMan (v0.3.6) testing, iVEC Fornax, Lustre Stripe Size = 1, \nSingle column with direct arrays, Array size = {0}MB, Table size = {0}MB * Rows".format(array_size))
+	plt.figtext(.10, .94, "Parallel AdiosStMan (v0.3.6) testing, iVEC Fornax, Lustre Stripe Size = 8, \nSingle column with direct arrays, Array size = {0}MB, Table size = {0}MB * Rows".format(array_size))
 	plt.savefig('fig1.png', dpi = 200)
 
 
@@ -87,7 +87,7 @@ def save_fig():
 	plt.ylim([0, 5000])
 	plt.xlabel('Number of Rows')
 	plt.ylabel('Total throughput in MB/s (cache saturated)')
-	plt.figtext(.10, .94, "Parallel AdiosStMan (v0.3.6) testing, iVEC Fornax, Lustre Stripe Size = 1, \nSingle column with direct arrays, Array size = {0}MB, Table size = {0}MB * Rows".format(array_size))
+	plt.figtext(.10, .94, "Parallel AdiosStMan (v0.3.6) testing, iVEC Fornax, Lustre Stripe Size = 8, \nSingle column with direct arrays, Array size = {0}MB, Table size = {0}MB * Rows".format(array_size))
 	plt.savefig('fig2.png', dpi = 200)
 
 #######  main

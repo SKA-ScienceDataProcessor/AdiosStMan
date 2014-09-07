@@ -334,7 +334,7 @@ namespace casa{
 
 	// ------------ scalar puts -----------------//
 	void AdiosStManColumn::putBoolV (uInt rownr, const Bool* dataPtr){
-		if (*dataPtr==0){   
+		if (*dataPtr==0){ 
 			return;
 		}
 		putGeneralV(rownr, dataPtr);
@@ -458,9 +458,7 @@ namespace casa{
 		aDataPtr->putStorage (data, deleteIt);
 	}
 
-
 	void AdiosStManColumn::getArraydoubleV (uInt aRowNr, Array<double>* aDataPtr){
-
 		Bool deleteIt;
 		double* data = aDataPtr->getStorage (deleteIt);
 		getArrayGeneralV(aRowNr, data);
@@ -485,26 +483,63 @@ namespace casa{
 		cout << "AdiosStManColumn Error: Sorry, AdiosStMan does not support string type at the moment!" << endl;
 	}
 
+	void AdiosStManColumn::getArrayGeneralV (uInt aRowNr, void* dataPtr){
+		Slicer ns(IPosition(itsShape.size(),0,0,0,0,0,0,0,0,0,0), itsShape);
+		getArrayGeneralV(aRowNr, ns, dataPtr);
+	}
 
-	void AdiosStManColumn::getArrayGeneralV (uInt aRowNr, void* data){
+	void AdiosStManColumn::getArrayGeneralV (uInt aRowNr, const Slicer& ns, void* dataPtr){
 
 		if(itsStManPtr->getAdiosReadFile()){
 			readStart[0] = aRowNr;
 			readCount[0] = 1;
 
 			for (int i=1; i<=itsShape.size(); i++){
-				readStart[i] = 0;
-				readCount[i] = itsShape(i-1);
+				readStart[i] = ns.start()(i-1);
+				readCount[i] = ns.length()(i-1);
 			}
 
 			ADIOS_SELECTION *sel = adios_selection_boundingbox (itsAdiosVarInfo->ndim, readStart, readCount);
-			adios_schedule_read (itsStManPtr->getAdiosReadFile(), sel, itsColumnName.c_str(), 0, 1, data);
+			adios_schedule_read (itsStManPtr->getAdiosReadFile(), sel, itsColumnName.c_str(), 0, 1, dataPtr);
 			adios_perform_reads (itsStManPtr->getAdiosReadFile(), 1);
 		}
+
 		else{
-			cout << "AdiosStManColumn Error: AdiosStMan is working in write mode!" << endl;
+			cout << "AdiosStManColumn Error: AdiosStMan is not working in read mode!" << endl;
 		}
 	}
+
+	void AdiosStManColumn::getColumnSliceCellsBoolV     (uInt aRowNr, const Slicer& ns, Array<Bool>* dataPtr){
+		getArrayGeneralV(aRowNr, ns, dataPtr);
+	}
+	void AdiosStManColumn::getColumnSliceCellsuCharV    (uInt aRowNr, const Slicer& ns, Array<uChar>* dataPtr){
+		getArrayGeneralV(aRowNr, ns, dataPtr);
+	}
+	void AdiosStManColumn::getColumnSliceCellsShortV    (uInt aRowNr, const Slicer& ns, Array<Short>* dataPtr){
+		getArrayGeneralV(aRowNr, ns, dataPtr);
+	}
+	void AdiosStManColumn::getColumnSliceCellsuShortV   (uInt aRowNr, const Slicer& ns, Array<uShort>* dataPtr){
+		getArrayGeneralV(aRowNr, ns, dataPtr);
+	}
+	void AdiosStManColumn::getColumnSliceCellsIntV      (uInt aRowNr, const Slicer& ns, Array<Int>* dataPtr){
+		getArrayGeneralV(aRowNr, ns, dataPtr);
+	}
+	void AdiosStManColumn::getColumnSliceCellsuIntV     (uInt aRowNr, const Slicer& ns, Array<uInt>* dataPtr){
+		getArrayGeneralV(aRowNr, ns, dataPtr);
+	}
+	void AdiosStManColumn::getSliceCellsfloatV          (uInt aRowNr, const Slicer& ns, Array<float>* dataPtr){
+		getArrayGeneralV(aRowNr, ns, dataPtr);
+	}
+	void AdiosStManColumn::getColumnSliceCellsdoubleV   (uInt aRowNr, const Slicer& ns, Array<double>* dataPtr){
+		getArrayGeneralV(aRowNr, ns, dataPtr);
+	}
+	void AdiosStManColumn::getColumnSliceCellsComplexV  (uInt aRowNr, const Slicer& ns, Array<Complex>* dataPtr){
+		getArrayGeneralV(aRowNr, ns, dataPtr);
+	}
+	void AdiosStManColumn::getColumnSliceCellsDComplexV (uInt aRowNr, const Slicer& ns, Array<DComplex>* dataPtr){
+		getArrayGeneralV(aRowNr, ns, dataPtr);
+	}
+
 
 	//////////
 
@@ -554,8 +589,7 @@ namespace casa{
 		}
 	}
 
+
+
 }
-
-
-
 

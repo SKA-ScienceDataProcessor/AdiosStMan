@@ -3,7 +3,7 @@ CCFLAGS = -g
 LDFLAGS = -lcasa_tables -lcasa_casa 
 #STMANFILES = ../AdiosStMan.cc ../AdiosStManColumn.cc
 STMANFILES = libadiosstman.so
-TARGET = wAdiosStMan rAdiosStMan wAdiosStManMPI wAdiosStManMPI2 
+TARGET = wAdiosStMan wAdiosStManMPI wAdiosStManMPI2 rAdiosStMan rAdiosStManSlice
 
 all: ${TARGET} cl
 
@@ -11,7 +11,7 @@ ${TARGET}: ${TARGET:=.cc} ${STMANFILES}
 	$(CC) $@.cc -o $@ $(CCFLAGS) $(LDFLAGS) $(STMANFILES) 
 
 ${STMANFILES}:  
-	cd ..; make; mv *.so examples 
+	cd ..; make; cp *.so examples 
 
 cl:
 	rm -rf *.casa 

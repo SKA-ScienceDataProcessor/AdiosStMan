@@ -42,43 +42,43 @@ namespace casa { //# NAMESPACE CASA - BEGIN
 			virtual void setShapeColumn (const IPosition& aShape);
 			virtual IPosition shape(uInt RowID);
 
-			void put (uInt rownr, const Array<Bool> dataPtr);
-			void put (uInt rownr, const Array<uChar> dataPtr);
-			void put (uInt rownr, const Array<Short> dataPtr);
-			void put (uInt rownr, const Array<uShort> dataPtr);
-			void put (uInt rownr, const Array<Int> dataPtr);
-			void put (uInt rownr, const Array<uInt> dataPtr);
-			void put (uInt rownr, const Array<Float> dataPtr);
-			void put (uInt rownr, const Array<Double> dataPtr);
-			void put (uInt rownr, const Array<Complex> dataPtr);
-			void put (uInt rownr, const Array<DComplex> dataPtr);
-			void put (uInt rownr, const Array<String> dataPtr);
+			void put (uInt aRowNr, const Array<Bool> dataPtr);
+			void put (uInt aRowNr, const Array<uChar> dataPtr);
+			void put (uInt aRowNr, const Array<Short> dataPtr);
+			void put (uInt aRowNr, const Array<uShort> dataPtr);
+			void put (uInt aRowNr, const Array<Int> dataPtr);
+			void put (uInt aRowNr, const Array<uInt> dataPtr);
+			void put (uInt aRowNr, const Array<Float> dataPtr);
+			void put (uInt aRowNr, const Array<Double> dataPtr);
+			void put (uInt aRowNr, const Array<Complex> dataPtr);
+			void put (uInt aRowNr, const Array<DComplex> dataPtr);
+			void put (uInt aRowNr, const Array<String> dataPtr);
 
-			void put (uInt rownr, const Bool dataPtr);
-			void put (uInt rownr, const uChar dataPtr);
-			void put (uInt rownr, const Short dataPtr);
-			void put (uInt rownr, const uShort dataPtr);
-			void put (uInt rownr, const Int dataPtr);
-			void put (uInt rownr, const uInt dataPtr);
-			void put (uInt rownr, const Float dataPtr);
-			void put (uInt rownr, const Double dataPtr);
-			void put (uInt rownr, const Complex dataPtr);
-			void put (uInt rownr, const DComplex dataPtr);
-			void put (uInt rownr, const String dataPtr);
+			void put (uInt aRowNr, const Bool dataPtr);
+			void put (uInt aRowNr, const uChar dataPtr);
+			void put (uInt aRowNr, const Short dataPtr);
+			void put (uInt aRowNr, const uShort dataPtr);
+			void put (uInt aRowNr, const Int dataPtr);
+			void put (uInt aRowNr, const uInt dataPtr);
+			void put (uInt aRowNr, const Float dataPtr);
+			void put (uInt aRowNr, const Double dataPtr);
+			void put (uInt aRowNr, const Complex dataPtr);
+			void put (uInt aRowNr, const DComplex dataPtr);
+			void put (uInt aRowNr, const String dataPtr);
 
 			// Put an array value in the given row.
 			// <group>
-			virtual void putArrayBoolV     (uInt rownr, const Array<Bool>* dataPtr);
-			virtual void putArrayuCharV    (uInt rownr, const Array<uChar>* dataPtr);
-			virtual void putArrayShortV    (uInt rownr, const Array<Short>* dataPtr);
-			virtual void putArrayuShortV   (uInt rownr, const Array<uShort>* dataPtr);
-			virtual void putArrayIntV      (uInt rownr, const Array<Int>* dataPtr);
-			virtual void putArrayuIntV     (uInt rownr, const Array<uInt>* dataPtr);
-			virtual void putArrayfloatV    (uInt rownr, const Array<Float>* dataPtr);
-			virtual void putArraydoubleV   (uInt rownr, const Array<Double>* dataPtr);
-			virtual void putArrayComplexV  (uInt rownr, const Array<Complex>* dataPtr);
-			virtual void putArrayDComplexV (uInt rownr, const Array<DComplex>* dataPtr);
-			virtual void putArrayStringV   (uInt rownr, const Array<String>* dataPtr);
+			virtual void putArrayBoolV     (uInt aRowNr, const Array<Bool>* dataPtr);
+			virtual void putArrayuCharV    (uInt aRowNr, const Array<uChar>* dataPtr);
+			virtual void putArrayShortV    (uInt aRowNr, const Array<Short>* dataPtr);
+			virtual void putArrayuShortV   (uInt aRowNr, const Array<uShort>* dataPtr);
+			virtual void putArrayIntV      (uInt aRowNr, const Array<Int>* dataPtr);
+			virtual void putArrayuIntV     (uInt aRowNr, const Array<uInt>* dataPtr);
+			virtual void putArrayfloatV    (uInt aRowNr, const Array<Float>* dataPtr);
+			virtual void putArraydoubleV   (uInt aRowNr, const Array<Double>* dataPtr);
+			virtual void putArrayComplexV  (uInt aRowNr, const Array<Complex>* dataPtr);
+			virtual void putArrayDComplexV (uInt aRowNr, const Array<DComplex>* dataPtr);
+			virtual void putArrayStringV   (uInt aRowNr, const Array<String>* dataPtr);
 			// </group>
 
 			// Put the scalar value in the given row.
@@ -99,17 +99,17 @@ namespace casa { //# NAMESPACE CASA - BEGIN
 
 			// Get an array value in the given row.
 			// <group>
-			virtual void getArrayBoolV     (uInt rownr, Array<Bool>* dataPtr);
-			virtual void getArrayuCharV    (uInt rownr, Array<uChar>* dataPtr);
-			virtual void getArrayShortV    (uInt rownr, Array<Short>* dataPtr);
-			virtual void getArrayuShortV   (uInt rownr, Array<uShort>* dataPtr);
-			virtual void getArrayIntV      (uInt rownr, Array<Int>* dataPtr);
-			virtual void getArrayuIntV     (uInt rownr, Array<uInt>* dataPtr);
-			virtual void getArrayfloatV    (uInt rownr, Array<float>* dataPtr);
-			virtual void getArraydoubleV   (uInt rownr, Array<double>* dataPtr);
-			virtual void getArrayComplexV  (uInt rownr, Array<Complex>* dataPtr);
-			virtual void getArrayDComplexV (uInt rownr, Array<DComplex>* dataPtr);
-			virtual void getArrayStringV   (uInt rownr, Array<String>* dataPtr);
+			virtual void getArrayBoolV     (uInt aRowNr, Array<Bool>* dataPtr);
+			virtual void getArrayuCharV    (uInt aRowNr, Array<uChar>* dataPtr);
+			virtual void getArrayShortV    (uInt aRowNr, Array<Short>* dataPtr);
+			virtual void getArrayuShortV   (uInt aRowNr, Array<uShort>* dataPtr);
+			virtual void getArrayIntV      (uInt aRowNr, Array<Int>* dataPtr);
+			virtual void getArrayuIntV     (uInt aRowNr, Array<uInt>* dataPtr);
+			virtual void getArrayfloatV    (uInt aRowNr, Array<float>* dataPtr);
+			virtual void getArraydoubleV   (uInt aRowNr, Array<double>* dataPtr);
+			virtual void getArrayComplexV  (uInt aRowNr, Array<Complex>* dataPtr);
+			virtual void getArrayDComplexV (uInt aRowNr, Array<DComplex>* dataPtr);
+			virtual void getArrayStringV   (uInt aRowNr, Array<String>* dataPtr);
 			// </group>
 
 
@@ -129,6 +129,24 @@ namespace casa { //# NAMESPACE CASA - BEGIN
 			// </group>
 
 
+			// Get the array values in some cells of the column.
+			// The buffer pointed to by dataPtr has to have the correct length.
+			// (which is guaranteed by the ArrayColumn getColumnCells function).
+			// The default implementation throws an "invalid operation exception".
+			// <group>
+
+			virtual void getColumnSliceCellsBoolV	  (uInt aRowNr, const Slicer& ns, Array<Bool>* dataPtr);
+			virtual void getColumnSliceCellsuCharV	  (uInt aRowNr,	const Slicer& ns, Array<uChar>* dataPtr);
+			virtual void getColumnSliceCellsShortV    (uInt aRowNr,	const Slicer& ns, Array<Short>* dataPtr);
+			virtual void getColumnSliceCellsuShortV   (uInt aRowNr,	const Slicer& ns, Array<uShort>* dataPtr);
+			virtual void getColumnSliceCellsIntV      (uInt aRowNr,	const Slicer& ns, Array<Int>* dataPtr);
+			virtual void getColumnSliceCellsuIntV     (uInt aRowNr,	const Slicer& ns, Array<uInt>* dataPtr);
+			virtual void getSliceCellsfloatV	      (uInt aRowNr,	const Slicer& ns, Array<float>* dataPtr);
+			virtual void getColumnSliceCellsdoubleV   (uInt aRowNr,	const Slicer& ns, Array<double>* dataPtr);
+			virtual void getColumnSliceCellsComplexV  (uInt aRowNr,	const Slicer& ns, Array<Complex>* dataPtr);
+			virtual void getColumnSliceCellsDComplexV (uInt aRowNr,	const Slicer& ns, Array<DComplex>* dataPtr);
+			// </group>
+
 
 			int getDataTypeSize();
 
@@ -142,7 +160,8 @@ namespace casa { //# NAMESPACE CASA - BEGIN
 		private:
 
 			void getGeneralV (uInt aRowNr, void* aDataPtr);
-			void getArrayGeneralV (uInt aRowNr,	void* data);
+			void getArrayGeneralV (uInt aRowNr, const Slicer& ns,	void* data);
+			void getArrayGeneralV (uInt aRowNr, void* data);
 
 			void putGeneralV (uInt aRowNr, const void* aDataPtr);
 
