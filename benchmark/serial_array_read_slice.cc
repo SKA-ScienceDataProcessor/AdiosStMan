@@ -65,7 +65,6 @@ void table_read(){
 		if ((i+1) % (data_arr.shape())(0) == 0)	cout << endl;
 	}
 
-
 }
 
 

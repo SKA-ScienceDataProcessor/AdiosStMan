@@ -39,20 +39,17 @@
 // headers for casa namespaces
 #include <casa/namespace.h>
 
-Table *casa_table;
 String filename = "/scratch/tmp/v.casa";
+
 
 int main (){
 
-	casa_table = new Table(filename);    
-	uInt nrrow = casa_table->nrow();
+	Slicer sli(IPosition(2,0,0), IPosition(2,6,5));
 
-	ROScalarColumn<uInt> index_col(*casa_table, "index");
-	ROArrayColumn<float> data_col(*casa_table, "data");
+	Table casa_table(filename);    
 
-	IPosition start(2,0,0);
-	IPosition end(2,2,5);
-	Slicer sli(start, end);
+	ROScalarColumn<uInt> index_col(casa_table, "index");
+	ROArrayColumn<float> data_col(casa_table, "data");
 
 	Array<uInt> index_arr = index_col.getColumn();
 	Array<float> data_arr = data_col.getColumn(sli);

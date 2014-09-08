@@ -175,17 +175,14 @@ namespace casa{
 					local_offsets += ",0";
 				}
 
-				/*
-				string columnShape = itsShape.toString().substr(1, itsShape.toString().length()-2);
-				string dimensions = columnShape + ",1"; 
-				string global_dimensions = columnShape + "," +  NrRows.str();
-
-				string local_offsets = ""; 
-				for (int k=0; k<itsShape.nelements(); k++){
-					local_offsets += "0,";
-				}
-				local_offsets += RowID.str(); 
-				*/
+//				string columnShape = itsShape.toString().substr(1, itsShape.toString().length()-2);
+//				string dimensions = columnShape + ",1"; 
+//				string global_dimensions = columnShape + "," +  NrRows.str();
+//				string local_offsets = ""; 
+//				for (int k=0; k<itsShape.nelements(); k++){
+//					local_offsets += "0,";
+//				}
+//				local_offsets += RowID.str(); 
 
 
 
@@ -506,14 +503,16 @@ namespace casa{
 	void AdiosStManColumn::getArrayGeneralV (int64_t aRowNr, const Slicer& ns, void* dataPtr){
 
 		if(itsStManPtr->getAdiosReadFile()){
-
-			if(aRowNr > 0){
-				readStart[0] = aRowNr;
-				readCount[0] = 1;
-			}
-			else{
+			
+			if(aRowNr < 0){
+				// if getting entire column
 				readStart[0] = 0;
 				readCount[0] = itsStManPtr->getNrRows();
+			}
+			else{
+				// if getting a row
+				readStart[0] = aRowNr;
+				readCount[0] = 1;
 			}
 
 			for (int i=1; i<=itsShape.size(); i++){
@@ -613,7 +612,8 @@ namespace casa{
 
 	Bool AdiosStManColumn::canAccessArrayColumn(Bool &reask) const{
 		reask = false;
-		return true;
+//		return true;
+		return false;
 	}
 
 
@@ -654,6 +654,7 @@ namespace casa{
 		dataPtr->putStorage (data, deleteIt);
 	}
 	void AdiosStManColumn::getArrayColumnfloatV (Array<float>* dataPtr){
+		cout << "!!!!!!" << endl;
 		Bool deleteIt;
 		float* data = dataPtr->getStorage (deleteIt);
 		getArrayGeneralV (-1, data);
