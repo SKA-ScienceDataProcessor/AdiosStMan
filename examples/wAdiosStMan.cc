@@ -30,6 +30,7 @@
 
 // headers for storage manager
 #include "../AdiosStMan.h"
+#include <tables/Tables/SSMBase.h>
 
 // headers for scalar column
 #include <tables/Tables/ScaColDesc.h>
@@ -49,7 +50,7 @@ int NrRows = 4;
 
 string filename = "/scratch/tmp/v.casa";
 
-int main (){
+int main(int argc, char **argv){
 
 	// define a storage manager
 	AdiosStMan stman;

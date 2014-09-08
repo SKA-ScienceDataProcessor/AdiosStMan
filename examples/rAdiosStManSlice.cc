@@ -44,7 +44,7 @@ String filename = "/scratch/tmp/v.casa";
 
 int main (){
 
-	Slicer sli(IPosition(2,0,0), IPosition(2,6,5));
+	Slicer sli(IPosition(2,1,2), IPosition(2,2,3));
 
 	Table casa_table(filename);    
 

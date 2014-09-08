@@ -150,17 +150,35 @@ namespace casa { //# NAMESPACE CASA - BEGIN
 
 
 			// *** get a slice of a row for an array column ***
-			virtual void getColumnSliceCellsBoolV	  (uInt aRowNr, const Slicer& ns, Array<Bool>* dataPtr);
-			virtual void getColumnSliceCellsuCharV	  (uInt aRowNr,	const Slicer& ns, Array<uChar>* dataPtr);
-			virtual void getColumnSliceCellsShortV    (uInt aRowNr,	const Slicer& ns, Array<Short>* dataPtr);
-			virtual void getColumnSliceCellsuShortV   (uInt aRowNr,	const Slicer& ns, Array<uShort>* dataPtr);
-			virtual void getColumnSliceCellsIntV      (uInt aRowNr,	const Slicer& ns, Array<Int>* dataPtr);
-			virtual void getColumnSliceCellsuIntV     (uInt aRowNr,	const Slicer& ns, Array<uInt>* dataPtr);
-			virtual void getSliceCellsfloatV	      (uInt aRowNr,	const Slicer& ns, Array<float>* dataPtr);
-			virtual void getColumnSliceCellsdoubleV   (uInt aRowNr,	const Slicer& ns, Array<double>* dataPtr);
-			virtual void getColumnSliceCellsComplexV  (uInt aRowNr,	const Slicer& ns, Array<Complex>* dataPtr);
-			virtual void getColumnSliceCellsDComplexV (uInt aRowNr,	const Slicer& ns, Array<DComplex>* dataPtr);
+			virtual void getSliceBoolV	   (uInt aRowNr, const Slicer& ns, Array<Bool>* dataPtr);
+			virtual void getSliceuCharV    (uInt aRowNr,	const Slicer& ns, Array<uChar>* dataPtr);
+			virtual void getSliceShortV    (uInt aRowNr,	const Slicer& ns, Array<Short>* dataPtr);
+			virtual void getSliceuShortV   (uInt aRowNr,	const Slicer& ns, Array<uShort>* dataPtr);
+			virtual void getSliceIntV      (uInt aRowNr,	const Slicer& ns, Array<Int>* dataPtr);
+			virtual void getSliceuIntV     (uInt aRowNr,	const Slicer& ns, Array<uInt>* dataPtr);
+			virtual void getSlicefloatV    (uInt aRowNr,	const Slicer& ns, Array<float>* dataPtr);
+			virtual void getSlicedoubleV   (uInt aRowNr,	const Slicer& ns, Array<double>* dataPtr);
+			virtual void getSliceComplexV  (uInt aRowNr,	const Slicer& ns, Array<Complex>* dataPtr);
+			virtual void getSliceDComplexV (uInt aRowNr,	const Slicer& ns, Array<DComplex>* dataPtr);
 			// *** get a slice of a row for an array column ***
+
+
+
+			
+			// *** get a slice of all rows for an array column ***
+			virtual void getColumnSlicesBoolV	 (const Slicer& ns, Array<Bool>* dataPtr);
+			virtual void getColumnSlicesuCharV	 (const Slicer& ns, Array<uChar>* dataPtr);
+			virtual void getColumnSlicesShortV   (const Slicer& ns, Array<Short>* dataPtr);
+			virtual void getColumnSlicesuShortV  (const Slicer& ns, Array<uShort>* dataPtr);
+			virtual void getColumnSlicesIntV     (const Slicer& ns, Array<Int>* dataPtr);
+			virtual void getColumnSlicesuIntV    (const Slicer& ns, Array<uInt>* dataPtr);
+			virtual void getColumnSlicefloatV    (const Slicer& ns, Array<float>* dataPtr);
+			virtual void getColumnSlicedoubleV   (const Slicer& ns, Array<double>* dataPtr);
+			virtual void getColumnSliceComplexV  (const Slicer& ns, Array<Complex>* dataPtr);
+			virtual void getColumnSliceDComplexV (const Slicer& ns, Array<DComplex>* dataPtr);
+			// *** get a slice of all rows for an array column ***
+			
+
 
 
 			int getDataTypeSize();
@@ -171,10 +189,9 @@ namespace casa { //# NAMESPACE CASA - BEGIN
 			void initAdiosWrite(uInt aNrRows);
 			void initAdiosRead();
 
-//			virtual Bool canAccessScalarColumn(Bool &reask) const;
 			virtual Bool canAccessArrayColumn(Bool &reask) const;
-//			virtual Bool canAccessArrayColumn(Bool &reask) const;
-//			virtual Bool canAccessArrayColumn(Bool &reask) const;
+			virtual Bool canAccessColumnSlice(Bool &reask) const;
+			virtual Bool canAccessSlice(Bool &reask) const;
 
 
 		private:

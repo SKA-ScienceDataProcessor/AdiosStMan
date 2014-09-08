@@ -8,6 +8,8 @@ This project is to implement a CASA storage manager using ADIOS (Adaptive IO Sys
 ============================================
 
 Version History:
+v0.3.12 - Added getColumnSlice
+---------------------
 v0.3.11 - Fixed a bug for reading slices
 ---------------------
 v0.3.10 - Added getColumn functions for array columns

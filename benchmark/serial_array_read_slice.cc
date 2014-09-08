@@ -52,12 +52,12 @@ void table_read(){
 	ROArrayColumn<Complex> data_col(casa_table, "DATA");
 
 	IPosition start(2,0,0);
-	IPosition end(2,2,5);
+	IPosition end(2,1,768);
 	Slicer sli(start, end);
 
 
-//	Array<Complex> data_arr = data_col.getColumn(sli);
-	Array<Complex> data_arr = data_col.getColumn();
+	Array<Complex> data_arr = data_col.getColumn(sli);
+//	Array<Complex> data_arr = data_col.getColumn();
 	Vector<Complex> data_vec = data_arr.reform(IPosition(1,data_arr.nelements()));
 
 	for (int i=0; i<32; i++){
