@@ -1,4 +1,4 @@
-//    rAdiosStMan.cc: example code for reading a casa table using AdiosStMan
+//    rAdiosStManSlice.cc: example code for reading a casa table using AdiosStMan
 //
 //    (c) University of Western Australia
 //    International Centre of Radio Astronomy Research
@@ -39,24 +39,50 @@
 // headers for casa namespaces
 #include <casa/namespace.h>
 
-String filename = "/scratch/tmp/v.casa";
+#include "tictak.h"
 
-int main (){
 
+String filename;
+
+void table_read(){
+	
 	Table casa_table(filename);    
+	uInt nrrow = casa_table.nrow();
 
-	ROScalarColumn<uInt> index_col(casa_table, "index");
-	ROArrayColumn<float> data_col(casa_table, "data");
+	ROArrayColumn<Complex> data_col(casa_table, "DATA");
 
-	Array<uInt> index_arr = index_col.getColumn();
-	Array<float> data_arr = data_col.getColumn();
+	IPosition start(2,0,0);
+	IPosition end(2,2,5);
+	Slicer sli(start, end);
 
-	Vector<float> data_vec = data_arr.reform(IPosition(1,data_arr.nelements()));
 
-	for (int i=0; i<data_arr.nelements(); i++){
+//	Array<Complex> data_arr = data_col.getColumn(sli);
+	Array<Complex> data_arr = data_col.getColumn();
+	Vector<Complex> data_vec = data_arr.reform(IPosition(1,data_arr.nelements()));
+
+	for (int i=0; i<32; i++){
 		cout << data_vec[i] << "  ";
 		if ((i+1) % (data_arr.shape())(0) == 0)	cout << endl;
 	}
+
+
+}
+
+
+int main (){
+
+
+	tictak_add((char*)"AdiosStMan",0);
+	filename = "/scratch/jason/1067892840_adios.ms";
+	table_read();
+
+	tictak_add((char*)"TiledStMan",0);
+	filename = "/scratch/jason/1067892840_tsm.ms";
+	table_read();
+
+	tictak_add((char*)"End",0);
+
+	tictak_dump(0);
 
 	return 0;
 }

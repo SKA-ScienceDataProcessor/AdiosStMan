@@ -45,7 +45,7 @@
 // define a dimension object for the array column
 IPosition data_pos = IPosition(2,6,5);
 
-int NrRows = 10;
+int NrRows = 4;
 
 string filename = "/scratch/tmp/v.casa";
 

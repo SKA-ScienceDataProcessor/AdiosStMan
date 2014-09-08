@@ -77,6 +77,7 @@ namespace casa {
 					const casa::Record& spec);
 
 			void adiosOpen();
+			uInt getNrRows();
 
 
 		private:

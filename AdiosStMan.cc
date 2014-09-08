@@ -253,6 +253,9 @@ namespace casa {
 		return makeDirArrColumn(name, aDataType, dataTypeId);
 	}
 	
+	uInt AdiosStMan::getNrRows(){
+		return itsNrRows;
+	}
 
 	void AdiosStMan::resync (uInt aNrRows){
 	}

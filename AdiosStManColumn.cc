@@ -174,6 +174,21 @@ namespace casa{
 				for (int k=0; k<itsShape.nelements(); k++){
 					local_offsets += ",0";
 				}
+
+				/*
+				string columnShape = itsShape.toString().substr(1, itsShape.toString().length()-2);
+				string dimensions = columnShape + ",1"; 
+				string global_dimensions = columnShape + "," +  NrRows.str();
+
+				string local_offsets = ""; 
+				for (int k=0; k<itsShape.nelements(); k++){
+					local_offsets += "0,";
+				}
+				local_offsets += RowID.str(); 
+				*/
+
+
+
 				itsAdiosWriteIDs[itsNrIDs] = adios_define_var(itsStManPtr->getAdiosGroup(), itsColumnName.c_str(), "", itsAdiosDataType, dimensions.c_str(), global_dimensions.c_str(), local_offsets.c_str());
 			}
 			itsNrIDs++;
@@ -483,16 +498,23 @@ namespace casa{
 		cout << "AdiosStManColumn Error: Sorry, AdiosStMan does not support string type at the moment!" << endl;
 	}
 
-	void AdiosStManColumn::getArrayGeneralV (uInt aRowNr, void* dataPtr){
+	void AdiosStManColumn::getArrayGeneralV (int64_t aRowNr, void* dataPtr){
 		Slicer ns(IPosition(itsShape.size(),0,0,0,0,0,0,0,0,0,0), itsShape);
 		getArrayGeneralV(aRowNr, ns, dataPtr);
 	}
 
-	void AdiosStManColumn::getArrayGeneralV (uInt aRowNr, const Slicer& ns, void* dataPtr){
+	void AdiosStManColumn::getArrayGeneralV (int64_t aRowNr, const Slicer& ns, void* dataPtr){
 
 		if(itsStManPtr->getAdiosReadFile()){
-			readStart[0] = aRowNr;
-			readCount[0] = 1;
+
+			if(aRowNr > 0){
+				readStart[0] = aRowNr;
+				readCount[0] = 1;
+			}
+			else{
+				readStart[0] = 0;
+				readCount[0] = itsStManPtr->getNrRows();
+			}
 
 			for (int i=1; i<=itsShape.size(); i++){
 				readStart[i] = ns.start()(i-1);
@@ -589,6 +611,75 @@ namespace casa{
 		}
 	}
 
+	Bool AdiosStManColumn::canAccessArrayColumn(Bool &reask) const{
+		reask = false;
+		return true;
+	}
+
+
+	void AdiosStManColumn::getArrayColumnBoolV (Array<Bool>* dataPtr){
+		Bool deleteIt;
+		Bool* data = dataPtr->getStorage (deleteIt);
+		getArrayGeneralV (-1, data);
+		dataPtr->putStorage (data, deleteIt);
+	}
+	void AdiosStManColumn::getArrayColumnuCharV (Array<uChar>* dataPtr){
+		Bool deleteIt;
+		uChar* data = dataPtr->getStorage (deleteIt);
+		getArrayGeneralV (-1, data);
+		dataPtr->putStorage (data, deleteIt);
+	}
+	void AdiosStManColumn::getArrayColumnShortV (Array<Short>* dataPtr){
+		Bool deleteIt;
+		Short* data = dataPtr->getStorage (deleteIt);
+		getArrayGeneralV (-1, data);
+		dataPtr->putStorage (data, deleteIt);
+	}
+	void AdiosStManColumn::getArrayColumnuShortV (Array<uShort>* dataPtr){
+		Bool deleteIt;
+		uShort* data = dataPtr->getStorage (deleteIt);
+		getArrayGeneralV (-1, data);
+		dataPtr->putStorage (data, deleteIt);
+	}
+	void AdiosStManColumn::getArrayColumnIntV (Array<Int>* dataPtr){
+		Bool deleteIt;
+		Int* data = dataPtr->getStorage (deleteIt);
+		getArrayGeneralV (-1, data);
+		dataPtr->putStorage (data, deleteIt);
+	}
+	void AdiosStManColumn::getArrayColumnuIntV (Array<uInt>* dataPtr){
+		Bool deleteIt;
+		uInt* data = dataPtr->getStorage (deleteIt);
+		getArrayGeneralV (-1, data);
+		dataPtr->putStorage (data, deleteIt);
+	}
+	void AdiosStManColumn::getArrayColumnfloatV (Array<float>* dataPtr){
+		Bool deleteIt;
+		float* data = dataPtr->getStorage (deleteIt);
+		getArrayGeneralV (-1, data);
+		dataPtr->putStorage (data, deleteIt);
+	}
+	void AdiosStManColumn::getArrayColumndoubleV (Array<double>* dataPtr){
+		Bool deleteIt;
+		double* data = dataPtr->getStorage (deleteIt);
+		getArrayGeneralV (-1, data);
+		dataPtr->putStorage (data, deleteIt);
+	}
+	void AdiosStManColumn::getArrayColumnComplexV (Array<Complex>* dataPtr){
+		Bool deleteIt;
+		Complex* data = dataPtr->getStorage (deleteIt);
+		getArrayGeneralV (-1, data);
+		dataPtr->putStorage (data, deleteIt);
+	}
+	void AdiosStManColumn::getArrayColumnDComplexV (Array<DComplex>* dataPtr){
+		Bool deleteIt;
+		DComplex* data = dataPtr->getStorage (deleteIt);
+		getArrayGeneralV (-1, data);
+		dataPtr->putStorage (data, deleteIt);
+	}
+	void AdiosStManColumn::getArrayColumnStringV (Array<String>* dataPtr){
+		cout << "AdiosStManColumn Error: Sorry, AdiosStMan does not support string type at this point!" << endl;
+	}
 
 
 }
