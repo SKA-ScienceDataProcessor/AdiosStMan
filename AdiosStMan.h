@@ -79,6 +79,7 @@ namespace casa {
 
 			void adiosOpen();
 			uInt getNrRows();
+			char getMode();
 
 
 		private:
@@ -105,6 +106,8 @@ namespace casa {
 			uInt itsNrRows;
 			uInt itsNrColsSlave;
 			MPI_Comm itsMpiComm;
+
+			char itsMode;
 
 
 	}; // end of class AdiosStMan

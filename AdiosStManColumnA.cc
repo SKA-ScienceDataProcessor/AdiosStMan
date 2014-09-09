@@ -92,6 +92,9 @@ namespace casa{
 
 	Bool AdiosStManColumnA::canAccessArrayColumn(Bool &reask) const{
 		reask = false;
+		// only can access array column when reading
+		if(itsStManPtr->getMode() == 'r') 
+			return true;
 		return false;
 	}
 	Bool AdiosStManColumnA::canAccessSlice(Bool &reask) const{
@@ -104,12 +107,17 @@ namespace casa{
 	}
 
 	void AdiosStManColumnA::putArrayGeneralV (uInt rownr, const void* dataPtr){
+		if(isZero(dataPtr) && rownr > 0){
+			return;
+		}
 		itsStManPtr->adiosOpen();
 		adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , (void*)dataPtr);
 	}
 
 	void AdiosStManColumnA::putGeneralV (uInt rownr, const void* dataPtr){
-		if(isZero(dataPtr)) return;
+		if(isZero(dataPtr) && rownr > 0){
+			return;
+		}
 		itsStManPtr->adiosOpen();
 		adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , (void*)dataPtr);
 	}
@@ -134,7 +142,6 @@ namespace casa{
 
 	void AdiosStManColumnA::getSliceGeneralV (int64_t aRowNr, const Slicer& ns, void* dataPtr){
 		if(itsStManPtr->getAdiosReadFile()){
-			
 			if(aRowNr < 0){
 				// if getting entire column
 				readStart[0] = 0;

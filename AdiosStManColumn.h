@@ -266,6 +266,7 @@ namespace casa { //# NAMESPACE CASA - BEGIN
 
 
 			int itsCasaDataType;
+			bool isArrayColumn;
 
 
 

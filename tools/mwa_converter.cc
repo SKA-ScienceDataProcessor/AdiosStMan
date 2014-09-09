@@ -36,9 +36,9 @@ int main (int argc, char **argv){
 	IPosition UVW_pos = UVW_col.shape(0);
 	td.addColumn (ArrayColumnDesc<Double>("UVW", UVW_pos, ColumnDesc::Direct));
 	// FLAG column
-	ROArrayColumn<bool> FLAG_col(read_table, "FLAG");
-	IPosition FLAG_pos = FLAG_col.shape(0);
-	td.addColumn (ArrayColumnDesc<bool>("FLAG", FLAG_pos, ColumnDesc::Direct));
+//	ROArrayColumn<bool> FLAG_col(read_table, "FLAG");
+//	IPosition FLAG_pos = FLAG_col.shape(0);
+//	td.addColumn (ArrayColumnDesc<bool>("FLAG", FLAG_pos, ColumnDesc::Direct));
 	// WEIGHT column
 	ROArrayColumn<float> WEIGHT_col(read_table, "WEIGHT");
 	IPosition WEIGHT_pos = WEIGHT_col.shape(0);
@@ -119,9 +119,9 @@ int main (int argc, char **argv){
 	UVW_col_new.putColumn(UVW_col.getColumn());
 	cout << "UVW column completed" << endl;
 	// FLAG column
-	ArrayColumn<bool> FLAG_col_new (write_table, "FLAG");
-	FLAG_col_new.putColumn(FLAG_col.getColumn());
-	cout << "FLAG column completed" << endl;
+//	ArrayColumn<bool> FLAG_col_new (write_table, "FLAG");
+//	FLAG_col_new.putColumn(FLAG_col.getColumn());
+//	cout << "FLAG column completed" << endl;
 	// FLAG_CATEGORY column
 	ArrayColumn<float> WEIGHT_col_new (write_table, "WEIGHT");
 	WEIGHT_col_new.putColumn(WEIGHT_col.getColumn());

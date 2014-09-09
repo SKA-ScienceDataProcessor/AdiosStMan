@@ -77,7 +77,7 @@ int main(int argc, char **argv){
 
 	// write data into the column objects
 	for (uInt i=0; i<NrRows; i++) {
-		index_col.put (i, i);
+		index_col.put (i, 0);
 		data_col.put(i, data_arr);
 	}
 

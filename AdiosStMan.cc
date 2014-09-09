@@ -155,6 +155,8 @@ namespace casa {
 
 	void AdiosStMan::create (uInt aNrRows)
 	{
+
+		itsMode = 'w';
 		itsNrRows = aNrRows;
 
 		adios_init_noxml(itsMpiComm);
@@ -194,6 +196,7 @@ namespace casa {
 
 	void AdiosStMan::open (uInt aNrRows, AipsIO& ios){
 
+		itsMode = 'r';
 		itsNrRows = aNrRows;
 
 		adios_read_init_method (ADIOS_READ_METHOD_BP, MPI_COMM_WORLD, "verbose=3");
@@ -276,6 +279,10 @@ namespace casa {
 
 	Bool AdiosStMan::flush (AipsIO& ios, Bool doFsync){
 		return true;
+	}
+
+	char AdiosStMan::getMode (){
+		return itsMode;
 	}
 
 	void register_adiosstman(){
