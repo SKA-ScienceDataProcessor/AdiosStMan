@@ -1,9 +1,9 @@
 CC = mpic++
 CCFLAGS = -g
-LDFLAGS = -lcasa_tables -lcasa_casa 
+LDFLAGS = -lcasa_tables -lcasa_casa
 #STMANFILES = ../AdiosStMan.cc ../AdiosStManColumn.cc
-STMANFILES = libadiosstman.so
-TARGET = mwa_converter
+STMANFILES=libadiosstman.so
+TARGET=mwa_converter mwa_checker
 
 all: ${TARGET} cl
 
