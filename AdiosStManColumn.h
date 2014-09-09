@@ -1,4 +1,4 @@
-//    AdiosStManColumn.h: DataManagerColumn class for AdiosStMan
+//    AdiosStManColumn.h: base StManColumn class for AdiosStMan
 //
 //    (c) University of Western Australia
 //    International Centre of Radio Astronomy Research
@@ -39,10 +39,20 @@ namespace casa { //# NAMESPACE CASA - BEGIN
 
 			AdiosStManColumn (AdiosStMan* aParent, int aDataType, uInt aColNr);
 			~AdiosStManColumn ();
+
 			virtual void setShapeColumn (const IPosition& aShape);
+			IPosition getShapeColumn();
 			virtual IPosition shape(uInt RowID);
 
+			int getDataTypeSize();
+			void setColumnName(String aName);
+
+			virtual void initAdiosRead() = 0;
+			virtual void initAdiosWrite(uInt aNrRows) = 0;
+
 			// *** put a row for an array column, for user application call ***
+			// *** legacy interface for slave processes to access AdiosStManColumn,
+			// *** might be removed in newer version
 			void put (uInt aRowNr, const Array<Bool> dataPtr);
 			void put (uInt aRowNr, const Array<uChar> dataPtr);
 			void put (uInt aRowNr, const Array<Short> dataPtr);
@@ -56,8 +66,9 @@ namespace casa { //# NAMESPACE CASA - BEGIN
 			void put (uInt aRowNr, const Array<String> dataPtr);
 			// *** put a row for an array column, for user application call ***
 
-
 			// *** put a row for a scalar column, for user application call ***
+			// *** legacy interface for slave processes to access AdiosStManColumn,
+			// *** might be removed in newer version
 			void put (uInt aRowNr, const Bool dataPtr);
 			void put (uInt aRowNr, const uChar dataPtr);
 			void put (uInt aRowNr, const Short dataPtr);
@@ -72,8 +83,8 @@ namespace casa { //# NAMESPACE CASA - BEGIN
 			// *** put a row for a scalar column, for user application call ***
 
 
-
-			// *** put a row for an array column ***
+			// *** access a row for an array column ***
+			// put
 			virtual void putArrayBoolV     (uInt aRowNr, const Array<Bool>* dataPtr);
 			virtual void putArrayuCharV    (uInt aRowNr, const Array<uChar>* dataPtr);
 			virtual void putArrayShortV    (uInt aRowNr, const Array<Short>* dataPtr);
@@ -85,25 +96,7 @@ namespace casa { //# NAMESPACE CASA - BEGIN
 			virtual void putArrayComplexV  (uInt aRowNr, const Array<Complex>* dataPtr);
 			virtual void putArrayDComplexV (uInt aRowNr, const Array<DComplex>* dataPtr);
 			virtual void putArrayStringV   (uInt aRowNr, const Array<String>* dataPtr);
-			// *** put a row for an array column ***
-
-
-			// *** put a row for a scalar column ***
-			virtual void putBoolV     (uInt aRowNr, const Bool* aDataPtr);
-			virtual void putuCharV    (uInt aRowNr, const uChar* aDataPtr);
-			virtual void putShortV    (uInt aRowNr, const Short* aDataPtr);
-			virtual void putuShortV   (uInt aRowNr, const uShort* aDataPtr);
-			virtual void putIntV      (uInt aRowNr, const Int* aDataPtr);
-			virtual void putuIntV     (uInt aRowNr, const uInt* aDataPtr);
-			virtual void putfloatV    (uInt aRowNr, const Float* aDataPtr);
-			virtual void putdoubleV   (uInt aRowNr, const Double* aDataPtr);
-			virtual void putComplexV  (uInt aRowNr, const Complex* aDataPtr);
-			virtual void putDComplexV (uInt aRowNr, const DComplex* aDataPtr);
-			virtual void putStringV   (uInt aRowNr, const String* aDataPtr);
-			// *** put a row for a scalar column ***
-
-
-			// *** get a row for an array column ***
+			// get
 			virtual void getArrayBoolV     (uInt aRowNr, Array<Bool>* dataPtr);
 			virtual void getArrayuCharV    (uInt aRowNr, Array<uChar>* dataPtr);
 			virtual void getArrayShortV    (uInt aRowNr, Array<Short>* dataPtr);
@@ -115,25 +108,23 @@ namespace casa { //# NAMESPACE CASA - BEGIN
 			virtual void getArrayComplexV  (uInt aRowNr, Array<Complex>* dataPtr);
 			virtual void getArrayDComplexV (uInt aRowNr, Array<DComplex>* dataPtr);
 			virtual void getArrayStringV   (uInt aRowNr, Array<String>* dataPtr);
-			// *** get a row for an array column ***
+			// *** access a row for an array column ***
 
 
-			// *** get all rows for an array column ***
-			virtual void getArrayColumnBoolV     (Array<Bool>* dataPtr);
-			virtual void getArrayColumnuCharV    (Array<uChar>* dataPtr);
-			virtual void getArrayColumnShortV    (Array<Short>* dataPtr);
-			virtual void getArrayColumnuShortV   (Array<uShort>* dataPtr);
-			virtual void getArrayColumnIntV      (Array<Int>* dataPtr);
-			virtual void getArrayColumnuIntV     (Array<uInt>* dataPtr);
-			virtual void getArrayColumnfloatV    (Array<float>* dataPtr);
-			virtual void getArrayColumndoubleV   (Array<double>* dataPtr);
-			virtual void getArrayColumnComplexV  (Array<Complex>* dataPtr);
-			virtual void getArrayColumnDComplexV (Array<DComplex>* dataPtr);
-			virtual void getArrayColumnStringV   (Array<String>* dataPtr);
-			// *** get all rows for an array column ***
-
-
-			// *** get a row for a scalar column ***
+			// *** access a row for a scalar column ***
+			// put
+			virtual void putBoolV     (uInt aRowNr, const Bool* aDataPtr);
+			virtual void putuCharV    (uInt aRowNr, const uChar* aDataPtr);
+			virtual void putShortV    (uInt aRowNr, const Short* aDataPtr);
+			virtual void putuShortV   (uInt aRowNr, const uShort* aDataPtr);
+			virtual void putIntV      (uInt aRowNr, const Int* aDataPtr);
+			virtual void putuIntV     (uInt aRowNr, const uInt* aDataPtr);
+			virtual void putfloatV    (uInt aRowNr, const Float* aDataPtr);
+			virtual void putdoubleV   (uInt aRowNr, const Double* aDataPtr);
+			virtual void putComplexV  (uInt aRowNr, const Complex* aDataPtr);
+			virtual void putDComplexV (uInt aRowNr, const DComplex* aDataPtr);
+			virtual void putStringV   (uInt aRowNr, const String* aDataPtr);
+			// get
 			virtual void getBoolV     (uInt aRowNr, Bool* aDataPtr);
 			virtual void getuCharV    (uInt aRowNr, uChar* aDataPtr);
 			virtual void getShortV    (uInt aRowNr, Short* aDataPtr);
@@ -145,27 +136,53 @@ namespace casa { //# NAMESPACE CASA - BEGIN
 			virtual void getComplexV  (uInt aRowNr, Complex* aDataPtr);
 			virtual void getDComplexV (uInt aRowNr, DComplex* aDataPtr);
 			virtual void getStringV   (uInt aRowNr, String* aDataPtr);
-			// *** get a row for a scalar column ***
+			// *** access a row for a scalar column ***
 
 
+			// *** access a slice of a row for an array column ***
+			// *** inactive by default
+			// *** only active when canAccessSlice() returns true in child class
+			// put
 
-			// *** get a slice of a row for an array column ***
+			// get
 			virtual void getSliceBoolV	   (uInt aRowNr, const Slicer& ns, Array<Bool>* dataPtr);
-			virtual void getSliceuCharV    (uInt aRowNr,	const Slicer& ns, Array<uChar>* dataPtr);
-			virtual void getSliceShortV    (uInt aRowNr,	const Slicer& ns, Array<Short>* dataPtr);
-			virtual void getSliceuShortV   (uInt aRowNr,	const Slicer& ns, Array<uShort>* dataPtr);
-			virtual void getSliceIntV      (uInt aRowNr,	const Slicer& ns, Array<Int>* dataPtr);
-			virtual void getSliceuIntV     (uInt aRowNr,	const Slicer& ns, Array<uInt>* dataPtr);
-			virtual void getSlicefloatV    (uInt aRowNr,	const Slicer& ns, Array<float>* dataPtr);
-			virtual void getSlicedoubleV   (uInt aRowNr,	const Slicer& ns, Array<double>* dataPtr);
-			virtual void getSliceComplexV  (uInt aRowNr,	const Slicer& ns, Array<Complex>* dataPtr);
-			virtual void getSliceDComplexV (uInt aRowNr,	const Slicer& ns, Array<DComplex>* dataPtr);
-			// *** get a slice of a row for an array column ***
+			virtual void getSliceuCharV    (uInt aRowNr, const Slicer& ns, Array<uChar>* dataPtr);
+			virtual void getSliceShortV    (uInt aRowNr, const Slicer& ns, Array<Short>* dataPtr);
+			virtual void getSliceuShortV   (uInt aRowNr, const Slicer& ns, Array<uShort>* dataPtr);
+			virtual void getSliceIntV      (uInt aRowNr, const Slicer& ns, Array<Int>* dataPtr);
+			virtual void getSliceuIntV     (uInt aRowNr, const Slicer& ns, Array<uInt>* dataPtr);
+			virtual void getSlicefloatV    (uInt aRowNr, const Slicer& ns, Array<float>* dataPtr);
+			virtual void getSlicedoubleV   (uInt aRowNr, const Slicer& ns, Array<double>* dataPtr);
+			virtual void getSliceComplexV  (uInt aRowNr, const Slicer& ns, Array<Complex>* dataPtr);
+			virtual void getSliceDComplexV (uInt aRowNr, const Slicer& ns, Array<DComplex>* dataPtr);
+			// *** access a slice of a row for an array column ***
 
 
+			// *** access all rows for an array column ***
+			// *** inactive by default
+			// *** only active when canAccessArrayColumn() returns true in child class
+			// put
 
+			// get
+			virtual void getArrayColumnBoolV     (Array<Bool>* dataPtr);
+			virtual void getArrayColumnuCharV    (Array<uChar>* dataPtr);
+			virtual void getArrayColumnShortV    (Array<Short>* dataPtr);
+			virtual void getArrayColumnuShortV   (Array<uShort>* dataPtr);
+			virtual void getArrayColumnIntV      (Array<Int>* dataPtr);
+			virtual void getArrayColumnuIntV     (Array<uInt>* dataPtr);
+			virtual void getArrayColumnfloatV    (Array<float>* dataPtr);
+			virtual void getArrayColumndoubleV   (Array<double>* dataPtr);
+			virtual void getArrayColumnComplexV  (Array<Complex>* dataPtr);
+			virtual void getArrayColumnDComplexV (Array<DComplex>* dataPtr);
+			// *** access all rows for an array column ***
 			
-			// *** get a slice of all rows for an array column ***
+
+			// *** access a slice of all rows for an array column ***
+			// *** inactive by default
+			// *** only active when canAccessColumnSlice() returns true in child class
+			// put
+
+			// get
 			virtual void getColumnSlicesBoolV	 (const Slicer& ns, Array<Bool>* dataPtr);
 			virtual void getColumnSlicesuCharV	 (const Slicer& ns, Array<uChar>* dataPtr);
 			virtual void getColumnSlicesShortV   (const Slicer& ns, Array<Short>* dataPtr);
@@ -176,32 +193,28 @@ namespace casa { //# NAMESPACE CASA - BEGIN
 			virtual void getColumnSlicedoubleV   (const Slicer& ns, Array<double>* dataPtr);
 			virtual void getColumnSliceComplexV  (const Slicer& ns, Array<Complex>* dataPtr);
 			virtual void getColumnSliceDComplexV (const Slicer& ns, Array<DComplex>* dataPtr);
-			// *** get a slice of all rows for an array column ***
-			
+			// *** access a slice of all rows for an array column ***
 
 
 
-			int getDataTypeSize();
+		protected:
 
-			IPosition getShapeColumn();
-			void setColumnName(String aName);
+			// access a row for a scalar column 
+			virtual void putGeneralV (uInt aRowNr, const void* aDataPtr) = 0;
+			virtual void getGeneralV (uInt aRowNr, void* aDataPtr) = 0;
 
-			void initAdiosWrite(uInt aNrRows);
-			void initAdiosRead();
+			// access a row for an array column 
+			virtual void putArrayGeneralV (uInt aRowNr, const void* aDataPtr) = 0;
+			virtual void getArrayGeneralV (int64_t aRowNr, void* data) = 0;
 
-			virtual Bool canAccessArrayColumn(Bool &reask) const;
-			virtual Bool canAccessColumnSlice(Bool &reask) const;
-			virtual Bool canAccessSlice(Bool &reask) const;
+			// access a slice of a row for an array column 
+			virtual void getSliceGeneralV (int64_t aRowNr, const Slicer& ns, void* data) = 0;
 
+			// access all rows for an array column 
+			virtual void getArrayColumnGeneralV (void* data) = 0;
 
-		private:
-
-			void getGeneralV (uInt aRowNr, void* aDataPtr);
-			void getArrayGeneralV (int64_t aRowNr, const Slicer& ns,	void* data);
-			void getArrayGeneralV (int64_t aRowNr, void* data);
-			void getArrayColumnGeneralV  (void* data);
-
-			void putGeneralV (uInt aRowNr, const void* aDataPtr);
+			// access a slice of all rows for an array column 
+			virtual void getColumnSliceGeneralV (const Slicer& ns, void* data) = 0;
 
 			// StMan pointer
 			AdiosStMan *itsStManPtr;

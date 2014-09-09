@@ -36,6 +36,7 @@
 namespace casa { 
 
 	class AdiosStManColumn;
+	class AdiosStManColumnA;
 
 	class AdiosStMan : public DataManager
 	{
@@ -98,7 +99,8 @@ namespace casa {
 			bool isMpiInitInternal;
 			bool isAdiosOpened;
 
-			PtrBlock<AdiosStManColumn*> itsColumnPtrBlk;
+			char itsStManColumnType;
+			PtrBlock<AdiosStManColumnA*> itsColumnPtrBlk;
 
 			uInt itsNrRows;
 			uInt itsNrColsSlave;

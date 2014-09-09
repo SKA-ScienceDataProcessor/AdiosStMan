@@ -7,14 +7,15 @@
 #include "../AdiosStMan.h"
 #include <casa/namespace.h>
 
-String filename = "/scratch/jason/1067892840.ms";
-String newfilename = "/scratch/jason/v.casa";
 
 int main (int argc, char **argv){
 
 
+	string file_tsm="/scratch/jason/1067892840_tsm.ms";
+	string file_adios="/scratch/jason/1067892840_adios.ms";
+
 	// ####### read init
-	Table read_table(filename);    
+	Table read_table(file_tsm);    
 	uInt NrRows = read_table.nrow();
 
 
@@ -99,7 +100,7 @@ int main (int argc, char **argv){
 	
 	
 	// ####### column init for read & write
-	SetupNewTable newtab(newfilename, td, Table::New);
+	SetupNewTable newtab(file_adios, td, Table::New);
 	AdiosStMan stman;
 	newtab.bindAll(stman);
 	Table write_table(newtab, NrRows);
@@ -109,51 +110,67 @@ int main (int argc, char **argv){
 	// UVW column
 	ArrayColumn<double> UVW_col_new (write_table, "UVW");
 	UVW_col_new.putColumn(UVW_col.getColumn());
+	cout << "UVW column completed" << endl;
 	// FLAG column
 	ArrayColumn<bool> FLAG_col_new (write_table, "FLAG");
 	FLAG_col_new.putColumn(FLAG_col.getColumn());
+	cout << "FLAG column completed" << endl;
 	// FLAG_CATEGORY column
 	ArrayColumn<float> WEIGHT_col_new (write_table, "WEIGHT");
 	WEIGHT_col_new.putColumn(WEIGHT_col.getColumn());
+	cout << "WEIGHT column completed" << endl;
 	// SIGMA column
 	ArrayColumn<float> SIGMA_col_new (write_table, "SIGMA");
 	SIGMA_col_new.putColumn(SIGMA_col.getColumn());
+	cout << "SIGMA column completed" << endl;
 	// ANTENNA1 column
 	ScalarColumn<int> ANTENNA1_col_new (write_table, "ANTENNA1");
 	ANTENNA1_col_new.putColumn(ANTENNA1_col.getColumn());
+	cout << "ANTENNA1 column completed" << endl;
 	// ANTENNA2 column
 	ScalarColumn<int> ANTENNA2_col_new (write_table, "ANTENNA2");
 	ANTENNA2_col_new.putColumn(ANTENNA2_col.getColumn());
+	cout << "ANTENNA2 column completed" << endl;
 	// ARRAY_ID column
 	ScalarColumn<int> ARRAY_ID_col_new (write_table, "ARRAY_ID");
 	ARRAY_ID_col_new.putColumn(ARRAY_ID_col.getColumn());
+	cout << "ARRAY_ID column completed" << endl;
 	// DATA_DESC_ID column
 	ScalarColumn<int> DATA_DESC_ID_col_new (write_table, "DATA_DESC_ID");
 	DATA_DESC_ID_col_new.putColumn(DATA_DESC_ID_col.getColumn());
+	cout << "DATA_DESC_ID column completed" << endl;
 	// EXPOSURE column
 	ScalarColumn<double> EXPOSURE_col_new (write_table, "EXPOSURE");
 	EXPOSURE_col_new.putColumn(EXPOSURE_col.getColumn());
+	cout << "EXPOSURE column completed" << endl;
 	// FEED1 column
 	ScalarColumn<int> FEED1_col_new (write_table, "FEED1");
 	FEED1_col_new.putColumn(FEED1_col.getColumn());
+	cout << "FEED1 column completed" << endl;
 	// FEED2 column
 	ScalarColumn<int> FEED2_col_new (write_table, "FEED2");
 	FEED2_col_new.putColumn(FEED2_col.getColumn());
+	cout << "FEED2 column completed" << endl;
 	// FIELD_ID column
 	ScalarColumn<int> FIELD_ID_col_new (write_table, "FIELD_ID");
 	FIELD_ID_col_new.putColumn(FIELD_ID_col.getColumn());
+	cout << "FIELD_ID column completed" << endl;
 	// FLAG_ROW column
 	ScalarColumn<bool> FLAG_ROW_col_new (write_table, "FLAG_ROW");
 	FLAG_ROW_col_new.putColumn(FLAG_ROW_col.getColumn());
+	cout << "FLAG_ROW column completed" << endl;
 	// INTERVAL column
 	ScalarColumn<double> INTERVAL_col_new (write_table, "INTERVAL");
 	INTERVAL_col_new.putColumn(INTERVAL_col.getColumn());
+	cout << "INTERVAL column completed" << endl;
 	// PROCESSOR_ID column
 	ScalarColumn<int> PROCESSOR_ID_col_new (write_table, "PROCESSOR_ID");
 	PROCESSOR_ID_col_new.putColumn(PROCESSOR_ID_col.getColumn());
+	cout << "PROCESSOR_ID column completed" << endl;
 	// SCAN_NUMBER column
 	ScalarColumn<int> SCAN_NUMBER_col_new (write_table, "SCAN_NUMBER");
 	SCAN_NUMBER_col_new.putColumn(SCAN_NUMBER_col.getColumn());
+	cout << "SCAN_NUMBER column completed" << endl;
 	// STATE_ID column
 	ScalarColumn<int> STATE_ID_col_new (write_table, "STATE_ID");
 	STATE_ID_col_new.putColumn(STATE_ID_col.getColumn());

@@ -25,7 +25,7 @@
 
 #include <casa/IO/AipsIO.h>
 #include "AdiosStMan.h"
-#include "AdiosStManColumn.h"
+#include "AdiosStManColumnA.h"
 
 
 namespace casa { 
@@ -38,6 +38,7 @@ namespace casa {
 		itsMpiComm(MPI_COMM_WORLD),
 		isAdiosOpened(false),
 		itsNrColsSlave(0),
+		itsStManColumnType('A'),
 		isMpiInitInternal(false)
 	{
 		int isMpiInitialized;
@@ -59,6 +60,7 @@ namespace casa {
 		itsMpiComm(MPI_COMM_WORLD),
 		isAdiosOpened(false),
 		itsNrColsSlave(0),
+		itsStManColumnType('A'),
 		isMpiInitInternal(false)
 	{
 		MPI_Comm_rank(MPI_COMM_WORLD, &mpiRank);
@@ -220,7 +222,7 @@ namespace casa {
 		if (itsNrColsSlave >= itsColumnPtrBlk.nelements()) {
 			itsColumnPtrBlk.resize (itsColumnPtrBlk.nelements() + 32);
 		}
-		AdiosStManColumn* aColumn = new AdiosStManColumn (this, aDataType, itsNrColsSlave);
+		AdiosStManColumnA* aColumn = new AdiosStManColumnA (this, aDataType, itsNrColsSlave);
 		aColumn->setColumnName(name);
 		itsColumnPtrBlk[itsNrColsSlave] = aColumn;
 		itsNrColsSlave++;
@@ -242,7 +244,18 @@ namespace casa {
 		if (ncolumn() >= itsColumnPtrBlk.nelements()) {
 			itsColumnPtrBlk.resize (itsColumnPtrBlk.nelements() + 32);
 		}
-		AdiosStManColumn* aColumn = new AdiosStManColumn (this, aDataType, ncolumn());
+
+		AdiosStManColumnA* aColumn;
+
+		switch (itsStManColumnType){
+			case 'A':
+				aColumn = new AdiosStManColumnA (this, aDataType, ncolumn());
+				break;
+			default:
+				aColumn = new AdiosStManColumnA (this, aDataType, ncolumn());
+				break;
+		}
+
 		aColumn->setColumnName(name);
 		itsColumnPtrBlk[ncolumn()] = aColumn;
 		return aColumn;
