@@ -8,6 +8,8 @@ This project is to implement a CASA storage manager using ADIOS (Adaptive IO Sys
 ============================================
 
 Version History:
+v0.4.1 - Added functions to check if data to be written is all zero
+---------------------
 v0.4 - Restructured AdiosStManColumn in a way that it derives child classes to access ADIOS files differently
 =====================
 =====================

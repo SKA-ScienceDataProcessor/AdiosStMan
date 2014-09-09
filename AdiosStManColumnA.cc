@@ -92,7 +92,7 @@ namespace casa{
 
 	Bool AdiosStManColumnA::canAccessArrayColumn(Bool &reask) const{
 		reask = false;
-		return true;
+		return false;
 	}
 	Bool AdiosStManColumnA::canAccessSlice(Bool &reask) const{
 		reask = false;
@@ -109,6 +109,7 @@ namespace casa{
 	}
 
 	void AdiosStManColumnA::putGeneralV (uInt rownr, const void* dataPtr){
+		if(isZero(dataPtr)) return;
 		itsStManPtr->adiosOpen();
 		adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , (void*)dataPtr);
 	}

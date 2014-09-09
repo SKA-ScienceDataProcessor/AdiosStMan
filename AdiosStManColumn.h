@@ -199,6 +199,34 @@ namespace casa { //# NAMESPACE CASA - BEGIN
 
 		protected:
 
+			// *** check if data is all zero ***
+			// void
+			bool isZero (const void *dataPtr);
+			// scalar
+			inline bool isZero (const Bool* dataPtr);
+			inline bool isZero (const uChar* dataPtr);
+			inline bool isZero (const Short* dataPtr);
+			inline bool isZero (const uShort* dataPtr);
+			inline bool isZero (const Int* dataPtr);
+			inline bool isZero (const uInt* dataPtr);
+			inline bool isZero (const float* dataPtr);
+			inline bool isZero (const double* dataPtr);
+			inline bool isZero (const Complex* dataPtr);
+			inline bool isZero (const DComplex* dataPtr);
+			// array
+			bool isZero (const Array<Bool>* dataPtr);
+			bool isZero (const Array<uChar>* dataPtr);
+			bool isZero (const Array<Short>* dataPtr);
+			bool isZero (const Array<uShort>* dataPtr);
+			bool isZero (const Array<Int>* dataPtr);
+			bool isZero (const Array<uInt>* dataPtr);
+			bool isZero (const Array<float>* dataPtr);
+			bool isZero (const Array<double>* dataPtr);
+			bool isZero (const Array<Complex>* dataPtr);
+			bool isZero (const Array<DComplex>* dataPtr);
+			// *** check if data is all zero ***
+			
+			
 			// access a row for a scalar column 
 			virtual void putGeneralV (uInt aRowNr, const void* aDataPtr) = 0;
 			virtual void getGeneralV (uInt aRowNr, void* aDataPtr) = 0;
@@ -236,6 +264,8 @@ namespace casa { //# NAMESPACE CASA - BEGIN
 			uint64_t itsNrIDs;                  // number of ADIOS write IDs that have been defined
 			uint64_t itsNrIDsAllocated;			// number of ADIOS write IDs that have been allocated 
 
+
+			int itsCasaDataType;
 
 
 

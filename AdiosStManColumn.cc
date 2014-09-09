@@ -37,6 +37,7 @@ namespace casa{
 		readCount (0),
 		itsAdiosVarInfo (0),
 		itsStManPtr (aParent),
+		itsCasaDataType (aDataType),
 		itsShape(0)
 	{
 		switch (aDataType){
@@ -654,6 +655,128 @@ namespace casa{
 	}
 	// *** access a slice of all rows for an array column ***
 
+	// *** check if data is all zero ***
+	// void
+	bool AdiosStManColumn::isZero (const void *dataPtr){
+		switch (itsCasaDataType){
+			case TpBool:
+				return isZero((const Bool*)dataPtr);
+			case TpArrayBool:
+				return isZero((const Array<Bool>*)dataPtr);
+			case TpChar:
+				return isZero((const Char*)dataPtr);
+			case TpArrayChar:
+				return isZero((const Array<Char>*)dataPtr);
+			case TpUChar:
+				return isZero((const uChar*)dataPtr);
+			case TpArrayUChar:
+				return isZero((const Array<uChar>*)dataPtr);
+			case TpShort:
+				return isZero((const Short*)dataPtr);
+			case TpArrayShort:
+				return isZero((const Array<Short>*)dataPtr);
+			case TpUShort:
+				return isZero((const uShort*)dataPtr);
+			case TpArrayUShort:
+				return isZero((const Array<uShort>*)dataPtr);
+			case TpInt:
+				return isZero((const Int*)dataPtr);
+			case TpArrayInt:
+				return isZero((const Array<Int>*)dataPtr);
+			case TpUInt:
+				return isZero((const uInt*)dataPtr);
+			case TpArrayUInt:
+				return isZero((const Array<uInt>*)dataPtr);
+			case TpFloat:
+				return isZero((const float*)dataPtr);
+			case TpArrayFloat:
+				return isZero((const Array<float>*)dataPtr);
+			case TpDouble:
+				return isZero((const double*)dataPtr);
+			case TpArrayDouble:
+				return isZero((const Array<double>*)dataPtr);
+			case TpComplex:
+				return isZero((const Complex*)dataPtr);
+			case TpArrayComplex:
+				return isZero((const Array<Complex>*)dataPtr);
+			case TpDComplex:
+				return isZero((const DComplex*)dataPtr);
+			case TpArrayDComplex:
+				return isZero((const Array<DComplex>*)dataPtr);
+		}
+		return false;
+	}
+	// scalar
+	inline bool AdiosStManColumn::isZero (const Bool* dataPtr){
+		if(*dataPtr==0) return true;
+		else return false;
+	}
+	inline bool AdiosStManColumn::isZero (const uChar* dataPtr){
+		if(*dataPtr==0) return true;
+		else return false;
+	}
+	inline bool AdiosStManColumn::isZero (const Short* dataPtr){
+		if(*dataPtr==0) return true;
+		else return false;
+	}
+	inline bool AdiosStManColumn::isZero (const uShort* dataPtr){
+		if(*dataPtr==0) return true;
+		else return false;
+	}
+	inline bool AdiosStManColumn::isZero (const Int* dataPtr){
+		if(*dataPtr==0) return true;
+		else return false;
+	}
+	inline bool AdiosStManColumn::isZero (const uInt* dataPtr){
+		if(*dataPtr==0) return true;
+		else return false;
+	}
+	inline bool AdiosStManColumn::isZero (const float* dataPtr){
+		if(*dataPtr==0) return true;
+		else return false;
+	}
+	inline bool AdiosStManColumn::isZero (const double* dataPtr){
+		if(*dataPtr==0) return true;
+		else return false;
+	}
+	inline bool AdiosStManColumn::isZero (const Complex* dataPtr){
+		return false;
+	}
+	inline bool AdiosStManColumn::isZero (const DComplex* dataPtr){
+		return false;
+	}
+	// scalar
+	bool AdiosStManColumn::isZero (const Array<Bool>* dataPtr){
+		return false;
+	}
+	bool AdiosStManColumn::isZero (const Array<uChar>* dataPtr){
+		return false;
+	}
+	bool AdiosStManColumn::isZero (const Array<Short>* dataPtr){
+		return false;
+	}
+	bool AdiosStManColumn::isZero (const Array<uShort>* dataPtr){
+		return false;
+	}
+	bool AdiosStManColumn::isZero (const Array<Int>* dataPtr){
+		return false;
+	}
+	bool AdiosStManColumn::isZero (const Array<uInt>* dataPtr){
+		return false;
+	}
+	bool AdiosStManColumn::isZero (const Array<float>* dataPtr){
+		return false;
+	}
+	bool AdiosStManColumn::isZero (const Array<double>* dataPtr){
+		return false;
+	}
+	bool AdiosStManColumn::isZero (const Array<Complex>* dataPtr){
+		return false;
+	}
+	bool AdiosStManColumn::isZero (const Array<DComplex>* dataPtr){
+		return false;
+	}
+	// *** check if data is all zero ***
 
 
 }

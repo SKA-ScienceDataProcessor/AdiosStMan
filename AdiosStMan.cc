@@ -184,8 +184,9 @@ namespace casa {
 			}
 		}
 
-		itsAdiosBufsize = itsAdiosGroupsize * 3 / 1000000;
-		if(itsAdiosBufsize < 100) itsAdiosBufsize = 100;
+		if(itsAdiosGroupsize < 100000000) itsAdiosGroupsize = 100000000;
+		itsAdiosGroupsize *= 2;
+		itsAdiosBufsize = itsAdiosGroupsize*2 / 1000000;
 		adios_allocate_buffer(ADIOS_BUFFER_ALLOC_NOW, itsAdiosBufsize);
 
 

@@ -10,9 +10,16 @@
 
 int main (int argc, char **argv){
 
-
 	string file_tsm="/scratch/jason/1067892840_tsm.ms";
 	string file_adios="/scratch/jason/1067892840_adios.ms";
+
+	if (argc == 3){
+		file_tsm = argv[1];
+		file_adios = argv[2];
+	}
+
+	cout << "file_tsm = " << file_tsm << endl;
+	cout << "file_adios = " << file_adios << endl;
 
 	// ####### read init
 	Table read_table(file_tsm);    
@@ -174,21 +181,27 @@ int main (int argc, char **argv){
 	// STATE_ID column
 	ScalarColumn<int> STATE_ID_col_new (write_table, "STATE_ID");
 	STATE_ID_col_new.putColumn(STATE_ID_col.getColumn());
+	cout << "STATE_ID column completed" << endl;
 	// TIME column
 	ScalarColumn<double> TIME_col_new (write_table, "TIME");
 	TIME_col_new.putColumn(TIME_col.getColumn());
+	cout << "TIME column completed" << endl;
 	// TIME_CENTROID column
 	ScalarColumn<double> TIME_CENTROID_col_new (write_table, "TIME_CENTROID");
 	TIME_CENTROID_col_new.putColumn(TIME_CENTROID_col.getColumn());
+	cout << "TIME_CENTROID column completed" << endl;
 	// DATA column
 	ArrayColumn<Complex> DATA_col_new (write_table, "DATA");
 	DATA_col_new.putColumn(DATA_col.getColumn());
+	cout << "DATA column completed" << endl;
 	// WEIGHT_SPECTRUM column
 	ArrayColumn<float> WEIGHT_SPECTRUM_col_new (write_table, "WEIGHT_SPECTRUM");
 	WEIGHT_SPECTRUM_col_new.putColumn(WEIGHT_SPECTRUM_col.getColumn());
+	cout << "WEIGHT_SPECTRUM column completed" << endl;
 	// CORRECTED_DATA column
 	ArrayColumn<Complex> CORRECTED_DATA_col_new (write_table, "CORRECTED_DATA");
 	CORRECTED_DATA_col_new.putColumn(CORRECTED_DATA_col.getColumn());
+	cout << "CORRECTED_DATA column completed" << endl;
 
 
 	return 0;
