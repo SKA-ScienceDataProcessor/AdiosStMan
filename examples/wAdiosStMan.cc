@@ -57,7 +57,8 @@ int main(int argc, char **argv){
 
 	// define a table description & add a scalar column and an array column
 	TableDesc td("", "1", TableDesc::Scratch);
-	td.addColumn (ScalarColumnDesc<uInt>("index"));
+	td.addColumn (ScalarColumnDesc<uInt>("index1"));
+	td.addColumn (ScalarColumnDesc<uInt>("index2"));
 	td.addColumn (ArrayColumnDesc<float>("data", data_pos, ColumnDesc::Direct));
 
 	// create a table instance, bind it to the storage manager & allocate rows
@@ -66,7 +67,8 @@ int main(int argc, char **argv){
 	Table tab(newtab, NrRows);
 
 	// define column objects and link them to the table
-	ScalarColumn<uInt> index_col (tab, "index");
+	ScalarColumn<uInt> index1_col (tab, "index1");
+	ScalarColumn<uInt> index2_col (tab, "index2");
 	ArrayColumn<float> data_col (tab, "data");
 
 	// define data arrays that actually hold the data
@@ -77,7 +79,8 @@ int main(int argc, char **argv){
 
 	// write data into the column objects
 	for (uInt i=0; i<NrRows; i++) {
-		index_col.put (i, 0);
+		index1_col.put (i, NrRows-i);
+		index2_col.put (i, 100);
 		data_col.put(i, data_arr);
 	}
 

@@ -31,8 +31,6 @@ namespace casa{
 
 	AdiosStManColumnA::AdiosStManColumnA (AdiosStMan* aParent, int aDataType, uInt aColNr)
 		:AdiosStManColumn (aParent, aDataType, aColNr){
-
-
 	}
 
 	void AdiosStManColumnA::initAdiosRead(){
@@ -66,24 +64,22 @@ namespace casa{
 
 
 			if (itsShape.nelements() == 0){   
-				
 				itsAdiosWriteIDs[itsNrIDs] = adios_define_var(itsStManPtr->getAdiosGroup(), itsColumnName.c_str(), "", itsAdiosDataType, "1", NrRows.str().c_str(), RowID.str().c_str() ); ////
 			}
 			else{
 
-				string columnShape = itsShape.toString().substr(1, itsShape.toString().length()-2);
-				string columnShapeReverse;
-				for (int k=columnShape.length(); k>0; k--){
-					if (columnShape[k-1] != ' ')
-						columnShapeReverse += columnShape[k-1];
-				}   
-				string dimensions = "1," + columnShapeReverse;
-				string global_dimensions = NrRows.str() + "," + columnShapeReverse;
+				IPosition dimensions_pos;
+				for (int k=itsShape.nelements() - 1; k>=0; k--){
+					dimensions_pos.append(IPosition(1, itsShape[k]));
+				}
+				string dimensions_pos_str = dimensions_pos.toString().substr(1, itsShape.toString().length()-2);
+
+				string dimensions = "1," + dimensions_pos_str;
+				string global_dimensions = NrRows.str() + "," + dimensions_pos_str;
 				string local_offsets = RowID.str(); 
 				for (int k=0; k<itsShape.nelements(); k++){
 					local_offsets += ",0";
 				}
-
 				itsAdiosWriteIDs[itsNrIDs] = adios_define_var(itsStManPtr->getAdiosGroup(), itsColumnName.c_str(), "", itsAdiosDataType, dimensions.c_str(), global_dimensions.c_str(), local_offsets.c_str());
 			}
 			itsNrIDs++;
@@ -107,25 +103,22 @@ namespace casa{
 	}
 
 	void AdiosStManColumnA::putArrayGeneralV (uInt rownr, const void* dataPtr){
-		if(isZero(dataPtr) && rownr > 0){
-			return;
-		}
+//		if(isZero(dataPtr) && rownr > 0) return;
 		itsStManPtr->adiosOpen();
 		adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , (void*)dataPtr);
 	}
 
 	void AdiosStManColumnA::putGeneralV (uInt rownr, const void* dataPtr){
-		if(isZero(dataPtr) && rownr > 0){
-			return;
-		}
+//		if(isZero(dataPtr) && rownr > 0) return;
 		itsStManPtr->adiosOpen();
 		adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , (void*)dataPtr);
 	}
 
 	void AdiosStManColumnA::getGeneralV (uInt aRowNr, void* aValue){
+
 		if(itsStManPtr->getAdiosReadFile()){
 			uint64_t rowid = aRowNr;
-			ADIOS_SELECTION *sel = adios_selection_points (itsAdiosVarInfo->ndim, 1, &rowid);
+			ADIOS_SELECTION *sel = adios_selection_points (1, 1, &rowid);
 			adios_schedule_read (itsStManPtr->getAdiosReadFile(), sel, itsColumnName.c_str(), 0, 1, aValue);
 			adios_perform_reads (itsStManPtr->getAdiosReadFile(), 1);
 		}
@@ -153,9 +146,11 @@ namespace casa{
 				readCount[0] = 1;
 			}
 
-			for (int i=1; i<=itsShape.size(); i++){
-				readStart[itsShape.size() - i + 1] = ns.start()(i-1);
-				readCount[itsShape.size() - i + 1] = ns.length()(i-1);
+			if (isArrayColumn){
+				for (int i=1; i<=itsShape.size(); i++){
+					readStart[itsShape.size() - i + 1] = ns.start()(i-1);
+					readCount[itsShape.size() - i + 1] = ns.length()(i-1);
+				}
 			}
 
 			ADIOS_SELECTION *sel = adios_selection_boundingbox (itsAdiosVarInfo->ndim, readStart, readCount);

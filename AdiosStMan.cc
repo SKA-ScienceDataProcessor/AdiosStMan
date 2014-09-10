@@ -186,9 +186,8 @@ namespace casa {
 			}
 		}
 
-		if(itsAdiosGroupsize < 100000000) itsAdiosGroupsize = 100000000;
-		itsAdiosGroupsize *= 2;
-		itsAdiosBufsize = itsAdiosGroupsize*2 / 1000000;
+		itsAdiosBufsize = itsAdiosGroupsize * 1.1 / 1000000;
+		if(itsAdiosBufsize < 100) itsAdiosBufsize = 100;
 		adios_allocate_buffer(ADIOS_BUFFER_ALLOC_NOW, itsAdiosBufsize);
 
 
@@ -211,8 +210,6 @@ namespace casa {
 			cout << "AdiosStMan : Couldn't find ADIOS file. Creating new file." << endl;
 			create(aNrRows);
 		}
-
-
 	}
 
 	void AdiosStMan::deleteManager(){
@@ -237,7 +234,6 @@ namespace casa {
 		cout << "AdiosStMan warning: Support of indirect arrays is currently under development, and it may not behave as expected!" << endl;
 		return makeDirArrColumnSlave(name, aDataType);
 	}
-
 
 	
 	DataManagerColumn* AdiosStMan::makeScalarColumn (const String& name, int aDataType,	const String& dataTypeId){

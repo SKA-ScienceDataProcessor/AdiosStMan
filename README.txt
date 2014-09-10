@@ -8,6 +8,8 @@ This project is to implement a CASA storage manager using ADIOS (Adaptive IO Sys
 ============================================
 
 Version History:
+v0.4.4 - Fixed a bug for reversing a dimension string
+---------------------
 v0.4.3 - Added mwa_checker
 ---------------------
 v0.4.2 - Separated canAccessArrayColumn for reading and writing
