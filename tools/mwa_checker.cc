@@ -91,29 +91,29 @@ int main (int argc, char **argv){
 	ROScalarColumn<int>     ANTENNA2_col_adios(adios_table, "ANTENNA2");
 	ROScalarColumn<int>     ARRAY_ID_col_adios(adios_table, "ARRAY_ID");
 	ROScalarColumn<int>     DATA_DESC_ID_col_adios(adios_table, "DATA_DESC_ID");
-//	ROScalarColumn<int>     FEED1_col_adios(adios_table, "FEED1");
-//	ROScalarColumn<int>     FEED2_col_adios(adios_table, "FEED2");
-//	ROScalarColumn<int>     FIELD_ID_col_adios(adios_table, "FIELD_ID");
-//	ROScalarColumn<int>     PROCESSOR_ID_col_adios(adios_table, "PROCESSOR_ID");
-//	ROScalarColumn<int>     SCAN_NUMBER_col_adios(adios_table, "SCAN_NUMBER");
-//	ROScalarColumn<int>     STATE_ID_col_adios(adios_table, "STATE_ID");
-//	ROScalarColumn<double>  EXPOSURE_col_adios(adios_table, "EXPOSURE");
-//	ROScalarColumn<double>  INTERVAL_col_adios(adios_table, "INTERVAL");
-//	ROScalarColumn<double>  TIME_col_adios(adios_table, "TIME");
-//	ROScalarColumn<double>  TIME_CENTROID_col_adios(adios_table, "TIME_CENTROID");
+	ROScalarColumn<int>     FEED1_col_adios(adios_table, "FEED1");
+	ROScalarColumn<int>     FEED2_col_adios(adios_table, "FEED2");
+	ROScalarColumn<int>     FIELD_ID_col_adios(adios_table, "FIELD_ID");
+	ROScalarColumn<int>     PROCESSOR_ID_col_adios(adios_table, "PROCESSOR_ID");
+	ROScalarColumn<int>     SCAN_NUMBER_col_adios(adios_table, "SCAN_NUMBER");
+	ROScalarColumn<int>     STATE_ID_col_adios(adios_table, "STATE_ID");
+	ROScalarColumn<double>  EXPOSURE_col_adios(adios_table, "EXPOSURE");
+	ROScalarColumn<double>  INTERVAL_col_adios(adios_table, "INTERVAL");
+	ROScalarColumn<double>  TIME_col_adios(adios_table, "TIME");
+	ROScalarColumn<double>  TIME_CENTROID_col_adios(adios_table, "TIME_CENTROID");
 
-//	ROArrayColumn<bool>     FLAG_col_adios(adios_table, "FLAG");
-//	ROArrayColumn<float>    SIGMA_col_adios(adios_table, "SIGMA");
-//	ROArrayColumn<float>    WEIGHT_col_adios(adios_table, "WEIGHT");
-//	ROArrayColumn<float>    WEIGHT_SPECTRUM_col_adios(adios_table, "WEIGHT_SPECTRUM");
-//	ROArrayColumn<Complex>  CORRECTED_DATA_col_adios(adios_table, "CORRECTED_DATA");
-//	ROArrayColumn<Complex>  DATA_col_adios(adios_table, "DATA");
-//	ROArrayColumn<double>   UVW_col_adios(adios_table, "UVW");
+	ROArrayColumn<bool>     FLAG_col_adios(adios_table, "FLAG");
+	ROArrayColumn<float>    SIGMA_col_adios(adios_table, "SIGMA");
+	ROArrayColumn<float>    WEIGHT_col_adios(adios_table, "WEIGHT");
+	ROArrayColumn<float>    WEIGHT_SPECTRUM_col_adios(adios_table, "WEIGHT_SPECTRUM");
+	ROArrayColumn<Complex>  CORRECTED_DATA_col_adios(adios_table, "CORRECTED_DATA");
+	ROArrayColumn<Complex>  DATA_col_adios(adios_table, "DATA");
+	ROArrayColumn<double>   UVW_col_adios(adios_table, "UVW");
 
 	///////////////////////////////////////////
 	
 
-	for(int i=0; i<tsm_rows; i++){
+	for(int i=210000; i<tsm_rows; i++){
 
 
 	// FLAG_ROW column
@@ -156,73 +156,175 @@ int main (int argc, char **argv){
 			cout << "adios value = " << DATA_DESC_ID_adios << ", tsm value = " << DATA_DESC_ID_tsm << endl;
 			exit(-1);
 		}
-//	// FEED1 column
-//		int FEED1_adios = FEED1_col_adios.get(i);
-//		int FEED1_tsm   = FEED1_col_tsm.get(i);
-//		if (FEED1_adios != FEED1_tsm){
-//			cout << "row = " << i << ", column = FEED1" << endl;
-//			cout << "adios value = " << FEED1_adios << ", tsm value = " << FEED1_tsm << endl;
-//			exit(-1);
-//		}
-//	// FEED2 column
-//		int FEED2_adios = FEED2_col_adios.get(i);
-//		int FEED2_tsm   = FEED2_col_tsm.get(i);
-//		if (FEED2_adios != FEED2_tsm){
-//			cout << "row = " << i << ", column = FEED2" << endl;
-//			cout << "adios value = " << FEED2_adios << ", tsm value = " << FEED2_tsm << endl;
-//			exit(-1);
-//		}
-//	// FIELD_ID column
-//		int FIELD_ID_adios = FIELD_ID_col_adios.get(i);
-//		int FIELD_ID_tsm   = FIELD_ID_col_tsm.get(i);
-//		if (FIELD_ID_adios != FIELD_ID_tsm){
-//			cout << "row = " << i << ", column = FIELD_ID" << endl;
-//			cout << "adios value = " << FIELD_ID_adios << ", tsm value = " << FIELD_ID_tsm << endl;
-//			exit(-1);
-//		}
-//	// PROCESSOR_ID column
-//	// SCAN_NUMBER column
-//	// STATE_ID column
-//	// EXPOSURE column
-//	// INTERVAL column
-//	// TIME column
-//	// TIME_CENTROID column
+	// FEED1 column
+		int FEED1_adios = FEED1_col_adios.get(i);
+		int FEED1_tsm   = FEED1_col_tsm.get(i);
+		if (FEED1_adios != FEED1_tsm){
+			cout << "row = " << i << ", column = FEED1" << endl;
+			cout << "adios value = " << FEED1_adios << ", tsm value = " << FEED1_tsm << endl;
+			exit(-1);
+		}
+	// FEED2 column
+		int FEED2_adios = FEED2_col_adios.get(i);
+		int FEED2_tsm   = FEED2_col_tsm.get(i);
+		if (FEED2_adios != FEED2_tsm){
+			cout << "row = " << i << ", column = FEED2" << endl;
+			cout << "adios value = " << FEED2_adios << ", tsm value = " << FEED2_tsm << endl;
+			exit(-1);
+		}
+	// FIELD_ID column
+		int FIELD_ID_adios = FIELD_ID_col_adios.get(i);
+		int FIELD_ID_tsm   = FIELD_ID_col_tsm.get(i);
+		if (FIELD_ID_adios != FIELD_ID_tsm){
+			cout << "row = " << i << ", column = FIELD_ID" << endl;
+			cout << "adios value = " << FIELD_ID_adios << ", tsm value = " << FIELD_ID_tsm << endl;
+			exit(-1);
+		}
+	// PROCESSOR_ID column
+		int PROCESSOR_ID_adios = PROCESSOR_ID_col_adios.get(i);
+		int PROCESSOR_ID_tsm   = PROCESSOR_ID_col_tsm.get(i);
+		if (PROCESSOR_ID_adios != PROCESSOR_ID_tsm){
+			cout << "row = " << i << ", column = PROCESSOR_ID" << endl;
+			cout << "adios value = " << PROCESSOR_ID_adios << ", tsm value = " << PROCESSOR_ID_tsm << endl;
+			exit(-1);
+		}
+	// SCAN_NUMBER column
+		int SCAN_NUMBER_adios = SCAN_NUMBER_col_adios.get(i);
+		int SCAN_NUMBER_tsm   = SCAN_NUMBER_col_tsm.get(i);
+		if (SCAN_NUMBER_adios != SCAN_NUMBER_tsm){
+			cout << "row = " << i << ", column = SCAN_NUMBER" << endl;
+			cout << "adios value = " << SCAN_NUMBER_adios << ", tsm value = " << SCAN_NUMBER_tsm << endl;
+			exit(-1);
+		}
+	// STATE_ID column
+		int STATE_ID_adios = STATE_ID_col_adios.get(i);
+		int STATE_ID_tsm   = STATE_ID_col_tsm.get(i);
+		if (STATE_ID_adios != STATE_ID_tsm){
+			cout << "row = " << i << ", column = STATE_ID" << endl;
+			cout << "adios value = " << STATE_ID_adios << ", tsm value = " << STATE_ID_tsm << endl;
+			exit(-1);
+		}
+	// EXPOSURE column
+		double EXPOSURE_adios = EXPOSURE_col_adios.get(i);
+		double EXPOSURE_tsm   = EXPOSURE_col_tsm.get(i);
+		if (EXPOSURE_adios != EXPOSURE_tsm){
+			cout << "row = " << i << ", column = EXPOSURE" << endl;
+			cout << "adios value = " << EXPOSURE_adios << ", tsm value = " << EXPOSURE_tsm << endl;
+			exit(-1);
+		}
+	// INTERVAL column
+		double INTERVAL_adios = INTERVAL_col_adios.get(i);
+		double INTERVAL_tsm   = INTERVAL_col_tsm.get(i);
+		if (INTERVAL_adios != INTERVAL_tsm){
+			cout << "row = " << i << ", column = INTERVAL" << endl;
+			cout << "adios value = " << INTERVAL_adios << ", tsm value = " << INTERVAL_tsm << endl;
+			exit(-1);
+		}
+	// TIME column
+		double TIME_adios = TIME_col_adios.get(i);
+		double TIME_tsm   = TIME_col_tsm.get(i);
+		if (TIME_adios != TIME_tsm){
+			cout << "row = " << i << ", column = TIME" << endl;
+			cout << "adios value = " << TIME_adios << ", tsm value = " << TIME_tsm << endl;
+			exit(-1);
+		}
+	// TIME_CENTROID column
+		double TIME_CENTROID_adios = TIME_CENTROID_col_adios.get(i);
+		double TIME_CENTROID_tsm   = TIME_CENTROID_col_tsm.get(i);
+		if (TIME_CENTROID_adios != TIME_CENTROID_tsm){
+			cout << "row = " << i << ", column = TIME_CENTROID" << endl;
+			cout << "adios value = " << TIME_CENTROID_adios << ", tsm value = " << TIME_CENTROID_tsm << endl;
+			exit(-1);
+		}
 
 
-//	// FLAG column
-//	// SIGMA column
-//	// WEIGHT column
-//	// WEIGHT_SPECTRUM column
-//		Array<float> WEIGHT_SPECTRUM_tsm = WEIGHT_SPECTRUM_col_tsm.get(i);
-//		Vector<float> WEIGHT_SPECTRUM_tsm_rf = WEIGHT_SPECTRUM_tsm.reform(IPosition(1, WEIGHT_SPECTRUM_tsm.nelements()));
-//		Array<float> WEIGHT_SPECTRUM_adios = WEIGHT_SPECTRUM_col_adios.get(i);
-//		Vector<float> WEIGHT_SPECTRUM_adios_rf = WEIGHT_SPECTRUM_adios.reform(IPosition(1, WEIGHT_SPECTRUM_adios.nelements()));
-//		for(int j=0; j<WEIGHT_SPECTRUM_tsm.nelements(); j++){
-//			if(WEIGHT_SPECTRUM_tsm_rf[j] != WEIGHT_SPECTRUM_adios_rf[j]){
-//				cout << "row = " << i << ", column = WEIGHT_SPECTRUM, element = " << j << endl;
-//				cout << WEIGHT_SPECTRUM_tsm_rf[j] << endl;
-//				cout << WEIGHT_SPECTRUM_adios_rf[j] << endl;
-//				exit(-1);
-//			}
-//		}
-//	// DATA column
-//	// CORRECTED_DATA column
-//	// UVW column
-//		Array<Double> UVW_tsm = UVW_col_tsm.get(i);
-//		Vector<Double> UVW_tsm_rf = UVW_tsm.reform(IPosition(1, UVW_tsm.nelements()));
-//		Array<Double> UVW_adios = UVW_col_adios.get(i);
-//		Vector<Double> UVW_adios_rf = UVW_adios.reform(IPosition(1, UVW_adios.nelements()));
-//		for(int j=0; j<UVW_tsm.nelements(); j++){
-//			if(UVW_tsm_rf[j] != UVW_adios_rf[j]){
-//				cout << "row = " << i << ", column = UVW, element = " << j << endl;
-//				cout << UVW_tsm_rf[j] << endl;
-//				cout << UVW_adios_rf[j] << endl;
-//				exit(-1);
-//			}
-//		}
+	// FLAG column
+		Array<Bool> FLAG_tsm = FLAG_col_tsm.get(i);
+		Vector<Bool> FLAG_tsm_rf = FLAG_tsm.reform(IPosition(1, FLAG_tsm.nelements()));
+		Array<Bool> FLAG_adios = FLAG_col_adios.get(i);
+		Vector<Bool> FLAG_adios_rf = FLAG_adios.reform(IPosition(1, FLAG_adios.nelements()));
+		for(int j=0; j<FLAG_tsm.nelements(); j++){
+			if(FLAG_tsm_rf[j] != FLAG_adios_rf[j]){
+				cout << "row = " << i << ", column = FLAG, element = " << j << endl;
+				cout << "adios value = " << FLAG_adios_rf[j] << ", tsm value = " << FLAG_tsm_rf[j] << endl;
+				exit(-1);
+			}
+		}
+	// SIGMA column
+		Array<float> SIGMA_tsm = SIGMA_col_tsm.get(i);
+		Vector<float> SIGMA_tsm_rf = SIGMA_tsm.reform(IPosition(1, SIGMA_tsm.nelements()));
+		Array<float> SIGMA_adios = SIGMA_col_adios.get(i);
+		Vector<float> SIGMA_adios_rf = SIGMA_adios.reform(IPosition(1, SIGMA_adios.nelements()));
+		for(int j=0; j<SIGMA_tsm.nelements(); j++){
+			if(SIGMA_tsm_rf[j] != SIGMA_adios_rf[j]){
+				cout << "row = " << i << ", column = SIGMA, element = " << j << endl;
+				cout << "adios value = " << SIGMA_adios_rf[j] << ", tsm value = " << SIGMA_tsm_rf[j] << endl;
+				exit(-1);
+			}
+		}
+	// WEIGHT column
+		Array<float> WEIGHT_tsm = WEIGHT_col_tsm.get(i);
+		Vector<float> WEIGHT_tsm_rf = WEIGHT_tsm.reform(IPosition(1, WEIGHT_tsm.nelements()));
+		Array<float> WEIGHT_adios = WEIGHT_col_adios.get(i);
+		Vector<float> WEIGHT_adios_rf = WEIGHT_adios.reform(IPosition(1, WEIGHT_adios.nelements()));
+		for(int j=0; j<WEIGHT_tsm.nelements(); j++){
+			if(WEIGHT_tsm_rf[j] != WEIGHT_adios_rf[j]){
+				cout << "row = " << i << ", column = WEIGHT, element = " << j << endl;
+				cout << "adios value = " << WEIGHT_adios_rf[j] << ", tsm value = " << WEIGHT_tsm_rf[j] << endl;
+				exit(-1);
+			}
+		}
+	// WEIGHT_SPECTRUM column
+		Array<float> WEIGHT_SPECTRUM_tsm = WEIGHT_SPECTRUM_col_tsm.get(i);
+		Vector<float> WEIGHT_SPECTRUM_tsm_rf = WEIGHT_SPECTRUM_tsm.reform(IPosition(1, WEIGHT_SPECTRUM_tsm.nelements()));
+		Array<float> WEIGHT_SPECTRUM_adios = WEIGHT_SPECTRUM_col_adios.get(i);
+		Vector<float> WEIGHT_SPECTRUM_adios_rf = WEIGHT_SPECTRUM_adios.reform(IPosition(1, WEIGHT_SPECTRUM_adios.nelements()));
+		for(int j=0; j<WEIGHT_SPECTRUM_tsm.nelements(); j++){
+			if(WEIGHT_SPECTRUM_tsm_rf[j] != WEIGHT_SPECTRUM_adios_rf[j]){
+				cout << "row = " << i << ", column = WEIGHT_SPECTRUM, element = " << j << endl;
+				cout << "adios value = " << WEIGHT_SPECTRUM_adios_rf[j] << ", tsm value = " << WEIGHT_SPECTRUM_tsm_rf[j] << endl;
+				exit(-1);
+			}
+		}
+	// DATA column
+		Array<Complex> DATA_tsm = DATA_col_tsm.get(i);
+		Vector<Complex> DATA_tsm_rf = DATA_tsm.reform(IPosition(1, DATA_tsm.nelements()));
+		Array<Complex> DATA_adios = DATA_col_adios.get(i);
+		Vector<Complex> DATA_adios_rf = DATA_adios.reform(IPosition(1, DATA_adios.nelements()));
+		for(int j=0; j<DATA_tsm.nelements(); j++){
+			if(DATA_tsm_rf[j] != DATA_adios_rf[j]){
+				cout << "row = " << i << ", column = DATA, element = " << j << endl;
+				cout << "adios value = " << DATA_adios_rf[j] << ", tsm value = " << DATA_tsm_rf[j] << endl;
+				exit(-1);
+			}
+		}
+    // CORRECTED_DATA column
+		Array<Complex> CORRECTED_DATA_tsm = CORRECTED_DATA_col_tsm.get(i);
+		Vector<Complex> CORRECTED_DATA_tsm_rf = CORRECTED_DATA_tsm.reform(IPosition(1, CORRECTED_DATA_tsm.nelements()));
+		Array<Complex> CORRECTED_DATA_adios = CORRECTED_DATA_col_adios.get(i);
+		Vector<Complex> CORRECTED_DATA_adios_rf = CORRECTED_DATA_adios.reform(IPosition(1, CORRECTED_DATA_adios.nelements()));
+		for(int j=0; j<CORRECTED_DATA_tsm.nelements(); j++){
+			if(CORRECTED_DATA_tsm_rf[j] != CORRECTED_DATA_adios_rf[j]){
+				cout << "row = " << i << ", column = CORRECTED_DATA, element = " << j << endl;
+				cout << "adios value = " << CORRECTED_DATA_adios_rf[j] << ", tsm value = " << CORRECTED_DATA_tsm_rf[j] << endl;
+				exit(-1);
+			}
+		}
+	// UVW column
+		Array<Double> UVW_tsm = UVW_col_tsm.get(i);
+		Vector<Double> UVW_tsm_rf = UVW_tsm.reform(IPosition(1, UVW_tsm.nelements()));
+		Array<Double> UVW_adios = UVW_col_adios.get(i);
+		Vector<Double> UVW_adios_rf = UVW_adios.reform(IPosition(1, UVW_adios.nelements()));
+		for(int j=0; j<UVW_tsm.nelements(); j++){
+			if(UVW_tsm_rf[j] != UVW_adios_rf[j]){
+				cout << "row = " << i << ", column = UVW, element = " << j << endl;
+				cout << "adios value = " << UVW_adios_rf[j] << ", tsm value = " << UVW_tsm_rf[j] << endl;
+				exit(-1);
+			}
+		}
 
 
-		if (i%1000 == 0 && i > 0)
+//		if (i%100 == 0 && i > 0)
 			cout << i << " rows checked, " << (float)i/tsm_rows*100 << "\% finished" << endl;
 	}
 

@@ -80,64 +80,76 @@ int main (int argc, char **argv){
 	ROScalarColumn<double> EXPOSURE_col(read_table, "EXPOSURE");
 	td.addColumn (ScalarColumnDesc<double>("EXPOSURE"));
 
-//	// FEED1 column
-//	ROScalarColumn<int> FEED1_col(read_table, "FEED1");
-//	td.addColumn (ScalarColumnDesc<int>("FEED1"));
-//
-//	// FEED2 column
-//	ROScalarColumn<int> FEED2_col(read_table, "FEED2");
-//	td.addColumn (ScalarColumnDesc<int>("FEED2"));
+	// FEED1 column
+	ROScalarColumn<int> FEED1_col(read_table, "FEED1");
+	td.addColumn (ScalarColumnDesc<int>("FEED1"));
+
+	// FEED2 column
+	ROScalarColumn<int> FEED2_col(read_table, "FEED2");
+	td.addColumn (ScalarColumnDesc<int>("FEED2"));
 
 	// FIELD_ID column
-//	ROScalarColumn<int> FIELD_ID_col(read_table, "FIELD_ID");
-//	td.addColumn (ScalarColumnDesc<int>("FIELD_ID"));
+	ROScalarColumn<int> FIELD_ID_col(read_table, "FIELD_ID");
+	td.addColumn (ScalarColumnDesc<int>("FIELD_ID"));
 
-//	// INTERVAL column
-//	ROScalarColumn<double> INTERVAL_col(read_table, "INTERVAL");
-//	td.addColumn (ScalarColumnDesc<double>("INTERVAL"));
-//	// PROCESSOR_ID column
-//	ROScalarColumn<int> PROCESSOR_ID_col(read_table, "PROCESSOR_ID");
-//	td.addColumn (ScalarColumnDesc<int>("PROCESSOR_ID"));
-//	// SCAN_NUMBER column
-//	ROScalarColumn<int> SCAN_NUMBER_col(read_table, "SCAN_NUMBER");
-//	td.addColumn (ScalarColumnDesc<int>("SCAN_NUMBER"));
-//	// STATE_ID column
-//	ROScalarColumn<int> STATE_ID_col(read_table, "STATE_ID");
-//	td.addColumn (ScalarColumnDesc<int>("STATE_ID"));
-//	// TIME column
-//	ROScalarColumn<double> TIME_col(read_table, "TIME");
-//	td.addColumn (ScalarColumnDesc<double>("TIME"));
-//	// TIME_CENTROID column
-//	ROScalarColumn<double> TIME_CENTROID_col(read_table, "TIME_CENTROID");
-//	td.addColumn (ScalarColumnDesc<double>("TIME_CENTROID"));
-//	// UVW column
-//	ROArrayColumn<Double> UVW_col(read_table, "UVW");
-//	IPosition UVW_pos = UVW_col.shape(0);
-//	td.addColumn (ArrayColumnDesc<Double>("UVW", UVW_pos, ColumnDesc::Direct));
-//	// FLAG column
-//	ROArrayColumn<bool> FLAG_col(read_table, "FLAG");
-//	IPosition FLAG_pos = FLAG_col.shape(0);
-//	td.addColumn (ArrayColumnDesc<bool>("FLAG", FLAG_pos, ColumnDesc::Direct));
-//	// WEIGHT column
-//	ROArrayColumn<float> WEIGHT_col(read_table, "WEIGHT");
-//	IPosition WEIGHT_pos = WEIGHT_col.shape(0);
-//	td.addColumn (ArrayColumnDesc<float>("WEIGHT", WEIGHT_pos, ColumnDesc::Direct));
-//	// SIGMA column
-//	ROArrayColumn<float> SIGMA_col(read_table, "SIGMA");
-//	IPosition SIGMA_pos = SIGMA_col.shape(0);
-//	td.addColumn (ArrayColumnDesc<float>("SIGMA", SIGMA_pos, ColumnDesc::Direct));
-//	// DATA column
-//	ROArrayColumn<Complex> DATA_col(read_table, "DATA");
-//	IPosition DATA_pos = DATA_col.shape(0);
-//	td.addColumn (ArrayColumnDesc<Complex>("DATA", DATA_pos, ColumnDesc::Direct));
-//	// WEIGHT_SPECTRUM column
-//	ROArrayColumn<float> WEIGHT_SPECTRUM_col(read_table, "WEIGHT_SPECTRUM");
-//	IPosition WEIGHT_SPECTRUM_pos = WEIGHT_SPECTRUM_col.shape(0);
-//	td.addColumn (ArrayColumnDesc<float>("WEIGHT_SPECTRUM", WEIGHT_SPECTRUM_pos, ColumnDesc::Direct));
-//	// CORRECTED_DATA column
-//	ROArrayColumn<Complex> CORRECTED_DATA_col(read_table, "CORRECTED_DATA");
-//	IPosition CORRECTED_DATA_pos = CORRECTED_DATA_col.shape(0);
-//	td.addColumn (ArrayColumnDesc<Complex>("CORRECTED_DATA", CORRECTED_DATA_pos, ColumnDesc::Direct));
+	// INTERVAL column
+	ROScalarColumn<double> INTERVAL_col(read_table, "INTERVAL");
+	td.addColumn (ScalarColumnDesc<double>("INTERVAL"));
+
+	// PROCESSOR_ID column
+	ROScalarColumn<int> PROCESSOR_ID_col(read_table, "PROCESSOR_ID");
+	td.addColumn (ScalarColumnDesc<int>("PROCESSOR_ID"));
+
+	// SCAN_NUMBER column
+	ROScalarColumn<int> SCAN_NUMBER_col(read_table, "SCAN_NUMBER");
+	td.addColumn (ScalarColumnDesc<int>("SCAN_NUMBER"));
+
+	// STATE_ID column
+	ROScalarColumn<int> STATE_ID_col(read_table, "STATE_ID");
+	td.addColumn (ScalarColumnDesc<int>("STATE_ID"));
+
+	// TIME column
+	ROScalarColumn<double> TIME_col(read_table, "TIME");
+	td.addColumn (ScalarColumnDesc<double>("TIME"));
+
+	// TIME_CENTROID column
+	ROScalarColumn<double> TIME_CENTROID_col(read_table, "TIME_CENTROID");
+	td.addColumn (ScalarColumnDesc<double>("TIME_CENTROID"));
+
+	// UVW column
+	ROArrayColumn<Double> UVW_col(read_table, "UVW");
+	IPosition UVW_pos = UVW_col.shape(0);
+	td.addColumn (ArrayColumnDesc<Double>("UVW", UVW_pos, ColumnDesc::Direct));
+
+	// FLAG column
+	ROArrayColumn<bool> FLAG_col(read_table, "FLAG");
+	IPosition FLAG_pos = FLAG_col.shape(0);
+	td.addColumn (ArrayColumnDesc<bool>("FLAG", FLAG_pos, ColumnDesc::Direct));
+
+	// WEIGHT column
+	ROArrayColumn<float> WEIGHT_col(read_table, "WEIGHT");
+	IPosition WEIGHT_pos = WEIGHT_col.shape(0);
+	td.addColumn (ArrayColumnDesc<float>("WEIGHT", WEIGHT_pos, ColumnDesc::Direct));
+
+	// SIGMA column
+	ROArrayColumn<float> SIGMA_col(read_table, "SIGMA");
+	IPosition SIGMA_pos = SIGMA_col.shape(0);
+	td.addColumn (ArrayColumnDesc<float>("SIGMA", SIGMA_pos, ColumnDesc::Direct));
+
+	// DATA column
+	ROArrayColumn<Complex> DATA_col(read_table, "DATA");
+	IPosition DATA_pos = DATA_col.shape(0);
+	td.addColumn (ArrayColumnDesc<Complex>("DATA", DATA_pos, ColumnDesc::Direct));
+
+	// WEIGHT_SPECTRUM column
+	ROArrayColumn<float> WEIGHT_SPECTRUM_col(read_table, "WEIGHT_SPECTRUM");
+	IPosition WEIGHT_SPECTRUM_pos = WEIGHT_SPECTRUM_col.shape(0);
+	td.addColumn (ArrayColumnDesc<float>("WEIGHT_SPECTRUM", WEIGHT_SPECTRUM_pos, ColumnDesc::Direct));
+
+	// CORRECTED_DATA column
+	ROArrayColumn<Complex> CORRECTED_DATA_col(read_table, "CORRECTED_DATA");
+	IPosition CORRECTED_DATA_pos = CORRECTED_DATA_col.shape(0);
+	td.addColumn (ArrayColumnDesc<Complex>("CORRECTED_DATA", CORRECTED_DATA_pos, ColumnDesc::Direct));
 	
 	
 	// ####### column init for read & write
@@ -179,79 +191,79 @@ int main (int argc, char **argv){
 	EXPOSURE_col_new.putColumn(EXPOSURE_col.getColumn());
 	cout << "EXPOSURE column completed" << endl;
 
-//	// FEED1 column
-//	ScalarColumn<int> FEED1_col_new (write_table, "FEED1");
-//	FEED1_col_new.putColumn(FEED1_col.getColumn());
-//	cout << "FEED1 column completed" << endl;
-//
-//	// FEED2 column
-//	ScalarColumn<int> FEED2_col_new (write_table, "FEED2");
-//	FEED2_col_new.putColumn(FEED2_col.getColumn());
-//	cout << "FEED2 column completed" << endl;
+	// FEED1 column
+	ScalarColumn<int> FEED1_col_new (write_table, "FEED1");
+	FEED1_col_new.putColumn(FEED1_col.getColumn());
+	cout << "FEED1 column completed" << endl;
+
+	// FEED2 column
+	ScalarColumn<int> FEED2_col_new (write_table, "FEED2");
+	FEED2_col_new.putColumn(FEED2_col.getColumn());
+	cout << "FEED2 column completed" << endl;
 
 	// FIELD_ID column
-//	ScalarColumn<int> FIELD_ID_col_new (write_table, "FIELD_ID");
-//	FIELD_ID_col_new.putColumn(FIELD_ID_col.getColumn());
-//	cout << "FIELD_ID column completed" << endl;
+	ScalarColumn<int> FIELD_ID_col_new (write_table, "FIELD_ID");
+	FIELD_ID_col_new.putColumn(FIELD_ID_col.getColumn());
+	cout << "FIELD_ID column completed" << endl;
 
-//	// INTERVAL column
-//	ScalarColumn<double> INTERVAL_col_new (write_table, "INTERVAL");
-//	INTERVAL_col_new.putColumn(INTERVAL_col.getColumn());
-//	cout << "INTERVAL column completed" << endl;
-//	// PROCESSOR_ID column
-//	ScalarColumn<int> PROCESSOR_ID_col_new (write_table, "PROCESSOR_ID");
-//	PROCESSOR_ID_col_new.putColumn(PROCESSOR_ID_col.getColumn());
-//	cout << "PROCESSOR_ID column completed" << endl;
-//	// SCAN_NUMBER column
-//	ScalarColumn<int> SCAN_NUMBER_col_new (write_table, "SCAN_NUMBER");
-//	SCAN_NUMBER_col_new.putColumn(SCAN_NUMBER_col.getColumn());
-//	cout << "SCAN_NUMBER column completed" << endl;
-//	// STATE_ID column
-//	ScalarColumn<int> STATE_ID_col_new (write_table, "STATE_ID");
-//	STATE_ID_col_new.putColumn(STATE_ID_col.getColumn());
-//	cout << "STATE_ID column completed" << endl;
-//	// TIME column
-//	ScalarColumn<double> TIME_col_new (write_table, "TIME");
-//	TIME_col_new.putColumn(TIME_col.getColumn());
-//	cout << "TIME column completed" << endl;
-//	// TIME_CENTROID column
-//	ScalarColumn<double> TIME_CENTROID_col_new (write_table, "TIME_CENTROID");
-//	TIME_CENTROID_col_new.putColumn(TIME_CENTROID_col.getColumn());
-//	cout << "TIME_CENTROID column completed" << endl;
-//	// UVW column
-//	ArrayColumn<double> UVW_col_new (write_table, "UVW");
-//	UVW_col_new.putColumn(UVW_col.getColumn());
-//	cout << "UVW column completed" << endl;
-//	// FLAG column
-//	ArrayColumn<bool> FLAG_col_new (write_table, "FLAG");
-//	FLAG_col_new.putColumn(FLAG_col.getColumn());
-//	cout << "FLAG column completed" << endl;
-//	// WEIGHT column
-//	ArrayColumn<float> WEIGHT_col_new (write_table, "WEIGHT");
-//	WEIGHT_col_new.putColumn(WEIGHT_col.getColumn());
-//	cout << "WEIGHT column completed" << endl;
-//	// SIGMA column
-//	ArrayColumn<float> SIGMA_col_new (write_table, "SIGMA");
-//	SIGMA_col_new.putColumn(SIGMA_col.getColumn());
-//	cout << "SIGMA column completed" << endl;
-//	// DATA column
-//	ArrayColumn<Complex> DATA_col_new (write_table, "DATA");
-//	for(int i=0; i<NrRows; i++){
-//		DATA_col_new.put(i, DATA_col.get(i));
-//	}
-//	cout << "DATA column completed" << endl;
-//	// WEIGHT_SPECTRUM column
-//	ArrayColumn<float> WEIGHT_SPECTRUM_col_new (write_table, "WEIGHT_SPECTRUM");
-//	for(int i=0; i<NrRows; i++){
-//		WEIGHT_SPECTRUM_col_new.put(i, WEIGHT_SPECTRUM_col.get(i));
-//	}
-//	cout << "WEIGHT_SPECTRUM column completed" << endl;
-//	// CORRECTED_DATA column
-//	ArrayColumn<Complex> CORRECTED_DATA_col_new (write_table, "CORRECTED_DATA");
-//	for(int i=0; i<NrRows; i++){
-//		CORRECTED_DATA_col_new.put(i, CORRECTED_DATA_col.get(i));
-//	}
-//	cout << "CORRECTED_DATA column completed" << endl;
+	// INTERVAL column
+	ScalarColumn<double> INTERVAL_col_new (write_table, "INTERVAL");
+	INTERVAL_col_new.putColumn(INTERVAL_col.getColumn());
+	cout << "INTERVAL column completed" << endl;
+	// PROCESSOR_ID column
+	ScalarColumn<int> PROCESSOR_ID_col_new (write_table, "PROCESSOR_ID");
+	PROCESSOR_ID_col_new.putColumn(PROCESSOR_ID_col.getColumn());
+	cout << "PROCESSOR_ID column completed" << endl;
+	// SCAN_NUMBER column
+	ScalarColumn<int> SCAN_NUMBER_col_new (write_table, "SCAN_NUMBER");
+	SCAN_NUMBER_col_new.putColumn(SCAN_NUMBER_col.getColumn());
+	cout << "SCAN_NUMBER column completed" << endl;
+	// STATE_ID column
+	ScalarColumn<int> STATE_ID_col_new (write_table, "STATE_ID");
+	STATE_ID_col_new.putColumn(STATE_ID_col.getColumn());
+	cout << "STATE_ID column completed" << endl;
+	// TIME column
+	ScalarColumn<double> TIME_col_new (write_table, "TIME");
+	TIME_col_new.putColumn(TIME_col.getColumn());
+	cout << "TIME column completed" << endl;
+	// TIME_CENTROID column
+	ScalarColumn<double> TIME_CENTROID_col_new (write_table, "TIME_CENTROID");
+	TIME_CENTROID_col_new.putColumn(TIME_CENTROID_col.getColumn());
+	cout << "TIME_CENTROID column completed" << endl;
+	// UVW column
+	ArrayColumn<double> UVW_col_new (write_table, "UVW");
+	UVW_col_new.putColumn(UVW_col.getColumn());
+	cout << "UVW column completed" << endl;
+	// FLAG column
+	ArrayColumn<bool> FLAG_col_new (write_table, "FLAG");
+	FLAG_col_new.putColumn(FLAG_col.getColumn());
+	cout << "FLAG column completed" << endl;
+	// WEIGHT column
+	ArrayColumn<float> WEIGHT_col_new (write_table, "WEIGHT");
+	WEIGHT_col_new.putColumn(WEIGHT_col.getColumn());
+	cout << "WEIGHT column completed" << endl;
+	// SIGMA column
+	ArrayColumn<float> SIGMA_col_new (write_table, "SIGMA");
+	SIGMA_col_new.putColumn(SIGMA_col.getColumn());
+	cout << "SIGMA column completed" << endl;
+	// WEIGHT_SPECTRUM column
+	ArrayColumn<float> WEIGHT_SPECTRUM_col_new (write_table, "WEIGHT_SPECTRUM");
+	for(int i=0; i<NrRows; i++){
+		WEIGHT_SPECTRUM_col_new.put(i, WEIGHT_SPECTRUM_col.get(i));
+	}
+	cout << "WEIGHT_SPECTRUM column completed" << endl;
+	// CORRECTED_DATA column
+	ArrayColumn<Complex> CORRECTED_DATA_col_new (write_table, "CORRECTED_DATA");
+	for(int i=0; i<NrRows; i++){
+		CORRECTED_DATA_col_new.put(i, CORRECTED_DATA_col.get(i));
+	}
+	cout << "CORRECTED_DATA column completed" << endl;
+	// DATA column
+	ArrayColumn<Complex> DATA_col_new (write_table, "DATA");
+	for(int i=0; i<NrRows; i++){
+		DATA_col_new.put(i, DATA_col.get(i));
+	}
+	cout << "DATA column completed" << endl;
 
 
 	return 0;

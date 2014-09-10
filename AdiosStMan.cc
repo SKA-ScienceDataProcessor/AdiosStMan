@@ -162,7 +162,7 @@ namespace casa {
 		adios_init_noxml(itsMpiComm);
 
 		adios_declare_group(&itsAdiosGroup, "casatable", "", adios_flag_no);
-		adios_select_method(itsAdiosGroup, "POSIX", "", "");
+		adios_select_method(itsAdiosGroup, "MPI", "", "");
 
 		itsAdiosGroupsize = 0;
 
@@ -186,8 +186,7 @@ namespace casa {
 			}
 		}
 
-		itsAdiosBufsize = itsAdiosGroupsize * 1.1 / 1000000;
-		if(itsAdiosBufsize < 100) itsAdiosBufsize = 100;
+		itsAdiosBufsize = 100000;
 		adios_allocate_buffer(ADIOS_BUFFER_ALLOC_NOW, itsAdiosBufsize);
 
 
