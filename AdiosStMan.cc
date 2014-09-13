@@ -36,7 +36,6 @@ namespace casa {
 		itsAdiosReadFile(0),
 		itsNrAdiosFiles(0),
 		itsMpiComm(MPI_COMM_WORLD),
-		isAdiosOpened(false),
 		itsNrColsSlave(0),
 		itsStManColumnType('A'),
 		isMpiInitInternal(false)
@@ -58,7 +57,6 @@ namespace casa {
 		itsAdiosReadFile(0),
 		itsNrAdiosFiles(0),
 		itsMpiComm(MPI_COMM_WORLD),
-		isAdiosOpened(false),
 		itsNrColsSlave(0),
 		itsStManColumnType('A'),
 		isMpiInitInternal(false)
@@ -76,10 +74,7 @@ namespace casa {
 
 	AdiosStMan::~AdiosStMan ()
 	{
-		if(itsAdiosFile){
-			adios_close(itsAdiosFile);
-			adios_finalize(mpiRank);
-		}
+		adios_finalize(mpiRank);
 
 		if(itsAdiosReadFile){
 			adios_read_close(itsAdiosReadFile);
@@ -122,9 +117,9 @@ namespace casa {
 
 	}
 
-	void AdiosStMan::adiosOpen(){
-		if(!isAdiosOpened){
+	void AdiosStMan::adiosWriteOpen(){
 
+		if(!itsAdiosFile){
 			string itsFileName;
 			int itsFileNameLen;
 
@@ -148,9 +143,16 @@ namespace casa {
 			delete [] itsFileNameChar;
 
 			adios_group_size(itsAdiosFile, itsAdiosGroupsize, &itsAdiosTotalsize);
-
-			isAdiosOpened = true;
 		}
+	}
+
+	void AdiosStMan::adiosWriteClose(){
+
+		if(itsAdiosFile){
+			adios_close(itsAdiosFile);
+			itsAdiosFile = 0;
+		}
+
 	}
 
 	void AdiosStMan::create (uInt aNrRows)
@@ -214,26 +216,6 @@ namespace casa {
 	void AdiosStMan::deleteManager(){
 	}
 
-	AdiosStManColumn* AdiosStMan::makeScalarColumnSlave (const String& name, int aDataType){
-		return makeDirArrColumnSlave(name, aDataType);
-	}
-
-	AdiosStManColumn* AdiosStMan::makeDirArrColumnSlave (const String& name, int aDataType){
-		if (itsNrColsSlave >= itsColumnPtrBlk.nelements()) {
-			itsColumnPtrBlk.resize (itsColumnPtrBlk.nelements() + 32);
-		}
-		AdiosStManColumnA* aColumn = new AdiosStManColumnA (this, aDataType, itsNrColsSlave);
-		aColumn->setColumnName(name);
-		itsColumnPtrBlk[itsNrColsSlave] = aColumn;
-		itsNrColsSlave++;
-		return aColumn;
-	}
-
-	AdiosStManColumn* AdiosStMan::makeIndArrColumnSlave (const String& name, int aDataType){
-		cout << "AdiosStMan warning: Support of indirect arrays is currently under development, and it may not behave as expected!" << endl;
-		return makeDirArrColumnSlave(name, aDataType);
-	}
-
 	
 	DataManagerColumn* AdiosStMan::makeScalarColumn (const String& name, int aDataType,	const String& dataTypeId){
 		return makeDirArrColumn(name, aDataType, dataTypeId);
@@ -273,6 +255,7 @@ namespace casa {
 	}
 
 	Bool AdiosStMan::flush (AipsIO& ios, Bool doFsync){
+		adiosWriteClose();
 		return true;
 	}
 

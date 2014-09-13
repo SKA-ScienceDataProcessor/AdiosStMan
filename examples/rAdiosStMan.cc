@@ -45,24 +45,17 @@ int main (){
 
 	Table casa_table(filename);    
 
-	ROScalarColumn<uInt> index1_col(casa_table, "index1");
-	ROScalarColumn<uInt> index2_col(casa_table, "index2");
+	ROScalarColumn<uInt> index_col(casa_table, "index");
 	ROArrayColumn<float> data_col(casa_table, "data");
 
-	Vector<uInt> index1_vec = index1_col.getColumn();
-	Vector<uInt> index2_vec = index2_col.getColumn();
+	Vector<uInt> index_vec = index_col.getColumn();
 	Array<float> data_arr = data_col.getColumn();
 
 	Vector<float> data_vec = data_arr.reform(IPosition(1,data_arr.nelements()));
 
-	cout << "index1 column: " << endl;
-	for (int i=0; i<index1_vec.nelements(); i++){
-		cout << index1_vec[i] << "  ";
-	}
-
-	cout << endl << endl << "index2 column: " << endl;
-	for (int i=0; i<index2_vec.nelements(); i++){
-		cout << index2_vec[i] << "  ";
+	cout << "index column: " << endl;
+	for (int i=0; i<index_vec.nelements(); i++){
+		cout << index_vec[i] << "  ";
 	}
 
 	cout << endl << endl << "data column: " << endl;

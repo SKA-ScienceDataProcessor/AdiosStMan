@@ -752,7 +752,7 @@ namespace casa{
 	inline bool AdiosStManColumn::isZero (const DComplex* dataPtr){
 		return false;
 	}
-	// scalar
+	// array
 	bool AdiosStManColumn::isZero (const Array<Bool>* dataPtr){
 		return false;
 	}

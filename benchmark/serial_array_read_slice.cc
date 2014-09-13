@@ -55,9 +55,7 @@ void table_read(){
 	IPosition end(2,1,768);
 	Slicer sli(start, end);
 
-
 	Array<Complex> data_arr = data_col.getColumn(sli);
-//	Array<Complex> data_arr = data_col.getColumn();
 	Vector<Complex> data_vec = data_arr.reform(IPosition(1,data_arr.nelements()));
 
 	for (int i=0; i<32; i++){

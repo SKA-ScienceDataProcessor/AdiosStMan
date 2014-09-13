@@ -2,7 +2,7 @@
 
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PBS_O_WORKDIR
 
-SIZE="2000000000000"
+QUOTA="2000000000000"
 prefix=/scratch/partner766/jwang/osd8
 
 for rows in {1000..6000..200}
@@ -14,8 +14,8 @@ do
 		do
 			CHECK=$(du -sb $prefix | cut -f1)
 
-			if [ "$CHECK" -gt "$SIZE" ]; then
-				echo "$CHECK bytes in $prefix, reaching disk quota $SIZE, cleaning up ..."
+			if [ "$CHECK" -gt "$QUOTA" ]; then
+				echo "$CHECK bytes in $prefix, reaching disk quota $QUOTA, cleaning up ..."
 				rm -rf $prefix/*
 			fi
 

@@ -52,12 +52,6 @@ namespace casa {
 			virtual void resync (uInt aRowNr);
 			virtual Bool flush (AipsIO&, Bool doFsync);
 
-			AdiosStManColumn* makeScalarColumnSlave (const String& aName,
-					int aDataType);
-			AdiosStManColumn* makeDirArrColumnSlave (const String& aName,
-					int aDataType);
-			AdiosStManColumn* makeIndArrColumnSlave (const String& aName,
-					int aDataType);
 			virtual DataManagerColumn* makeScalarColumn (const String& aName,
 					int aDataType,
 					const String& aDataTypeID);
@@ -77,7 +71,8 @@ namespace casa {
 			static DataManager* makeObject (const casa::String& aDataManType,
 					const casa::Record& spec);
 
-			void adiosOpen();
+			void adiosWriteOpen();
+			void adiosWriteClose();
 			uInt getNrRows();
 			char getMode();
 
@@ -98,7 +93,6 @@ namespace casa {
 			int mpiRank;
 			int mpiSize; 
 			bool isMpiInitInternal;
-			bool isAdiosOpened;
 
 			char itsStManColumnType;
 			PtrBlock<AdiosStManColumnA*> itsColumnPtrBlk;
