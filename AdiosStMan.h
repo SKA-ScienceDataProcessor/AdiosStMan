@@ -37,12 +37,18 @@ namespace casa {
 
 	class AdiosStManColumn;
 	class AdiosStManColumnA;
+	class AdiosStManColumnV;
 
 	class AdiosStMan : public DataManager
 	{
 		public:
 
-			AdiosStMan();
+			enum StManColumnType{
+				ARRAY = 0,
+				VAR = 1,
+			};
+
+			AdiosStMan(int aType = 1);
 			~AdiosStMan();
 
 			virtual DataManager* clone() const;
@@ -76,6 +82,8 @@ namespace casa {
 			uInt getNrRows();
 			char getMode();
 
+			void setStManColumnType(StManColumnType aType);
+			int getStManColumnType();
 
 		private:
 
@@ -94,14 +102,14 @@ namespace casa {
 			int mpiSize; 
 			bool isMpiInitInternal;
 
-			char itsStManColumnType;
-			PtrBlock<AdiosStManColumnA*> itsColumnPtrBlk;
+			PtrBlock<AdiosStManColumn*> itsColumnPtrBlk;
 
 			uInt itsNrRows;
 			uInt itsNrColsSlave;
 			MPI_Comm itsMpiComm;
 
 			char itsMode;
+			int itsStManColumnType;
 
 
 	}; // end of class AdiosStMan

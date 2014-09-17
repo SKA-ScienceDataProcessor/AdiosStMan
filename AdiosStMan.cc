@@ -24,20 +24,20 @@
 //    jason.wang@icrar.org
 
 #include <casa/IO/AipsIO.h>
-#include "AdiosStMan.h"
 #include "AdiosStManColumnA.h"
+#include "AdiosStManColumnV.h"
 
 
 namespace casa { 
 
-	AdiosStMan::AdiosStMan ()
+	AdiosStMan::AdiosStMan (int aType)
 		:DataManager(),
 		itsAdiosFile(0),
 		itsAdiosReadFile(0),
 		itsNrAdiosFiles(0),
 		itsMpiComm(MPI_COMM_WORLD),
 		itsNrColsSlave(0),
-		itsStManColumnType('A'),
+		itsStManColumnType(aType),
 		isMpiInitInternal(false)
 	{
 		int isMpiInitialized;
@@ -53,12 +53,12 @@ namespace casa {
 
 	AdiosStMan::AdiosStMan (const AdiosStMan& that)
 		:DataManager(),
-		itsAdiosFile(0),
-		itsAdiosReadFile(0),
-		itsNrAdiosFiles(0),
+		itsAdiosFile(that.itsAdiosFile),
+		itsAdiosReadFile(that.itsAdiosReadFile),
+		itsNrAdiosFiles(that.itsNrAdiosFiles),
 		itsMpiComm(MPI_COMM_WORLD),
-		itsNrColsSlave(0),
-		itsStManColumnType('A'),
+		itsNrColsSlave(that.itsNrColsSlave),
+		itsStManColumnType(that.itsStManColumnType),
 		isMpiInitInternal(false)
 	{
 		MPI_Comm_rank(MPI_COMM_WORLD, &mpiRank);
@@ -195,6 +195,10 @@ namespace casa {
 	} // end of void AdiosStMan::create (uInt aNrRows)
 
 	void AdiosStMan::open (uInt aNrRows, AipsIO& ios){
+		
+		ios.getstart("AdiosStMan");
+		ios >> itsStManColumnType;
+		ios.getend();
 
 		itsMode = 'r';
 		itsNrRows = aNrRows;
@@ -226,14 +230,14 @@ namespace casa {
 			itsColumnPtrBlk.resize (itsColumnPtrBlk.nelements() + 32);
 		}
 
-		AdiosStManColumnA* aColumn;
+		AdiosStManColumn* aColumn;
 
 		switch (itsStManColumnType){
-			case 'A':
+			case ARRAY:
 				aColumn = new AdiosStManColumnA (this, aDataType, ncolumn());
 				break;
-			default:
-				aColumn = new AdiosStManColumnA (this, aDataType, ncolumn());
+			case VAR:
+				aColumn = new AdiosStManColumnV (this, aDataType, ncolumn());
 				break;
 		}
 
@@ -255,12 +259,23 @@ namespace casa {
 	}
 
 	Bool AdiosStMan::flush (AipsIO& ios, Bool doFsync){
+		ios.putstart("AdiosStMan", 2);
+		ios << itsStManColumnType;
+		ios.putend();
 		adiosWriteClose();
 		return true;
 	}
 
 	char AdiosStMan::getMode (){
 		return itsMode;
+	}
+
+	void AdiosStMan::setStManColumnType(StManColumnType aType){
+		itsStManColumnType = aType;
+	}
+
+	int AdiosStMan::getStManColumnType(){
+		return itsStManColumnType;
 	}
 
 	void register_adiosstman(){

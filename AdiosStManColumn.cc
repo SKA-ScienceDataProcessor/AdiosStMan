@@ -35,7 +35,6 @@ namespace casa{
 		itsNrIDsAllocated (0),
 		readStart (0),
 		readCount (0),
-		itsAdiosVarInfo (0),
 		itsStManPtr (aParent),
 		itsCasaDataType(aDataType),
 		itsShape(0)
@@ -114,6 +113,10 @@ namespace casa{
 		itsColumnName = aName;
 	}
 
+	String AdiosStManColumn::getColumnName (){
+		return itsColumnName;
+	}
+
 	IPosition AdiosStManColumn::getShapeColumn (){
 		return itsShape;
 	}
@@ -124,6 +127,10 @@ namespace casa{
 
 	int AdiosStManColumn::getDataTypeSize(){
 		return itsDataTypeSize;
+	}
+
+	int AdiosStManColumn::getDataType(){
+		return itsCasaDataType;
 	}
 
 	void AdiosStManColumn::setShapeColumn (const IPosition& aShape){
@@ -784,6 +791,112 @@ namespace casa{
 		return false;
 	}
 	// *** check if data is all zero ***
+
+	void AdiosStManColumn::getArrayGeneralV (int64_t aRowNr, void* dataPtr){
+		Slicer ns(IPosition(itsShape.size(),0,0,0,0,0,0,0,0,0,0), itsShape);
+		getSliceGeneralV(aRowNr, ns, dataPtr);
+	}
+
+	void AdiosStManColumn::getArrayColumnGeneralV (void* dataPtr){
+		cout << "getArrayColumnGeneralV" << endl;
+		getArrayGeneralV(-1, dataPtr);
+	}
+
+	void AdiosStManColumn::getColumnSliceGeneralV (const Slicer& ns, void* dataPtr){
+		cout << "getColumnSliceGeneralV" << endl;
+		getSliceGeneralV(-1, ns, dataPtr);
+	}
+
+	void AdiosStManColumn::getSliceGeneralV (int64_t aRowNr, const Slicer& ns, void* dataPtr){
+		
+
+		if(itsStManPtr->getAdiosReadFile()){
+
+			if(itsStManPtr->getStManColumnType() == AdiosStMan::VAR){
+				stringstream varName;
+				varName << itsColumnName << "/" << itsColumnName << "[" << aRowNr << "]";
+
+				for (int i=0; i<itsShape.size(); i++){
+					readStart[itsShape.size() - i - 1] = ns.start()(i);
+					readCount[itsShape.size() - i - 1] = ns.length()(i);
+				}
+
+				ADIOS_SELECTION *sel = adios_selection_boundingbox (itsShape.size(), readStart, readCount);
+				adios_schedule_read (itsStManPtr->getAdiosReadFile(), sel, varName.str().c_str(), 0, 1, dataPtr);
+				adios_perform_reads (itsStManPtr->getAdiosReadFile(), 1);
+				return;
+			}
+
+			if(itsStManPtr->getStManColumnType() == AdiosStMan::ARRAY){
+				if(aRowNr < 0){
+					// if getting entire column
+					readStart[0] = 0;
+					readCount[0] = itsStManPtr->getNrRows();
+				}
+				else{
+					// if getting a row
+					readStart[0] = aRowNr;
+					readCount[0] = 1;
+				}
+
+				for (int i=1; i<=itsShape.size(); i++){
+					readStart[itsShape.size() - i + 1] = ns.start()(i-1);
+					readCount[itsShape.size() - i + 1] = ns.length()(i-1);
+				}
+
+				ADIOS_SELECTION *sel = adios_selection_boundingbox (itsShape.size()+1, readStart, readCount);
+				adios_schedule_read (itsStManPtr->getAdiosReadFile(), sel, itsColumnName.c_str(), 0, 1, dataPtr);
+				adios_perform_reads (itsStManPtr->getAdiosReadFile(), 1);
+				return;
+			}
+			cout << "AdiosStManColumn Error: Wrong StManColumnType, neither ARRAY nor VAR" << endl;
+		}
+
+		else{
+			cout << "AdiosStManColumn Error: AdiosStMan is not working in read mode!" << endl;
+		}
+
+	}
+
+	void AdiosStManColumn::getGeneralV (uInt aRowNr, void* aValue){
+
+
+		if(itsStManPtr->getAdiosReadFile()){
+			if(itsStManPtr->getStManColumnType() == AdiosStMan::VAR){
+				stringstream varName;
+				varName << itsColumnName << "/" << itsColumnName << "[" << aRowNr << "]";
+				ADIOS_SELECTION *sel = NULL;
+				adios_schedule_read (itsStManPtr->getAdiosReadFile(), sel, varName.str().c_str(), 0, 1, aValue);
+				adios_perform_reads (itsStManPtr->getAdiosReadFile(), 1);
+				return;
+			}
+
+			if(itsStManPtr->getStManColumnType() == AdiosStMan::ARRAY){
+
+				uint64_t rowid = aRowNr;
+				ADIOS_SELECTION *sel = adios_selection_points (1, 1, &rowid);
+				adios_schedule_read (itsStManPtr->getAdiosReadFile(), sel, itsColumnName.c_str(), 0, 1, aValue);
+				adios_perform_reads (itsStManPtr->getAdiosReadFile(), 1);
+				return;
+			}
+			cout << "AdiosStManColumn Error: Wrong StManColumnType, neither ARRAY nor VAR" << endl;
+
+		}
+		else{
+			cout << "AdiosStManColumn Error: AdiosStMan is working in write mode!" << endl;
+		}
+	}
+
+	void AdiosStManColumn::initAdiosRead(){
+
+		int ndim = itsShape.size();
+		// if array column, allocate dimension vectors 
+		if (ndim > 0){
+			readStart = new uint64_t[ndim+1];
+			readCount = new uint64_t[ndim+1];
+		}
+	}
+
 
 
 }

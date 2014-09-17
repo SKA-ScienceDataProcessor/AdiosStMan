@@ -1,4 +1,4 @@
-//    AdiosStManColumnA.h: StManColumn class for AdiosStMan, 
+//    AdiosStManColumnV.h: StManColumn class for AdiosStMan, 
 //    managing all rows in a single array for a column
 //
 //    (c) University of Western Australia
@@ -23,8 +23,8 @@
 //    Any bugs, questions, concerns and/or suggestions please email to
 //    jason.wang@icrar.org
 
-#ifndef ADIOSSTMANCOLUMNA_H
-#define ADIOSSTMANCOLUMNA_H
+#ifndef ADIOSSTMANCOLUMNV_H
+#define ADIOSSTMANCOLUMNV_H
 
 
 #include <casa/Arrays/IPosition.h>
@@ -34,16 +34,14 @@
 
 namespace casa { 
 
-	class AdiosStManColumnA : public AdiosStManColumn
+	class AdiosStManColumnV : public AdiosStManColumn
 	{
 		public:
 
-			AdiosStManColumnA(AdiosStMan *aParent, int aDataType, uInt aColNr);
+			AdiosStManColumnV(AdiosStMan *aParent, int aDataType, uInt aColNr);
 			
 			void initAdiosWrite(uInt aNrRows);
 
-			Bool canAccessArrayColumn(Bool &reask) const;
-			Bool canAccessColumnSlice(Bool &reask) const;
 			Bool canAccessSlice(Bool &reask) const;
 
 		private:
@@ -54,7 +52,7 @@ namespace casa {
 			// access a row for an array column 
 			void putArrayGeneralV (uInt aRowNr, const void* aDataPtr);
 
-	}; // end of class AdiosStManColumnA
+	}; // end of class AdiosStManColumnV
 
 } // end of namespace casa
 

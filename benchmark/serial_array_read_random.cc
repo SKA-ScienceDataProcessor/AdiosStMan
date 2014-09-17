@@ -55,7 +55,7 @@ void table_read(){
 	IPosition end(2,1,768);
 	Slicer sli(start, end);
 
-	for (int j=0; j<100; j++){
+	for (int j=0; j<nrrow; j++){
 		Array<Complex> data_arr = data_col.getSlice(j, sli);
 //		Vector<Complex> data_vec = data_arr.reform(IPosition(1,data_arr.nelements()));
 //		cout << "Row  " << j << endl;
@@ -64,15 +64,13 @@ void table_read(){
 //			if ((i+1) % (data_arr.shape())(0) == 0)	cout << endl;
 //		}
 	}
-
-
 }
 
 
 int main (){
 
 	tictak_add((char*)"AdiosStMan",0);
-	filename = "/scratch/jason/1067892840_adios.ms";
+	filename = "/scratch/jason/1067892840_adiosA.ms";
 	table_read();
 
 	tictak_add((char*)"TiledStMan",0);

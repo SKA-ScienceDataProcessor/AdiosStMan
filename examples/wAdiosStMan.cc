@@ -53,12 +53,12 @@ string filename = "/scratch/tmp/v.casa";
 int main(int argc, char **argv){
 
 	// define a storage manager
-	AdiosStMan stman;
+	AdiosStMan stman(AdiosStMan::VAR);
+//	AdiosStMan stman(AdiosStMan::ARRAY);
 
 	// define a table description & add a scalar column and an array column
 	TableDesc td("", "1", TableDesc::Scratch);
-	td.addColumn (ScalarColumnDesc<uInt>("index1"));
-	td.addColumn (ScalarColumnDesc<uInt>("index2"));
+	td.addColumn (ScalarColumnDesc<uInt>("index"));
 	td.addColumn (ArrayColumnDesc<float>("data", data_pos, ColumnDesc::Direct));
 
 	// create a table instance, bind it to the storage manager & allocate rows
@@ -67,8 +67,7 @@ int main(int argc, char **argv){
 	Table tab(newtab, NrRows);
 
 	// define column objects and link them to the table
-	ScalarColumn<uInt> index1_col (tab, "index1");
-	ScalarColumn<uInt> index2_col (tab, "index2");
+	ScalarColumn<uInt> index_col (tab, "index");
 	ArrayColumn<float> data_col (tab, "data");
 
 	// define data arrays that actually hold the data
@@ -79,8 +78,7 @@ int main(int argc, char **argv){
 
 	// write data into the column objects
 	for (uInt i=0; i<NrRows; i++) {
-		index1_col.put (i, NrRows-i);
-		index2_col.put (i, 100);
+		index_col.put (i, NrRows-i);
 		data_col.put(i, data_arr);
 	}
 

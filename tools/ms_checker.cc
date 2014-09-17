@@ -1,4 +1,5 @@
-//    mwa_checker.cc: check if mwa_converter wrote correctly
+//    ms_checker.cc: check if ms_converter wrote measurement sets
+//    correctly
 //
 //    (c) University of Western Australia
 //    International Centre of Radio Astronomy Research
@@ -61,6 +62,7 @@ int main (int argc, char **argv){
 		cout << "Warning: number of rows does not match!\n" ;
 		cout << "ADIOS rows = " << adios_rows << endl;
 		cout << "TSM rows = " << tsm_rows << endl;
+		cout << "Will only check available" << endl;
 	}
 
 //////////////////////////////////////////////////////////////////////////////////////////////
@@ -333,9 +335,8 @@ int main (int argc, char **argv){
 			}
 		}
 
+		cout << i << " rows checked, " << (float)(i+1)/tsm_rows*100 << "\% finished" << endl;
 
-//		if (i%100 == 0 && i > 0)
-			cout << i << " rows checked, " << (float)i/tsm_rows*100 << "\% finished" << endl;
 	}
 
 

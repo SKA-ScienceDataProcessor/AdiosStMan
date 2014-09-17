@@ -45,9 +45,11 @@ namespace casa { //# NAMESPACE CASA - BEGIN
 			virtual IPosition shape(uInt RowID);
 
 			int getDataTypeSize();
+			int getDataType();
 			void setColumnName(String aName);
+			String getColumnName();
 
-			virtual void initAdiosRead() = 0;
+			virtual void initAdiosRead();
 			virtual void initAdiosWrite(uInt aNrRows) = 0;
 
 			// *** put a row for an array column, for user application call ***
@@ -229,20 +231,20 @@ namespace casa { //# NAMESPACE CASA - BEGIN
 			
 			// access a row for a scalar column 
 			virtual void putGeneralV (uInt aRowNr, const void* aDataPtr) = 0;
-			virtual void getGeneralV (uInt aRowNr, void* aDataPtr) = 0;
+			virtual void getGeneralV (uInt aRowNr, void* aDataPtr);
 
 			// access a row for an array column 
 			virtual void putArrayGeneralV (uInt aRowNr, const void* aDataPtr) = 0;
-			virtual void getArrayGeneralV (int64_t aRowNr, void* data) = 0;
+			virtual void getArrayGeneralV (int64_t aRowNr, void* data);
 
 			// access a slice of a row for an array column 
-			virtual void getSliceGeneralV (int64_t aRowNr, const Slicer& ns, void* data) = 0;
+			virtual void getSliceGeneralV (int64_t aRowNr, const Slicer& ns, void* data);
 
 			// access all rows for an array column 
-			virtual void getArrayColumnGeneralV (void* data) = 0;
+			virtual void getArrayColumnGeneralV (void* data);
 
 			// access a slice of all rows for an array column 
-			virtual void getColumnSliceGeneralV (const Slicer& ns, void* data) = 0;
+			virtual void getColumnSliceGeneralV (const Slicer& ns, void* data);
 
 			// StMan pointer
 			AdiosStMan *itsStManPtr;
@@ -254,7 +256,6 @@ namespace casa { //# NAMESPACE CASA - BEGIN
 			int itsDataTypeSize;
 
 			// ADIOS read
-			ADIOS_VARINFO *itsAdiosVarInfo;
 			uint64_t *readStart;
 			uint64_t *readCount;
 

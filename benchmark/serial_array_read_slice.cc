@@ -70,7 +70,7 @@ int main (){
 
 
 	tictak_add((char*)"AdiosStMan",0);
-	filename = "/scratch/jason/1067892840_adios.ms";
+	filename = "/scratch/jason/1067892840_adiosV.ms";
 	table_read();
 
 	tictak_add((char*)"TiledStMan",0);
