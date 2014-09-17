@@ -34,6 +34,7 @@
 uInt TotalRows = 0;
 uInt Rows = 0;
 Table *write_table = NULL;
+int mpiRank, mpiSize;
 
 ROScalarColumn<bool> *FLAG_ROW_col;
 ROScalarColumn<int> *ANTENNA1_col;
@@ -60,7 +61,13 @@ ROArrayColumn<float> *WEIGHT_SPECTRUM_col;
 ROArrayColumn<Complex> *CORRECTED_DATA_col;
 
 void write_rows(){
-	for(int i=0; i<Rows; i++){
+
+	uInt rows;
+	if(Rows == 0) rows = TotalRows;
+	else rows = Rows;
+	
+
+	for(int i=mpiRank; i<rows; i+=mpiSize){
 		// FLAG_ROW column
 		ScalarColumn<bool> FLAG_ROW_col_new (*write_table, "FLAG_ROW");
 		FLAG_ROW_col_new.put(i, FLAG_ROW_col->get(i));
@@ -128,8 +135,7 @@ void write_rows(){
 		ArrayColumn<Complex> DATA_col_new (*write_table, "DATA");
 		DATA_col_new.put(i, DATA_col->get(i));
 
-//		if(i%100 == 0 )
-			cout << i << " rows finished" << endl;
+		cout << i << " rows finished" << endl;
 
 	}
 }
@@ -233,8 +239,9 @@ void write_columns(){
 
 int main (int argc, char **argv){
 
+
 	string file_input="/scratch/jason/1067892840_tsm.ms";
-	string file_output="/scratch/jason/1067892840_adios.ms";
+	string file_output="/scratch/jason/1067892840_adiosA.ms";
 
 	if (argc >= 3){
 		file_input = argv[1];
@@ -245,13 +252,16 @@ int main (int argc, char **argv){
 		Rows = atoi(argv[3]);
 	}
 
-
 	cout << "ms input = " << file_input << endl;
 	cout << "ms output = " << file_output << endl;
 
 	// ####### Storage Manager used to write output measurement set
 	AdiosStMan stman;
+//	stman.setStManColumnType(AdiosStMan::VAR);
 	stman.setStManColumnType(AdiosStMan::ARRAY);
+
+	MPI_Comm_rank(MPI_COMM_WORLD, &mpiRank);
+	MPI_Comm_size(MPI_COMM_WORLD, &mpiSize);
 
 	// ####### read init
 	Table read_table(file_input);    
@@ -358,14 +368,38 @@ int main (int argc, char **argv){
 	td.addColumn (ArrayColumnDesc<Complex>("CORRECTED_DATA", CORRECTED_DATA_pos, ColumnDesc::Direct));
 	
 	// ####### column init for read & write
+	if(mpiRank>0){
+		stringstream filename;
+		filename << "/tmp/v" << mpiRank << ".casa";
+		file_output = filename.str();
+	}
+
 	SetupNewTable newtab(file_output, td, Table::New);
 	newtab.bindAll(stman);
 
-	if (Rows <= 0){
+	if (mpiSize == 1 && Rows == 0){
+		cout << "Single process mode. Duplicating columns ..." << endl;
 		write_table = new Table(newtab, TotalRows);
 		write_columns();
 	}
-	else{
+	if (mpiSize > 1 && Rows == 0){
+		cout << "Multiple process mode. Duplicating all rows ..." << endl;
+		write_table = new Table(newtab, TotalRows);
+		write_rows();
+	}
+
+	if (mpiSize == 1 && Rows > 0){
+		cout << "Single process mode. Duplicating " << Rows << " rows ..." << endl;
+		write_table = new Table(newtab, Rows);
+		write_rows();
+	}
+
+	if (mpiSize > 1 && Rows > 0){
+		cout << "Multiple process mode. Duplicating " << Rows << " rows ..." << endl;
+		if (Rows < mpiSize){
+			cout << "Number of rows should be larger than MPI size, otherwise MPI-IO will never return" << endl;
+			exit(-1);
+		}
 		write_table = new Table(newtab, Rows);
 		write_rows();
 	}

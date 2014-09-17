@@ -8,6 +8,8 @@ This project is to implement a CASA storage manager using ADIOS (Adaptive IO Sys
 ============================================
 
 Version History:
+v0.4.8 - Added parallel support to tools/ms_converter
+---------------------
 v0.4.7 - Added functions to write each cell in individual ADIOS VARs
 ---------------------
 v0.4.6 - Some minor changes for massive MPI testing

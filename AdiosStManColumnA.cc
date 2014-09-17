@@ -92,13 +92,13 @@ namespace casa{
 	}
 
 	void AdiosStManColumnA::putArrayGeneralV (uInt rownr, const void* dataPtr){
-		if(isZero(dataPtr) && rownr > 0) return;
+//		if(isZero(dataPtr) && rownr > 0) return;
 		itsStManPtr->adiosWriteOpen();
 		adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , (void*)dataPtr);
 	}
 
 	void AdiosStManColumnA::putGeneralV (uInt rownr, const void* dataPtr){
-		if(isZero(dataPtr) && rownr > 0) return;
+//		if(isZero(dataPtr) && rownr > 0) return;
 		itsStManPtr->adiosWriteOpen();
 		adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , (void*)dataPtr);
 	}

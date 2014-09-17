@@ -36,7 +36,7 @@
 int main (int argc, char **argv){
 
 	string file_tsm="/scratch/jason/1067892840_tsm.ms";
-	string file_adios="/scratch/jason/1067892840_adios.ms";
+	string file_adios="/scratch/jason/1067892840_adiosA.ms";
 
 	uInt row_start = 0;
 
@@ -335,7 +335,7 @@ int main (int argc, char **argv){
 			}
 		}
 
-		cout << i << " rows checked, " << (float)(i+1)/tsm_rows*100 << "\% finished" << endl;
+		cout << i << " rows checked, " << (float)(i+1)/rows*100 << "\% finished" << endl;
 
 	}
 
