@@ -1,6 +1,10 @@
-CC = mpic++
-CCFLAGS = -g
-LDFLAGS = -lcasa_tables -lcasa_casa
+ifeq ($(VENDOR),cray)
+	CC=cc -dynamic
+else
+	CC=mpic++
+endif
+CCFLAGS=
+LDFLAGS=-lcasa_tables -lcasa_casa
 #STMANFILES = ../AdiosStMan.cc ../AdiosStManColumn.cc
 STMANFILES=libadiosstman.so
 TARGET=ms_converter ms_checker

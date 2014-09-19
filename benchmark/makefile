@@ -1,4 +1,9 @@
-CC=mpic++
+ifeq ($(VENDOR),cray)
+	CC=cc -dynamic
+else
+	CC=mpic++
+endif
+
 CCFLAGS= 
 LDFLAGS=-ladios -lcasa_tables -lcasa_casa
 STMANFILES=libadiosstman.so

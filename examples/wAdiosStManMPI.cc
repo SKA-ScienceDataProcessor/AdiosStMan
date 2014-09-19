@@ -60,7 +60,7 @@
 // headers for casa namespaces
 #include <casa/namespace.h>
 
-int NrRows = 10;
+int NrRows = 50;
 IPosition data_pos = IPosition(2,5,6);
 string filename = "/scratch/tmp/v.casa";
 

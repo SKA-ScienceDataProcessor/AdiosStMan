@@ -8,6 +8,8 @@ This project is to implement a CASA storage manager using ADIOS (Adaptive IO Sys
 ============================================
 
 Version History:
+v0.4.9 - Added makefile configuration for Cray machines
+---------------------
 v0.4.8 - Added parallel support to tools/ms_converter
 ---------------------
 v0.4.7 - Added functions to write each cell in individual ADIOS VARs

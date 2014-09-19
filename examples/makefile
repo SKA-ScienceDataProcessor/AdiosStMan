@@ -1,5 +1,10 @@
-CC=mpic++
-CCFLAGS=-g
+ifeq ($(VENDOR),cray)
+	CC=cc -dynamic
+else
+	CC=mpic++
+endif
+
+CCFLAGS=
 LDFLAGS=-lcasa_tables -lcasa_casa 
 STMANFILES=libadiosstman.so
 TARGET=wAdiosStMan wAdiosStManMPI rAdiosStMan rAdiosStManSlice
