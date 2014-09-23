@@ -3,7 +3,8 @@
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PBS_O_WORKDIR
 
 QUOTA="2000000000000"
-prefix=/scratch/partner766/jwang/osd8
+prefix=$scratch
+JOBSCHEDULER="slurm"
 
 for rows in {1000..6000..200}
 do
@@ -19,7 +20,13 @@ do
 				rm -rf $prefix/*
 			fi
 
-			mpirun $PBS_O_WORKDIR/parallel_array_write $rows $length $length $prefix/${rows}rows_${length}length_${PBS_JOBID}_${i}.casa  >> $PBS_O_WORKDIR/log
+			if [$JOBSCHEDULER -eq "slurm" ]; then
+				aprun $SLURM_SUBMIT_DIR/parallel_array_write $rows $length $length $prefix/${rows}rows_${length}length_${SLURM_JOBID}_${i}.casa  >> $SLURM_SUBMIT_DIR/log
+			fi
+
+			if [$JOBSCHEDULER -eq "pbs" ]; then
+				mpirun $PBS_O_WORKDIR/parallel_array_write $rows $length $length $prefix/${rows}rows_${length}length_${PBS_JOBID}_${i}.casa  >> $PBS_O_WORKDIR/log
+			fi
 
 		done
 
