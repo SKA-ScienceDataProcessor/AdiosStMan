@@ -1,18 +1,19 @@
 #!/bin/bash
 
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PBS_O_WORKDIR
-
 QUOTA="2000000000000"
-prefix=$scratch
+prefix=$scratch/stripe8
 JOBSCHEDULER="slurm"
 
-for rows in {1000..6000..200}
+for rows in $(seq 1000 200 6000) 
 do
-	for length in {2000..2000..200}
+	for length in $(seq 2000 200 2000)
 	do
 
-		for i in {1..10}
+		for i in $(seq 1 10)
 		do
+
+			echo $rows $length $length $prefix/${rows}rows_${length}length_${SLURM_JOBID}_${i}.casa
+
 			CHECK=$(du -sb $prefix | cut -f1)
 
 			if [ "$CHECK" -gt "$QUOTA" ]; then
@@ -20,11 +21,11 @@ do
 				rm -rf $prefix/*
 			fi
 
-			if [$JOBSCHEDULER -eq "slurm" ]; then
-				aprun $SLURM_SUBMIT_DIR/parallel_array_write $rows $length $length $prefix/${rows}rows_${length}length_${SLURM_JOBID}_${i}.casa  >> $SLURM_SUBMIT_DIR/log
+			if [ "$JOBSCHEDULER" == "slurm" ]; then
+				aprun -B $SLURM_SUBMIT_DIR/parallel_array_write $rows $length $length $prefix/${rows}rows_${length}length_${SLURM_JOBID}_${i}.casa  >> $SLURM_SUBMIT_DIR/log
 			fi
 
-			if [$JOBSCHEDULER -eq "pbs" ]; then
+			if [ "$JOBSCHEDULER" == "pbs" ]; then
 				mpirun $PBS_O_WORKDIR/parallel_array_write $rows $length $length $prefix/${rows}rows_${length}length_${PBS_JOBID}_${i}.casa  >> $PBS_O_WORKDIR/log
 			fi
 

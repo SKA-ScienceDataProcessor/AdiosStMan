@@ -8,6 +8,8 @@ This project is to implement a CASA storage manager using ADIOS (Adaptive IO Sys
 ============================================
 
 Version History:
+v0.4.11 - Slight changes to enable large scale testing on Cray machines
+---------------------
 v0.4.10 - Added user manual
 ---------------------
 v0.4.9 - Added makefile configuration for Cray machines

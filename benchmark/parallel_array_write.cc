@@ -114,6 +114,9 @@ int main (int argc, char **argv){
 	data_pos = IPosition(2, atoi(argv[2]), atoi(argv[3]));
 	data_arr = Array<Float>(data_pos);
 
+	if(NrRows<mpiSize){
+		exit(-1);
+	}
 	// generate filenames for slave processes
 	// these files are not used later on, so just put them 
 	// into /tmp and clean them up when job is finished
