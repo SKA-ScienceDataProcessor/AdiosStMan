@@ -46,7 +46,7 @@
 // headers for casa namespaces
 #include <casa/namespace.h>
 
-#include "tictak.h"
+#include "../tools/tictak.h"
 
 // shape of the array column
 IPosition *data_pos;

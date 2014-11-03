@@ -8,5 +8,5 @@ file_adios=/scratch/jason/1067892840_adios.ms
 
 rm -rf $file_adios
 
-/home/jason/adiosStMan/tools/mwa_converter $file_tsm $file_adios
+/home/jason/adiosStMan/tools/ms_converter $file_tsm $file_adios
 

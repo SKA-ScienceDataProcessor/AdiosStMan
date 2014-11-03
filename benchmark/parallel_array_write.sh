@@ -1,6 +1,6 @@
 #!/bin/bash
 
-QUOTA="2000000000000"
+QUOTA="2000000000" # in KB
 prefix=$scratch/stripe8
 JOBSCHEDULER="slurm"
 
@@ -14,7 +14,7 @@ do
 
 			echo $rows $length $length $prefix/${rows}rows_${length}length_${SLURM_JOBID}_${i}.casa
 
-			CHECK=$(du -sb $prefix | cut -f1)
+			CHECK=$(du -s $prefix | cut -f1)
 
 			if [ "$CHECK" -gt "$QUOTA" ]; then
 				echo "$CHECK bytes in $prefix, reaching disk quota $QUOTA, cleaning up ..."

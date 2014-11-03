@@ -30,6 +30,7 @@
 #include <casacore/tables/Tables/ArrayColumn.h>
 #include "../AdiosStMan.h"
 #include <casa/namespace.h>
+#include "tictak.h"
 
 uInt TotalRows = 0;
 uInt Rows = 0;
@@ -135,7 +136,8 @@ void write_rows(){
 		ArrayColumn<Complex> DATA_col_new (*write_table, "DATA");
 		DATA_col_new.put(i, DATA_col->get(i));
 
-		cout << i << " rows finished" << endl;
+		if (i%100 == 0)
+			cout << i << " rows finished, from Rank" << mpiRank << endl;
 
 	}
 }
@@ -239,6 +241,7 @@ void write_columns(){
 
 int main (int argc, char **argv){
 
+	tictak_add((char*)"begin", 0);
 
 	string file_input="/scratch/jason/1067892840_tsm.ms";
 	string file_output="/scratch/jason/1067892840_adiosA.ms";
@@ -428,6 +431,14 @@ int main (int argc, char **argv){
 	delete CORRECTED_DATA_col;
 	delete write_table;
 
+	tictak_add((char*)"end", 0);
+
+	if(mpiRank == 0){
+		float Seconds = tictak_total(0);
+		cout << "MpiSize," << mpiSize;
+		cout << ",Seconds," << Seconds;
+	
+	}
 	return 0;
 }
 

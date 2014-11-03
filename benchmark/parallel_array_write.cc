@@ -60,7 +60,7 @@
 // headers for casa namespaces
 #include <casa/namespace.h>
 
-#include "tictak.h"
+#include "../tools/tictak.h"
 
 int NrRows = 10;
 IPosition data_pos;
@@ -72,7 +72,7 @@ Array<Float> data_arr;
 
 void write_table(){
 
-	AdiosStMan stman;
+	AdiosStMan stman(AdiosStMan::ARRAY);
 
 	// define a table description & add a scalar column and an array column
 	TableDesc td("", "1", TableDesc::Scratch);
@@ -90,8 +90,11 @@ void write_table(){
 
 	// each mpi rank writes a subset of the data
 	for (uInt i=mpiRank; i<NrRows; i+=mpiSize) {
+//		if (i < NrRows/mpiSize*mpiSize )
+//			MPI_Barrier(MPI_COMM_WORLD);
 //		index_col.put (i, i);
 		data_col.put (i, data_arr);
+		cout << i << " rows finished from Rank " << mpiRank << endl;
 	}
 
 }
