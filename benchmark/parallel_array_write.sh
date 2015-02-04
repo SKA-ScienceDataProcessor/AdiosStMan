@@ -1,11 +1,11 @@
 #!/bin/bash
 
-QUOTA="200000000" # in KB
+QUOTA="5000000000" # in KB
 prefix=$scratch/stripe8
 
-for rows in $(seq 100 100 400) 
+for rows in $(seq 100 100 1000) 
 do
-	for length in $(seq 50 50 500)
+	for length in $(seq 1000 1000 20000)
 	do
 
 		for i in $(seq 1 10)

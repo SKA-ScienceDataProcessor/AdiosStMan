@@ -145,11 +145,11 @@ int main (int argc, char **argv){
 		uint64_t TableSize = CellSize * NrRows;
 		int Mps = TableSize / Seconds / 1000000;
 
-		cout << "Mps," << Mps;
+		cout << "MB/s," << Mps;
 		cout << ",Seconds," << Seconds;
-		cout << ",TableSize," << TableSize;
+		cout << ",TableSize(Byte)," << TableSize;
 		cout << ",NrRows," << NrRows;
-		cout << ",CellSize," << CellSize;
+		cout << ",CellSize(Byte)," << CellSize;
 		cout << ",MpiSize," << mpiSize;
 		cout << ",Nodes," << mpiSize / 12;
 		cout << ",Xlength," << atoi(argv[2]); 

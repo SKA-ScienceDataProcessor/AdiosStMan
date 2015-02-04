@@ -8,6 +8,8 @@ This project is to implement a CASA storage manager using ADIOS (Adaptive IO Sys
 ============================================
 
 Version History:
+v0.4.15 - Adjusted parameters for testing on Fornax
+---------------------
 v0.4.14 - PBS scripts slightly twisted for Fornax 2015 configuration
 ---------------------
 v0.4.13 - Added Slurm job scripts to benchmark ms_converter
