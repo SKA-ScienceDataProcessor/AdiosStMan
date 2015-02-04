@@ -1,12 +1,11 @@
 #!/bin/bash
 
-QUOTA="2000000000" # in KB
+QUOTA="200000000" # in KB
 prefix=$scratch/stripe8
-JOBSCHEDULER="slurm"
 
-for rows in $(seq 1000 200 6000) 
+for rows in $(seq 100 100 400) 
 do
-	for length in $(seq 2000 200 2000)
+	for length in $(seq 50 50 500)
 	do
 
 		for i in $(seq 1 10)

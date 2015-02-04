@@ -94,7 +94,7 @@ void write_table(){
 //			MPI_Barrier(MPI_COMM_WORLD);
 //		index_col.put (i, i);
 		data_col.put (i, data_arr);
-		cout << i << " rows finished from Rank " << mpiRank << endl;
+//		cout << i << " rows finished from Rank " << mpiRank << endl;
 	}
 
 }
