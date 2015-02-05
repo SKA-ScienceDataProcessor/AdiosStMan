@@ -151,7 +151,6 @@ int main (int argc, char **argv){
 		cout << ",NrRows," << NrRows;
 		cout << ",CellSize(Byte)," << CellSize;
 		cout << ",MpiSize," << mpiSize;
-		cout << ",Nodes," << mpiSize / 12;
 		cout << ",Xlength," << atoi(argv[2]); 
 		cout << ",Ylength," << atoi(argv[3]);
 		cout << endl;
