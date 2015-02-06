@@ -8,6 +8,8 @@ This project is to implement a CASA storage manager using ADIOS (Adaptive IO Sys
 ============================================
 
 Version History:
+v0.4.17 - Minor changes
+---------------------
 v0.4.16 - Slurm scripts slightly twisted for Magnus 2015 configuration
 ---------------------
 v0.4.15 - Adjusted parameters for testing on Fornax
