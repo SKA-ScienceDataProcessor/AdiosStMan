@@ -8,6 +8,8 @@ This project is to implement a CASA storage manager using ADIOS (Adaptive IO Sys
 ============================================
 
 Version History:
+v0.4.19 - Minor changes to Magnus job scripts for queueing more efficiently
+---------------------
 v0.4.18 - Minor changes to job scripts for toleration of walltime running out
 ---------------------
 v0.4.17 - Minor changes
