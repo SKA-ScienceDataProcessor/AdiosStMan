@@ -164,7 +164,9 @@ namespace casa {
 		adios_init_noxml(itsMpiComm);
 
 		adios_declare_group(&itsAdiosGroup, "casatable", "", adios_flag_no);
-		adios_select_method(itsAdiosGroup, "MPI", "", "");
+		adios_select_method(itsAdiosGroup, "MPI_AGGREGATE", "num_aggregators=32;verbose=3", "");
+//		adios_select_method(itsAdiosGroup, "POSIX", "", "");
+//		adios_select_method(itsAdiosGroup, "MPI", "", "");
 
 		itsAdiosGroupsize = 0;
 
