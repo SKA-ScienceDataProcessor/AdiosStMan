@@ -1,0 +1,17 @@
+#!/bin/bash
+#PBS -W group_list=$PROJECT 
+#PBS -q workq 
+#PBS -l walltime=2:00:00
+#PBS -l select=1:ncpus=12:mem=68gb:mpiprocs=12
+
+
+
+file_tsm=/scratch/jason/1067892840_tsm.ms
+file_adios=/scratch/jason/1067892840_adios.ms
+
+rm -rf $file_adios
+
+/home/jason/adiosStMan/tools/ms_converter $file_tsm $file_adios
+
+
+

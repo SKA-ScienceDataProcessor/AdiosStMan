@@ -1,7 +1,7 @@
 #!/bin/bash
 
 QUOTA="5000000000" # in KB
-prefix=$scratch/stripe4
+prefix=$scratch/stripe1
 
 for i in $(seq 1 10)
 do
