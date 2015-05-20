@@ -335,7 +335,7 @@ int main (int argc, char **argv){
 			}
 		}
 
-		cout << i << " rows checked, " << (float)(i+1)/rows*100 << "\% finished" << endl;
+		cout << i << " rows checked, " << (float)(i+1)/rows*100 << "% finished" << endl;
 
 	}
 
