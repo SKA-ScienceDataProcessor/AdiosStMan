@@ -11,12 +11,12 @@
 //    modify it under the terms of the GNU General Public License as published
 //    by the Free Software Foundation, either version 3 of the License, or
 //    (at your option) any later version.
-//   
+//
 //    This library is distributed in the hope that it will be useful,
 //    but WITHOUT ANY WARRANTY; without even the implied warranty of
 //    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //    GNU General Public License for more details.
-//   
+//
 //    You should have received a copy of the GNU General Public License along
 //    with this library. If not, see <http://www.gnu.org/licenses/>.
 //
@@ -33,88 +33,92 @@
 #include <adios_read.h>
 
 
-namespace casa { 
+namespace casa {
 
-	class AdiosStManColumn;
-	class AdiosStManColumnA;
-	class AdiosStManColumnV;
+    class AdiosStManColumn;
+    class AdiosStManColumnA;
+    class AdiosStManColumnV;
 
-	class AdiosStMan : public DataManager
-	{
-		public:
+    class AdiosStMan : public DataManager
+    {
+        public:
 
-			enum StManColumnType{
-				ARRAY = 0,
-				VAR = 1,
-			};
+            enum StManColumnType{
+                ARRAY = 0,
+                VAR = 1,
+            };
 
-			AdiosStMan(int aType = 1);
-			~AdiosStMan();
+            AdiosStMan(int aType = 1);
+            ~AdiosStMan();
 
-			virtual DataManager* clone() const;
-			virtual String dataManagerType() const;
-			virtual void create (uInt aNrRows);
-			virtual void open (uInt aRowNr, AipsIO&);
-			virtual void resync (uInt aRowNr);
-			virtual Bool flush (AipsIO&, Bool doFsync);
+            virtual DataManager* clone() const;
+            virtual String dataManagerType() const;
+            virtual void create (uInt aNrRows);
+            virtual void open (uInt aRowNr, AipsIO&);
+            virtual void resync (uInt aRowNr);
+            virtual Bool flush (AipsIO&, Bool doFsync);
 
-			virtual DataManagerColumn* makeScalarColumn (const String& aName,
-					int aDataType,
-					const String& aDataTypeID);
-			virtual DataManagerColumn* makeDirArrColumn (const String& aName,
-					int aDataType,
-					const String& aDataTypeID);
-			virtual DataManagerColumn* makeIndArrColumn (const String& aName,
-					int aDataType,
-					const String& aDataTypeID);
-			virtual void deleteManager();
-			virtual void addRow (uInt aNrRows);
+            virtual DataManagerColumn* makeScalarColumn (const String& aName,
+                    int aDataType,
+                    const String& aDataTypeID);
+            virtual DataManagerColumn* makeDirArrColumn (const String& aName,
+                    int aDataType,
+                    const String& aDataTypeID);
+            virtual DataManagerColumn* makeIndArrColumn (const String& aName,
+                    int aDataType,
+                    const String& aDataTypeID);
+            virtual void deleteManager();
+            virtual void addRow (uInt aNrRows);
 
-			int64_t getAdiosFile();
-			int64_t getAdiosGroup();
-			ADIOS_FILE* getAdiosReadFile();
+            int64_t getAdiosFile();
+            int64_t getAdiosGroup();
+            ADIOS_FILE* getAdiosReadFile();
 
-			static DataManager* makeObject (const casa::String& aDataManType,
-					const casa::Record& spec);
+            static DataManager* makeObject (const casa::String& aDataManType,
+                    const casa::Record& spec);
 
-			void adiosWriteOpen();
-			void adiosWriteClose();
-			uInt getNrRows();
-			char getMode();
+            void adiosWriteOpen();
+            void adiosWriteClose();
+            uInt getNrRows();
+            char getMode();
+            void setAdiosTransMethod(string method, string parameter);
+            void setAdiosBufSize(uint64_t bufsize);
 
-			void setStManColumnType(StManColumnType aType);
-			int getStManColumnType();
+            void setStManColumnType(StManColumnType aType);
+            int getStManColumnType();
 
-		private:
+        private:
 
-			AdiosStMan(const AdiosStMan& that);
+            AdiosStMan(const AdiosStMan& that);
 
-			int64_t itsAdiosFile;
-			int64_t itsAdiosGroup;
-			uint64_t itsNrAdiosFiles;
-			uint64_t itsAdiosBufsize;
-			uint64_t itsAdiosGroupsize;
-			uint64_t itsAdiosTotalsize;
+            int64_t itsAdiosFile;
+            int64_t itsAdiosGroup;
+            uint64_t itsNrAdiosFiles;
+            uint64_t itsAdiosBufsize;
+            uint64_t itsAdiosGroupsize;
+            uint64_t itsAdiosTotalsize;
+            string itsAdiosTransMethod;
+            string itsAdiosTransPara;
 
-			ADIOS_FILE *itsAdiosReadFile;
+            ADIOS_FILE *itsAdiosReadFile;
 
-			int mpiRank;
-			int mpiSize; 
-			bool isMpiInitInternal;
+            int mpiRank;
+            int mpiSize;
+            bool isMpiInitInternal;
 
-			PtrBlock<AdiosStManColumn*> itsColumnPtrBlk;
+            PtrBlock<AdiosStManColumn*> itsColumnPtrBlk;
 
-			uInt itsNrRows;
-			uInt itsNrColsSlave;
-			MPI_Comm itsMpiComm;
+            uInt itsNrRows;
+            uInt itsNrColsSlave;
+            MPI_Comm itsMpiComm;
 
-			char itsMode;
-			int itsStManColumnType;
+            char itsMode;
+            int itsStManColumnType;
 
 
-	}; // end of class AdiosStMan
+    }; // end of class AdiosStMan
 
-	extern "C" void register_adiosstman();
+    extern "C" void register_adiosstman();
 } // end of namespace casa
 
 #endif
