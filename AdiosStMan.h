@@ -48,7 +48,7 @@ namespace casa {
                 VAR = 1,
             };
 
-            AdiosStMan(int aType = 1);
+            AdiosStMan(int aType=0, string aMethod="MPI", string aPara="", uint64_t aBufsize=10000);
             ~AdiosStMan();
 
             virtual DataManager* clone() const;
@@ -81,8 +81,6 @@ namespace casa {
             void adiosWriteClose();
             uInt getNrRows();
             char getMode();
-            void setAdiosTransMethod(string method, string parameter);
-            void setAdiosBufSize(uint64_t bufsize);
 
             void setStManColumnType(StManColumnType aType);
             int getStManColumnType();

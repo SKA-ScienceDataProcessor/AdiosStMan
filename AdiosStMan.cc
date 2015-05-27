@@ -30,7 +30,7 @@
 
 namespace casa {
 
-    AdiosStMan::AdiosStMan (int aType)
+    AdiosStMan::AdiosStMan (int aType, string aMethod, string aPara, uint64_t aBufsize)
         :DataManager(),
         itsAdiosFile(0),
         itsAdiosReadFile(0),
@@ -38,9 +38,9 @@ namespace casa {
         itsMpiComm(MPI_COMM_WORLD),
         itsNrColsSlave(0),
         itsStManColumnType(aType),
-        itsAdiosTransMethod("MPI"),
-        itsAdiosTransPara(""),
-        itsAdiosBufsize(50000),
+        itsAdiosTransMethod(aMethod),
+        itsAdiosTransPara(aPara),
+        itsAdiosBufsize(aBufsize),
         isMpiInitInternal(false)
     {
         int isMpiInitialized;
@@ -62,6 +62,9 @@ namespace casa {
         itsMpiComm(MPI_COMM_WORLD),
         itsNrColsSlave(that.itsNrColsSlave),
         itsStManColumnType(that.itsStManColumnType),
+        itsAdiosTransMethod(that.itsAdiosTransMethod),
+        itsAdiosTransPara(that.itsAdiosTransPara),
+        itsAdiosBufsize(that.itsAdiosBufsize),
         isMpiInitInternal(false)
     {
         MPI_Comm_rank(MPI_COMM_WORLD, &mpiRank);
@@ -278,15 +281,6 @@ namespace casa {
 
     int AdiosStMan::getStManColumnType(){
         return itsStManColumnType;
-    }
-
-    void AdiosStMan::setAdiosTransMethod(string method, string parameter){
-        itsAdiosTransMethod = method;
-        itsAdiosTransPara = parameter;
-    }
-
-    void AdiosStMan::setAdiosBufSize(uint64_t bufsize){
-        itsAdiosBufsize = bufsize;
     }
 
     void register_adiosstman(){
