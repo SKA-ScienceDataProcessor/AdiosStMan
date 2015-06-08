@@ -54,8 +54,8 @@
 #include <tables/Tables/ScalarColumn.h>
 
 // headers for array column
-#include <casacore/tables/Tables/ArrColDesc.h>
-#include <casacore/tables/Tables/ArrayColumn.h>
+#include <tables/Tables/ArrColDesc.h>
+#include <tables/Tables/ArrayColumn.h>
 
 // headers for casa namespaces
 #include <casa/namespace.h>
