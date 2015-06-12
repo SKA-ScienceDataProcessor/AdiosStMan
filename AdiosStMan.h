@@ -53,6 +53,7 @@ namespace casa {
 
             virtual DataManager* clone() const;
             virtual String dataManagerType() const;
+            virtual String dataManagerName() const;
             virtual void create (uInt aNrRows);
             virtual void open (uInt aRowNr, AipsIO&);
             virtual void resync (uInt aRowNr);
@@ -89,6 +90,7 @@ namespace casa {
 
             AdiosStMan(const AdiosStMan& that);
 
+            String  itsDataManName;
             int64_t itsAdiosFile;
             int64_t itsAdiosGroup;
             uint64_t itsNrAdiosFiles;

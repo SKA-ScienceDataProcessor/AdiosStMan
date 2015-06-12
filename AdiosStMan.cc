@@ -32,6 +32,7 @@ namespace casa {
 
     AdiosStMan::AdiosStMan (int aType, string aMethod, string aPara, uint64_t aBufsize)
         :DataManager(),
+        itsDataManName("AdiosStMan"),
         itsAdiosFile(0),
         itsAdiosReadFile(0),
         itsNrAdiosFiles(0),
@@ -56,6 +57,7 @@ namespace casa {
 
     AdiosStMan::AdiosStMan (const AdiosStMan& that)
         :DataManager(),
+        itsDataManName(that.itsDataManName),
         itsAdiosFile(that.itsAdiosFile),
         itsAdiosReadFile(that.itsAdiosReadFile),
         itsNrAdiosFiles(that.itsNrAdiosFiles),
@@ -202,6 +204,7 @@ namespace casa {
     void AdiosStMan::open (uInt aNrRows, AipsIO& ios){
 
         ios.getstart("AdiosStMan");
+        ios >> itsDataManName;
         ios >> itsStManColumnType;
         ios.getend();
 
@@ -265,6 +268,7 @@ namespace casa {
 
     Bool AdiosStMan::flush (AipsIO& ios, Bool doFsync){
         ios.putstart("AdiosStMan", 2);
+        ios << itsDataManName;
         ios << itsStManColumnType;
         ios.putend();
         adiosWriteClose();
@@ -283,6 +287,10 @@ namespace casa {
         return itsStManColumnType;
     }
 
+    String AdiosStMan::dataManagerName() const
+    {
+        return itsDataManName;
+    }
     void register_adiosstman(){
         DataManager::registerCtor ("AdiosStMan", AdiosStMan::makeObject);
     }
