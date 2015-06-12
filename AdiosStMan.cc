@@ -151,7 +151,7 @@ namespace casa {
             MPI_Bcast(&itsFileNameLen, 1, MPI_INT, 0, itsMpiComm);
 
             char *itsFileNameChar = new char [itsFileNameLen + 1];
-            sprintf(itsFileNameChar, itsFileName.c_str());
+            sprintf(itsFileNameChar,"%s", itsFileName.c_str());
 
             // broadcast the filename string from the master to slaves.
             MPI_Bcast(itsFileNameChar, itsFileNameLen + 1, MPI_CHAR, 0, itsMpiComm);
