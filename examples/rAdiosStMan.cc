@@ -24,6 +24,19 @@
 
 
 
+#include "../casacore_version.h"
+
+#ifdef CASACORE_VERSION_1
+#include <tables/Tables/TableDesc.h>
+#include <tables/Tables/SetupNewTab.h>
+#include <tables/Tables/ScaColDesc.h>
+#include <tables/Tables/ScalarColumn.h>
+#include <tables/Tables/ArrColDesc.h>
+#include <tables/Tables/ArrayColumn.h>
+#include <casa/namespace.h>
+#endif
+
+#ifdef CASACORE_VERSION_2
 #include <casacore/tables/Tables/TableDesc.h>
 #include <casacore/tables/Tables/SetupNewTab.h>
 #include <casacore/tables/Tables/ScaColDesc.h>
@@ -31,6 +44,9 @@
 #include <casacore/tables/Tables/ArrColDesc.h>
 #include <casacore/tables/Tables/ArrayColumn.h>
 #include <casacore/casa/namespace.h>
+#endif
+
+
 
 
 int main(int argc, char **argv){

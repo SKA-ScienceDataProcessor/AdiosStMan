@@ -10,12 +10,12 @@
 //    modify it under the terms of the GNU General Public License as published
 //    by the Free Software Foundation, either version 3 of the License, or
 //    (at your option) any later version.
-//   
+//
 //    This library is distributed in the hope that it will be useful,
 //    but WITHOUT ANY WARRANTY; without even the implied warranty of
 //    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //    GNU General Public License for more details.
-//   
+//
 //    You should have received a copy of the GNU General Public License along
 //    with this library. If not, see <http://www.gnu.org/licenses/>.
 //
@@ -24,29 +24,37 @@
 
 
 
-// headers for table creation 
+#include "../casacore_version.h"
+
+#ifdef CASACORE_VERSION_1
 #include <tables/Tables/TableDesc.h>
 #include <tables/Tables/SetupNewTab.h>
-
-// headers for scalar column
 #include <tables/Tables/ScaColDesc.h>
 #include <tables/Tables/ScalarColumn.h>
-
-// headers for array column
 #include <tables/Tables/ArrColDesc.h>
 #include <tables/Tables/ArrayColumn.h>
-
-// headers for casa namespaces
 #include <casa/namespace.h>
+#endif
+
+#ifdef CASACORE_VERSION_2
+#include <casacore/tables/Tables/TableDesc.h>
+#include <casacore/tables/Tables/SetupNewTab.h>
+#include <casacore/tables/Tables/ScaColDesc.h>
+#include <casacore/tables/Tables/ScalarColumn.h>
+#include <casacore/tables/Tables/ArrColDesc.h>
+#include <casacore/tables/Tables/ArrayColumn.h>
+#include <casacore/casa/namespace.h>
+#endif
 
 #include "../tools/tictak.h"
+
 
 
 String filename;
 
 void table_read(){
-	
-	Table casa_table(filename);    
+
+	Table casa_table(filename);
 	uInt nrrow = casa_table.nrow();
 
 	ROArrayColumn<Complex> data_col(casa_table, "DATA");

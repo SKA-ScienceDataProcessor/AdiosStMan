@@ -1,5 +1,5 @@
 //    serial_array_write.cc: Benchmark code for comparing storage managers.
-//    This is supposed to be used together with serial_array_write.py, 
+//    This is supposed to be used together with serial_array_write.py,
 //    which is a python code controlling the benchmark flow.
 //
 //    (c) University of Western Australia
@@ -12,12 +12,12 @@
 //    modify it under the terms of the GNU General Public License as published
 //    by the Free Software Foundation, either version 3 of the License, or
 //    (at your option) any later version.
-//   
+//
 //    This library is distributed in the hope that it will be useful,
 //    but WITHOUT ANY WARRANTY; without even the implied warranty of
 //    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //    GNU General Public License for more details.
-//   
+//
 //    You should have received a copy of the GNU General Public License along
 //    with this library. If not, see <http://www.gnu.org/licenses/>.
 //
@@ -25,27 +25,33 @@
 //    jason.wang@icrar.org
 
 
+#include "../casacore_version.h"
 
-// headers for table creation 
+#ifdef CASACORE_VERSION_1
 #include <tables/Tables/TableDesc.h>
 #include <tables/Tables/SetupNewTab.h>
-
-// headers for storage manager
 #include <tables/Tables/TiledShapeStMan.h>
 #include <tables/Tables/StandardStMan.h>
-#include "../AdiosStMan.h"
-
-// headers for scalar column
 #include <tables/Tables/ScaColDesc.h>
 #include <tables/Tables/ScalarColumn.h>
-
-// headers for array column
 #include <tables/Tables/ArrColDesc.h>
 #include <tables/Tables/ArrayColumn.h>
-
-// headers for casa namespaces
 #include <casa/namespace.h>
+#endif
 
+#ifdef CASACORE_VERSION_2
+#include <casacore/tables/Tables/TableDesc.h>
+#include <casacore/tables/Tables/SetupNewTab.h>
+#include <casacore/tables/Tables/ScaColDesc.h>
+#include <casacore/tables/Tables/ScalarColumn.h>
+#include <casacore/tables/Tables/ArrColDesc.h>
+#include <casacore/tables/Tables/ArrayColumn.h>
+#include <casacore/tables/DataMan/TiledShapeStMan.h>
+#include <casacore/tables/DataMan/StandardStMan.h>
+#include <casacore/casa/namespace.h>
+#endif
+
+#include "../AdiosStMan.h"
 #include "../tools/tictak.h"
 
 // shape of the array column
@@ -101,7 +107,7 @@ int main(int argc, char** argv){
 
 	Array<float> data_arr(*data_pos);
 	indgen (data_arr);
-	
+
 	string nameStMan = argv[4];
 	string filename = argv[5];
 	DataManager *stman = 0;

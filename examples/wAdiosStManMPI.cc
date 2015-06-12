@@ -41,24 +41,29 @@
 // necessary to reproduce the casa table.
 
 
+#include "../casacore_version.h"
 
-// headers for table creation
+#ifdef CASACORE_VERSION_1
 #include <tables/Tables/TableDesc.h>
 #include <tables/Tables/SetupNewTab.h>
-
-// headers for storage manager
-#include "../AdiosStMan.h"
-
-// headers for scalar column
 #include <tables/Tables/ScaColDesc.h>
 #include <tables/Tables/ScalarColumn.h>
-
-// headers for array column
 #include <tables/Tables/ArrColDesc.h>
 #include <tables/Tables/ArrayColumn.h>
-
-// headers for casa namespaces
 #include <casa/namespace.h>
+#endif
+
+#ifdef CASACORE_VERSION_2
+#include <casacore/tables/Tables/TableDesc.h>
+#include <casacore/tables/Tables/SetupNewTab.h>
+#include <casacore/tables/Tables/ScaColDesc.h>
+#include <casacore/tables/Tables/ScalarColumn.h>
+#include <casacore/tables/Tables/ArrColDesc.h>
+#include <casacore/tables/Tables/ArrayColumn.h>
+#include <casacore/casa/namespace.h>
+#endif
+
+#include "../AdiosStMan.h"
 
 
 

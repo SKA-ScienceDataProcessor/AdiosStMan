@@ -11,12 +11,12 @@
 //    modify it under the terms of the GNU General Public License as published
 //    by the Free Software Foundation, either version 3 of the License, or
 //    (at your option) any later version.
-//   
+//
 //    This library is distributed in the hope that it will be useful,
 //    but WITHOUT ANY WARRANTY; without even the implied warranty of
 //    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //    GNU General Public License for more details.
-//   
+//
 //    You should have received a copy of the GNU General Public License along
 //    with this library. If not, see <http://www.gnu.org/licenses/>.
 //
@@ -26,11 +26,11 @@
 
 
 // ################################################################################
-// This code creates separate casa table files for each MPI process. 
-// In order to fool the casa table system as if different processes are 
+// This code creates separate casa table files for each MPI process.
+// In order to fool the casa table system as if different processes are
 // dealing with independent casa tables so that one process won't lock
 // the table and/or prevent others from putting data in, only the master MPI process
-// creates casa table files in the intended place, while slave processes 
+// creates casa table files in the intended place, while slave processes
 // create table files with exactly the same contents in /tmp, which are supposed
 // to be cleaned up once the job is finished.
 //
@@ -38,29 +38,35 @@
 // writing data into a single ADIOS container, which is in the same directory where
 // the master MPI process writes casa table files. Therefore, after job is finished,
 // these table files together with ADIOS files will contain all information that is
-// necessary to reproduce the casa table. 
+// necessary to reproduce the casa table.
 
 
 
-// headers for table creation 
+#include "../casacore_version.h"
+
+#ifdef CASACORE_VERSION_1
 #include <tables/Tables/TableDesc.h>
 #include <tables/Tables/SetupNewTab.h>
-
-// headers for storage manager
-#include "../AdiosStMan.h"
-
-// headers for scalar column
 #include <tables/Tables/ScaColDesc.h>
 #include <tables/Tables/ScalarColumn.h>
-
-// headers for array column
 #include <tables/Tables/ArrColDesc.h>
 #include <tables/Tables/ArrayColumn.h>
-
-// headers for casa namespaces
 #include <casa/namespace.h>
+#endif
 
+#ifdef CASACORE_VERSION_2
+#include <casacore/tables/Tables/TableDesc.h>
+#include <casacore/tables/Tables/SetupNewTab.h>
+#include <casacore/tables/Tables/ScaColDesc.h>
+#include <casacore/tables/Tables/ScalarColumn.h>
+#include <casacore/tables/Tables/ArrColDesc.h>
+#include <casacore/tables/Tables/ArrayColumn.h>
+#include <casacore/casa/namespace.h>
+#endif
+
+#include "../AdiosStMan.h"
 #include "../tools/tictak.h"
+
 
 int NrRows = 10;
 IPosition data_pos;
@@ -121,7 +127,7 @@ int main (int argc, char **argv){
 		exit(-1);
 	}
 	// generate filenames for slave processes
-	// these files are not used later on, so just put them 
+	// these files are not used later on, so just put them
 	// into /tmp and clean them up when job is finished
 	if(mpiRank>0){
 		stringstream filename_s;
@@ -151,7 +157,7 @@ int main (int argc, char **argv){
 		cout << ",NrRows," << NrRows;
 		cout << ",CellSize(Byte)," << CellSize;
 		cout << ",MpiSize," << mpiSize;
-		cout << ",Xlength," << atoi(argv[2]); 
+		cout << ",Xlength," << atoi(argv[2]);
 		cout << ",Ylength," << atoi(argv[3]);
 		cout << endl;
 	}
