@@ -10,12 +10,12 @@
 //    modify it under the terms of the GNU General Public License as published
 //    by the Free Software Foundation, either version 3 of the License, or
 //    (at your option) any later version.
-//   
+//
 //    This library is distributed in the hope that it will be useful,
 //    but WITHOUT ANY WARRANTY; without even the implied warranty of
 //    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //    GNU General Public License for more details.
-//   
+//
 //    You should have received a copy of the GNU General Public License along
 //    with this library. If not, see <http://www.gnu.org/licenses/>.
 //
@@ -24,46 +24,44 @@
 
 
 
-// headers for table creation 
-#include <tables/Tables/TableDesc.h>
-#include <tables/Tables/SetupNewTab.h>
+#include <casacore/tables/Tables/TableDesc.h>
+#include <casacore/tables/Tables/SetupNewTab.h>
+#include <casacore/tables/Tables/ScaColDesc.h>
+#include <casacore/tables/Tables/ScalarColumn.h>
+#include <casacore/tables/Tables/ArrColDesc.h>
+#include <casacore/tables/Tables/ArrayColumn.h>
+#include <casacore/casa/namespace.h>
 
-// headers for scalar column
-#include <tables/Tables/ScaColDesc.h>
-#include <tables/Tables/ScalarColumn.h>
 
-// headers for array column
-#include <tables/Tables/ArrColDesc.h>
-#include <tables/Tables/ArrayColumn.h>
+int main(int argc, char **argv){
 
-// headers for casa namespaces
-#include <casa/namespace.h>
+    if (argc < 2){
+        cout << "./rAdiosStMan /path/to/file" << endl;
+        return -1;
+    }
+    string filename = argv[1];
 
-String filename = "/scratch/tmp/v.casa";
+    Table casa_table(filename);
 
-int main (){
+    ROScalarColumn<uInt> index_col(casa_table, "index");
+    ROArrayColumn<float> data_col(casa_table, "data");
 
-	Table casa_table(filename);    
+    Vector<uInt> index_vec = index_col.getColumn();
+    Array<float> data_arr = data_col.getColumn();
 
-	ROScalarColumn<uInt> index_col(casa_table, "index");
-	ROArrayColumn<float> data_col(casa_table, "data");
+    Vector<float> data_vec = data_arr.reform(IPosition(1,data_arr.nelements()));
 
-	Vector<uInt> index_vec = index_col.getColumn();
-	Array<float> data_arr = data_col.getColumn();
+    cout << "index column: " << endl;
+    for (int i=0; i<index_vec.nelements(); i++){
+        cout << index_vec[i] << "  ";
+    }
 
-	Vector<float> data_vec = data_arr.reform(IPosition(1,data_arr.nelements()));
-
-	cout << "index column: " << endl;
-	for (int i=0; i<index_vec.nelements(); i++){
-		cout << index_vec[i] << "  ";
-	}
-
-	cout << endl << endl << "data column: " << endl;
-	for (int i=0; i<data_arr.nelements(); i++){
-		cout << data_vec[i] << "  ";
-		if ((i+1) % (data_arr.shape())(0) == 0)	cout << endl;
-	}
-	return 0;
+    cout << endl << endl << "data column: " << endl;
+    for (int i=0; i<data_arr.nelements(); i++){
+        cout << data_vec[i] << "  ";
+        if ((i+1) % (data_arr.shape())(0) == 0)	cout << endl;
+    }
+    return 0;
 }
 
 

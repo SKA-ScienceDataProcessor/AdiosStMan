@@ -11,12 +11,12 @@
 //    modify it under the terms of the GNU General Public License as published
 //    by the Free Software Foundation, either version 3 of the License, or
 //    (at your option) any later version.
-//   
+//
 //    This library is distributed in the hope that it will be useful,
 //    but WITHOUT ANY WARRANTY; without even the implied warranty of
 //    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //    GNU General Public License for more details.
-//   
+//
 //    You should have received a copy of the GNU General Public License along
 //    with this library. If not, see <http://www.gnu.org/licenses/>.
 //
@@ -26,11 +26,11 @@
 
 
 // ################################################################################
-// This code creates separate casa table files for each MPI process. 
-// In order to fool the casa table system as if different processes are 
+// This code creates separate casa table files for each MPI process.
+// In order to fool the casa table system as if different processes are
 // dealing with independent casa tables so that one process won't lock
 // the table and/or prevent others from putting data in, only the master MPI process
-// creates casa table files in the intended place, while slave processes 
+// creates casa table files in the intended place, while slave processes
 // create table files with exactly the same contents in /tmp, which are supposed
 // to be cleaned up once the job is finished.
 //
@@ -38,11 +38,11 @@
 // writing data into a single ADIOS container, which is in the same directory where
 // the master MPI process writes casa table files. Therefore, after job is finished,
 // these table files together with ADIOS files will contain all information that is
-// necessary to reproduce the casa table. 
+// necessary to reproduce the casa table.
 
 
 
-// headers for table creation 
+// headers for table creation
 #include <tables/Tables/TableDesc.h>
 #include <tables/Tables/SetupNewTab.h>
 
@@ -60,64 +60,64 @@
 // headers for casa namespaces
 #include <casa/namespace.h>
 
-int NrRows = 50;
-IPosition data_pos = IPosition(2,5,6);
-string filename = "/scratch/tmp/v.casa";
-
-int mpiRank, mpiSize;
-Array<Float> data_arr(data_pos);
 
 
-void write_table(){
 
-	AdiosStMan stman;
-
-	// define a table description & add a scalar column and an array column
-	TableDesc td("", "1", TableDesc::Scratch);
-	td.addColumn (ScalarColumnDesc<uInt>("index"));
-	td.addColumn (ArrayColumnDesc<Float>("data", data_pos, ColumnDesc::Direct));
-
-	// create a table instance, bind it to the storage manager & allocate rows
-	SetupNewTable newtab(filename, td, Table::New);
-	newtab.bindAll(stman);
-	Table casa_table(newtab, NrRows);
-
-	// define column objects and link them to the table
-	ScalarColumn<uInt> index_col(casa_table, "index");
-	ArrayColumn<Float> data_col(casa_table, "data");
-
-	// each mpi rank writes a subset of the data
-	for (uInt i=mpiRank; i<NrRows; i+=mpiSize) {
-		index_col.put (i, i);
-		data_col.put (i, data_arr);
-	}
-
-}
+int main(int argc, char **argv){
 
 
-int main (){
+    if (argc < 2){
+        cout << "./wAdiosStMan /path/to/file" << endl;
+        return 0;
+    }
 
-	MPI_Init(0,0);
-	MPI_Comm_rank(MPI_COMM_WORLD, &mpiRank);
-	MPI_Comm_size(MPI_COMM_WORLD, &mpiSize);
+    string filename = argv[1];
 
-	// generate filenames for slave processes
-	// these files are not used later on, so just put them 
-	// into /tmp and clean them up when job is finished
-	if(mpiRank>0){
-		stringstream filename_s;
-		filename_s << "/tmp/v" << mpiRank << ".casa";
-		filename = filename_s.str();
-	}
+    AdiosStMan stman;
 
-	// put some data into the data array
-	indgen (data_arr);
+    int mpiRank, mpiSize;
+    MPI_Comm_rank(MPI_COMM_WORLD, &mpiRank);
+    MPI_Comm_size(MPI_COMM_WORLD, &mpiSize);
 
-	write_table();
+    // generate filenames for slave processes
+    // these files are not used later on, so just put them
+    // into /tmp and clean them up when job is finished
+    if(mpiRank>0){
+        stringstream filename_s;
+        filename_s << "/tmp/v" << mpiRank << ".casa";
+        filename = filename_s.str();
+    }
 
-	MPI_Finalize();
+    // define a dimension object for the array column
+    IPosition data_pos = IPosition(2,5,6);
+    int NrRows = 50;
+    // define data arrays that actually hold the data
+    Array<Float> data_arr(data_pos);
+    // put some data into the data array
+    indgen (data_arr);
 
-	return 0;
+
+    // define a table description & add a scalar column and an array column
+    TableDesc td("", "1", TableDesc::Scratch);
+    td.addColumn (ScalarColumnDesc<uInt>("index"));
+    td.addColumn (ArrayColumnDesc<Float>("data", data_pos, ColumnDesc::Direct));
+
+    // create a table instance, bind it to the storage manager & allocate rows
+    SetupNewTable newtab(filename, td, Table::New);
+    newtab.bindAll(stman);
+    Table casa_table(newtab, NrRows);
+
+    // define column objects and link them to the table
+    ScalarColumn<uInt> index_col(casa_table, "index");
+    ArrayColumn<Float> data_col(casa_table, "data");
+
+    // each mpi rank writes a subset of the data
+    for (uInt i=mpiRank; i<NrRows; i+=mpiSize) {
+        index_col.put (i, i);
+        data_col.put (i, data_arr);
+    }
+
+    return 0;
 }
 
 

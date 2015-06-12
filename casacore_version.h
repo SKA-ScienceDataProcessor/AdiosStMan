@@ -1,0 +1,5 @@
+//#define CASACORE_VERSION_1
+#define CASACORE_VERSION_2
+
+
+

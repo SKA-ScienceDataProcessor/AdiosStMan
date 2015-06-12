@@ -26,9 +26,20 @@
 #ifndef ADIOSSTMAN_H
 #define ADIOSSTMAN_H
 
+#include "casacore_version.h"
+
+#ifdef CASACORE_VERSION_1
 #include <casa/aips.h>
-#include <tables/Tables/DataManager.h>
 #include <casa/Containers/Block.h>
+#include <tables/Tables/DataManager.h>
+#endif
+
+#ifdef CASACORE_VERSION_2
+#include <casacore/casa/aips.h>
+#include <casacore/casa/Containers/Block.h>
+#include <casacore/tables/DataMan/DataManager.h>
+#endif
+
 #include <adios.h>
 #include <adios_read.h>
 
@@ -48,7 +59,7 @@ namespace casa {
                 VAR = 1,
             };
 
-            AdiosStMan(int aType=0, string aMethod="MPI", string aPara="", uint64_t aBufsize=10000);
+            AdiosStMan(int aType=0, string aMethod="MPI", string aPara="", uint64_t aBufsize=1000);
             ~AdiosStMan();
 
             virtual DataManager* clone() const;

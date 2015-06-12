@@ -10,12 +10,12 @@
 //    modify it under the terms of the GNU General Public License as published
 //    by the Free Software Foundation, either version 3 of the License, or
 //    (at your option) any later version.
-//   
+//
 //    This library is distributed in the hope that it will be useful,
 //    but WITHOUT ANY WARRANTY; without even the implied warranty of
 //    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //    GNU General Public License for more details.
-//   
+//
 //    You should have received a copy of the GNU General Public License along
 //    with this library. If not, see <http://www.gnu.org/licenses/>.
 //
@@ -24,7 +24,7 @@
 
 
 
-// headers for table creation 
+// headers for table creation
 #include <tables/Tables/TableDesc.h>
 #include <tables/Tables/SetupNewTab.h>
 
@@ -39,29 +39,34 @@
 // headers for casa namespaces
 #include <casa/namespace.h>
 
-String filename = "/scratch/tmp/v.casa";
 
 
-int main (){
+int main(int argc, char **argv){
 
-	Slicer sli(IPosition(2,1,2), IPosition(2,2,3));
+    if (argc < 2){
+        cout << "./rAdiosStMan /path/to/file" << endl;
+        return -1;
+    }
+    string filename = argv[1];
 
-	Table casa_table(filename);    
+    Slicer sli(IPosition(2,1,2), IPosition(2,2,3));
 
-	ROScalarColumn<uInt> index_col(casa_table, "index");
-	ROArrayColumn<float> data_col(casa_table, "data");
+    Table casa_table(filename);
 
-	Array<uInt> index_arr = index_col.getColumn();
-	Array<float> data_arr = data_col.getColumn(sli);
+    ROScalarColumn<uInt> index_col(casa_table, "index");
+    ROArrayColumn<float> data_col(casa_table, "data");
 
-	Vector<float> data_vec = data_arr.reform(IPosition(1,data_arr.nelements()));
+    Array<uInt> index_arr = index_col.getColumn();
+    Array<float> data_arr = data_col.getColumn(sli);
 
-	for (int i=0; i<data_arr.nelements(); i++){
-		cout << data_vec[i] << "  ";
-		if ((i+1) % (data_arr.shape())(0) == 0)	cout << endl;
-	}
+    Vector<float> data_vec = data_arr.reform(IPosition(1,data_arr.nelements()));
 
-	return 0;
+    for (int i=0; i<data_arr.nelements(); i++){
+        cout << data_vec[i] << "  ";
+        if ((i+1) % (data_arr.shape())(0) == 0)	cout << endl;
+    }
+
+    return 0;
 }
 
 

@@ -23,7 +23,17 @@
 //    Any bugs, questions, concerns and/or suggestions please email to
 //    jason.wang@icrar.org
 
+#include "casacore_version.h"
+
+#ifdef CASACORE_VERSION_1
 #include <casa/IO/AipsIO.h>
+#endif
+
+#ifdef CASACORE_VERSION_2
+#include <casacore/casa/IO/AipsIO.h>
+#endif
+
+
 #include "AdiosStManColumnA.h"
 #include "AdiosStManColumnV.h"
 
@@ -165,26 +175,17 @@ namespace casa {
 
     void AdiosStMan::create (uInt aNrRows)
     {
-
         itsMode = 'w';
         itsNrRows = aNrRows;
-
         adios_init_noxml(itsMpiComm);
-
         adios_declare_group(&itsAdiosGroup, "casatable", "", adios_flag_no);
-//        adios_select_method(itsAdiosGroup, "MPI_AGGREGATE", "num_aggregators=32", "");
         adios_select_method(itsAdiosGroup, itsAdiosTransMethod.c_str(), itsAdiosTransPara.c_str(), "");
-
         itsAdiosGroupsize = 0;
-
         uInt NrCols = ncolumn();
         MPI_Bcast(&NrCols, 1, MPI_UNSIGNED, 0, itsMpiComm);
-
         for (uInt i=0; i<NrCols; i++){
             itsColumnPtrBlk[i]->initAdiosWrite(aNrRows);
         }
-
-
         for (uInt i=0; i<NrCols; i++){
             // if scalar column
             if (itsColumnPtrBlk[i]->getShapeColumn().nelements() == 0){
@@ -195,25 +196,18 @@ namespace casa {
                 itsAdiosGroupsize = itsAdiosGroupsize + aNrRows * itsColumnPtrBlk[i]->getDataTypeSize() * itsColumnPtrBlk[i]->getShapeColumn().product();
             }
         }
-
         adios_allocate_buffer(ADIOS_BUFFER_ALLOC_NOW, itsAdiosBufsize);
-
-
     } // end of void AdiosStMan::create (uInt aNrRows)
 
     void AdiosStMan::open (uInt aNrRows, AipsIO& ios){
-
         ios.getstart("AdiosStMan");
         ios >> itsDataManName;
         ios >> itsStManColumnType;
         ios.getend();
-
         itsMode = 'r';
         itsNrRows = aNrRows;
-
         adios_read_init_method (ADIOS_READ_METHOD_BP, MPI_COMM_WORLD, "verbose=3");
         itsAdiosReadFile = adios_read_open (fileName().c_str(), ADIOS_READ_METHOD_BP, MPI_COMM_WORLD, ADIOS_LOCKMODE_NONE, 0);
-
         if(itsAdiosReadFile){
             for (int i=0; i<ncolumn(); i++){
                 itsColumnPtrBlk[i]->initAdiosRead();

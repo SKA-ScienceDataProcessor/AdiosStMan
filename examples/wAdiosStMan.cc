@@ -43,47 +43,51 @@
 // headers for casa namespaces
 #include <casa/namespace.h>
 
-// define a dimension object for the array column
-IPosition data_pos = IPosition(2,6,5);
 
-int NrRows = 4;
-
-string filename = "/scratch/tmp/v.casa";
 
 int main(int argc, char **argv){
 
-	// define a storage manager
-//	AdiosStMan stman(AdiosStMan::VAR);
-//	AdiosStMan stman(AdiosStMan::ARRAY, "MPI", "", 100);
-	AdiosStMan stman(0);
+    if (argc < 2){
+        cout << "./wAdiosStMan /path/to/file" << endl;
+        return -1;
+    }
+    string filename = argv[1];
 
-	// define a table description & add a scalar column and an array column
-	TableDesc td("", "1", TableDesc::Scratch);
-	td.addColumn (ScalarColumnDesc<uInt>("index"));
-	td.addColumn (ArrayColumnDesc<float>("data", data_pos, ColumnDesc::Direct));
+    // define a dimension object for the array column
+    IPosition data_pos = IPosition(2,6,5);
+    int NrRows = 4;
+    // define data arrays that actually hold the data
+    Array<float> data_arr(data_pos);
+    // put some data in
+    indgen (data_arr);
 
-	// create a table instance, bind it to the storage manager & allocate rows
-	SetupNewTable newtab(filename, td, Table::New);
-	newtab.bindAll(stman);
-	Table tab(newtab, NrRows);
+    // define a storage manager
+//    AdiosStMan stman(AdiosStMan::VAR);
+//    AdiosStMan stman(AdiosStMan::ARRAY, "MPI", "", 100);
+//    AdiosStMan stman(AdiosStMan::ARRAY, "MPI_AGGREGATE", "num_aggregators=32", 100);
+    AdiosStMan stman;
 
-	// define column objects and link them to the table
-	ScalarColumn<uInt> index_col (tab, "index");
-	ArrayColumn<float> data_col (tab, "data");
+    // define a table description & add a scalar column and an array column
+    TableDesc td("", "1", TableDesc::Scratch);
+    td.addColumn (ScalarColumnDesc<uInt>("index"));
+    td.addColumn (ArrayColumnDesc<float>("data", data_pos, ColumnDesc::Direct));
 
-	// define data arrays that actually hold the data
-	Array<float> data_arr(data_pos);
+    // create a table instance, bind it to the storage manager & allocate rows
+    SetupNewTable newtab(filename, td, Table::New);
+    newtab.bindAll(stman);
+    Table tab(newtab, NrRows);
 
-	// put some data in
-	indgen (data_arr);
+    // define column objects and link them to the table
+    ScalarColumn<uInt> index_col (tab, "index");
+    ArrayColumn<float> data_col (tab, "data");
 
-	// write data into the column objects
-	for (uInt i=0; i<NrRows; i++) {
-		index_col.put (i, NrRows-i);
-		data_col.put(i, data_arr);
-	}
+    // write data into the column objects
+    for (uInt i=0; i<NrRows; i++) {
+        index_col.put (i, NrRows-i);
+        data_col.put(i, data_arr);
+    }
 
-	return 0;
+    return 0;
 }
 
 
