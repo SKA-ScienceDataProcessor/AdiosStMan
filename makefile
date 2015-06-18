@@ -16,10 +16,13 @@ $(TARGET):$(SRC)
 all:$(TARGET) 
 	for d in $(DIRS); do(cd $$d; rm -f $(TARGET); ln -sf ../$(TARGET) ./; make);  done
 
-re:clean $(TARGET)
+re:cl $(TARGET)
 
 ln:$(TARGET)
 	for d in $(DIRS); do(cd $$d; rm -f $(TARGET); ln -sf ../$(TARGET) ./);  done
+
+cl:
+	rm -f *.so
 
 clean:
 	rm -rf *.so 

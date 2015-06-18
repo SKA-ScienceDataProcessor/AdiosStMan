@@ -120,7 +120,7 @@ namespace casa {
             PtrBlock<AdiosStManColumn*> itsColumnPtrBlk;
 
             uInt itsNrRows;
-            uInt itsNrColsSlave;
+            uInt itsNrCols;
             MPI_Comm itsMpiComm;
 
             char itsMode;

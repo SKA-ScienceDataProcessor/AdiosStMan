@@ -46,32 +46,24 @@ namespace casa{
 
 
     void AdiosStManColumnA::initAdiosWrite(uInt aNrRows){
-
-        int mpiRank;
-        MPI_Comm_rank(MPI_COMM_WORLD, &mpiRank);
-
         for(int j=0; j<aNrRows; j++){
             // if not allocated
             if(itsAdiosWriteIDs == 0){
                 itsNrIDsAllocated = aNrRows;
                 itsAdiosWriteIDs = (int64_t*) malloc(sizeof(int64_t) * itsNrIDsAllocated);
             }
-
             stringstream NrRows, RowID;
             NrRows << aNrRows;
             RowID << itsNrIDs;
-
             if (itsShape.nelements() == 0){
                 itsAdiosWriteIDs[itsNrIDs] = adios_define_var(itsStManPtr->getAdiosGroup(), itsColumnName.c_str(), "", itsAdiosDataType, "1", NrRows.str().c_str(), RowID.str().c_str() ); ////
             }
             else{
-
                 IPosition dimensions_pos;
                 for (int k=itsShape.nelements() - 1; k>=0; k--){
                     dimensions_pos.append(IPosition(1, itsShape[k]));
                 }
                 string dimensions_pos_str = dimensions_pos.toString().substr(1, itsShape.toString().length()-2);
-
                 string dimensions = "1," + dimensions_pos_str;
                 string global_dimensions = NrRows.str() + "," + dimensions_pos_str;
                 string local_offsets = RowID.str();
