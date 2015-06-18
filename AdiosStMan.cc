@@ -139,10 +139,28 @@ namespace casa {
             char *itsFileNameChar = new char [itsFileNameLen + 1];
             sprintf(itsFileNameChar,"%s", itsFileName.c_str());
             MPI_Bcast(itsFileNameChar, itsFileNameLen + 1, MPI_CHAR, 0, itsMpiComm);
-            delete [] itsFileNameChar;
             // create ADIOS file
-            adios_open(&itsAdiosFile, "casatable", itsFileNameChar, "w", itsMpiComm);
+	    adios_init_noxml(itsMpiComm);
+	    adios_allocate_buffer(ADIOS_BUFFER_ALLOC_NOW, itsAdiosBufsize);
+	    adios_declare_group(&itsAdiosGroup, "casatable", "", adios_flag_no);
+	    adios_select_method(itsAdiosGroup, itsAdiosTransMethod.c_str(), itsAdiosTransPara.c_str(), "");
+	    for (uInt i=0; i<itsNrCols; i++){
+		    itsColumnPtrBlk[i]->initAdiosWrite(itsNrRows);
+	    }
+	    itsAdiosGroupsize = 0;
+	    for (uInt i=0; i<itsNrCols; i++){
+		    // if scalar column
+		    if (itsColumnPtrBlk[i]->getShapeColumn().nelements() == 0){
+			    itsAdiosGroupsize = itsAdiosGroupsize + itsNrRows * itsColumnPtrBlk[i]->getDataTypeSize();
+		    }
+		    // if array column
+		    else{
+			    itsAdiosGroupsize = itsAdiosGroupsize + itsNrRows * itsColumnPtrBlk[i]->getDataTypeSize() * itsColumnPtrBlk[i]->getShapeColumn().product();
+		    }
+	    }
+	    adios_open(&itsAdiosFile, "casatable", itsFileNameChar, "w", itsMpiComm);
             adios_group_size(itsAdiosFile, itsAdiosGroupsize, &itsAdiosTotalsize);
+            delete [] itsFileNameChar;
         }
     }
 
@@ -159,26 +177,6 @@ namespace casa {
         itsNrCols = ncolumn();
         MPI_Bcast(&itsNrCols, 1, MPI_UNSIGNED, 0, itsMpiComm);
         MPI_Bcast(&itsNrRows, 1, MPI_UNSIGNED, 0, itsMpiComm);
-        // initialise ADIOS
-        adios_init_noxml(itsMpiComm);
-        adios_allocate_buffer(ADIOS_BUFFER_ALLOC_NOW, itsAdiosBufsize);
-        adios_declare_group(&itsAdiosGroup, "casatable", "", adios_flag_no);
-        adios_select_method(itsAdiosGroup, itsAdiosTransMethod.c_str(), itsAdiosTransPara.c_str(), "");
-        for (uInt i=0; i<itsNrCols; i++){
-            itsColumnPtrBlk[i]->initAdiosWrite(itsNrRows);
-        }
-        itsAdiosGroupsize = 0;
-        for (uInt i=0; i<itsNrCols; i++){
-            // if scalar column
-            if (itsColumnPtrBlk[i]->getShapeColumn().nelements() == 0){
-                itsAdiosGroupsize = itsAdiosGroupsize + itsNrRows * itsColumnPtrBlk[i]->getDataTypeSize();
-            }
-            // if array column
-            else{
-                itsAdiosGroupsize = itsAdiosGroupsize + itsNrRows * itsColumnPtrBlk[i]->getDataTypeSize() * itsColumnPtrBlk[i]->getShapeColumn().product();
-            }
-        }
-//        printf("AdiosStMan: ADIOS Group Size = %llu \n", itsAdiosGroupsize);
     } // end of void AdiosStMan::create (uInt aNrRows)
 
     void AdiosStMan::open (uInt aNrRows, AipsIO& ios){
