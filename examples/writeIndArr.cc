@@ -32,6 +32,7 @@
 #include <tables/Tables/ScalarColumn.h>
 #include <tables/Tables/ArrColDesc.h>
 #include <tables/Tables/ArrayColumn.h>
+#include <tables/Tables/TiledShapeStMan.h>
 #include <casa/namespace.h>
 #endif
 
@@ -42,6 +43,7 @@
 #include <casacore/tables/Tables/ScalarColumn.h>
 #include <casacore/tables/Tables/ArrColDesc.h>
 #include <casacore/tables/Tables/ArrayColumn.h>
+#include <casacore/tables/DataMan/TiledShapeStMan.h>
 #include <casacore/casa/namespace.h>
 #endif
 
@@ -66,28 +68,26 @@ int main(int argc, char **argv){
 //    AdiosStMan stman(AdiosStMan::VAR);
 //    AdiosStMan stman(AdiosStMan::ARRAY, "MPI", "", 100);
 //    AdiosStMan stman(AdiosStMan::ARRAY, "MPI_AGGREGATE", "num_aggregators=32", 100);
-    AdiosStMan stman;
+//    AdiosStMan stman;
+    TiledShapeStMan stman("Ti", data_pos);
 
     // define a table description & add a scalar column and an array column
     TableDesc td("", "1", TableDesc::Scratch);
-    td.addColumn (ScalarColumnDesc<uInt>("index"));
-    td.addColumn (ArrayColumnDesc<float>("data", -1, ColumnDesc::FixedShape));
+    td.addColumn (ArrayColumnDesc<float>("data", data_pos, ColumnDesc::Direct));
 
     // create a table instance, bind it to the storage manager & allocate rows
     SetupNewTable newtab(filename, td, Table::New);
+//    newtab.setShapeColumn("data", data_pos);
     newtab.bindAll(stman);
 
-    newtab.setShapeColumn("data", data_pos);
 
     Table tab(newtab, NrRows);
 
     // define column objects and link them to the table
-    ScalarColumn<uInt> index_col (tab, "index");
     ArrayColumn<float> data_col (tab, "data");
 
     // write data into the column objects
     for (uInt i=0; i<NrRows; i++) {
-        index_col.put (i, NrRows-i);
         data_col.put(i, data_arr);
     }
 

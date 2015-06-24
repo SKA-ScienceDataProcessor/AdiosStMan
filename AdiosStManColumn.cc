@@ -37,7 +37,7 @@
 
 #include "AdiosStManColumn.h"
 
-namespace casa{
+namespace casacore {
 
     AdiosStManColumn::AdiosStManColumn (AdiosStMan* aParent, int aDataType, uInt aColNr)
         :StManColumn (aDataType),
@@ -251,69 +251,148 @@ namespace casa{
 
     // *** access a row for an array column ***
     // put
+
+    void AdiosStManColumn::putArrayV (uInt rownr, const void* dataPtr){
+        Bool deleteIt;
+        itsStManPtr->adiosWriteOpen();
+        switch (itsCasaDataType){
+            case TpBool:
+                {
+                    const Bool *data = ((const Array<Bool>*)dataPtr)->getStorage (deleteIt);
+                    adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , (void*)data);
+                    ((const Array<Bool>*)dataPtr)->freeStorage (data, deleteIt);
+                }
+                break;
+            case TpUChar:
+                {
+                    const uChar *data = ((const Array<uChar>*)dataPtr)->getStorage (deleteIt);
+                    adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , (void*)data);
+                    ((const Array<uChar>*)dataPtr)->freeStorage (data, deleteIt);
+                }
+                break;
+            case TpShort:
+                {
+                    const Short *data = ((const Array<Short>*)dataPtr)->getStorage (deleteIt);
+                    adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , (void*)data);
+                    ((const Array<Short>*)dataPtr)->freeStorage (data, deleteIt);
+                }
+                break;
+            case TpUShort:
+                {
+                    const uShort *data = ((const Array<uShort>*)dataPtr)->getStorage (deleteIt);
+                    adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , (void*)data);
+                    ((const Array<uShort>*)dataPtr)->freeStorage (data, deleteIt);
+                }
+                break;
+            case TpInt:
+                {
+                    const Int *data = ((const Array<Int>*)dataPtr)->getStorage (deleteIt);
+                    adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , (void*)data);
+                    ((const Array<Int>*)dataPtr)->freeStorage (data, deleteIt);
+                }
+                break;
+            case TpUInt:
+                {
+                    const uInt *data = ((const Array<uInt>*)dataPtr)->getStorage (deleteIt);
+                    adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , (void*)data);
+                    ((const Array<uInt>*)dataPtr)->freeStorage (data, deleteIt);
+                }
+                break;
+            case TpFloat:
+                {
+                    const float *data = ((const Array<float>*)dataPtr)->getStorage (deleteIt);
+                    adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , (void*)data);
+                    ((const Array<float>*)dataPtr)->freeStorage (data, deleteIt);
+                }
+                break;
+            case TpDouble:
+                {
+                    const double *data = ((const Array<double>*)dataPtr)->getStorage (deleteIt);
+                    adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , (void*)data);
+                    ((const Array<double>*)dataPtr)->freeStorage (data, deleteIt);
+                }
+                break;
+            case TpComplex:
+                {
+                    const Complex *data = ((const Array<Complex>*)dataPtr)->getStorage (deleteIt);
+                    adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , (void*)data);
+                    ((const Array<Complex>*)dataPtr)->freeStorage (data, deleteIt);
+                }
+                break;
+            case TpDComplex:
+                {
+                    const DComplex *data = ((const Array<DComplex>*)dataPtr)->getStorage (deleteIt);
+                    adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , (void*)data);
+                    ((const Array<DComplex>*)dataPtr)->freeStorage (data, deleteIt);
+                }
+                break;
+        }
+    }
+/*
     void AdiosStManColumn::putArrayBoolV (uInt rownr, const Array<Bool>* dataPtr){
         Bool deleteIt;
         const Bool* data = dataPtr->getStorage (deleteIt);
-        putArrayGeneralV(rownr, data);
+        putGeneralV(rownr, data);
         dataPtr->freeStorage (data, deleteIt);
     }
     void AdiosStManColumn::putArrayuCharV (uInt rownr, const Array<uChar>* dataPtr){
         Bool deleteIt;
         const uChar* data = dataPtr->getStorage (deleteIt);
-        putArrayGeneralV(rownr, data);
+        putGeneralV(rownr, data);
         dataPtr->freeStorage (data, deleteIt);
     }
     void AdiosStManColumn::putArrayShortV (uInt rownr, const Array<Short>* dataPtr){
         Bool deleteIt;
         const Short* data = dataPtr->getStorage (deleteIt);
-        putArrayGeneralV(rownr, data);
+        putGeneralV(rownr, data);
         dataPtr->freeStorage (data, deleteIt);
     }
     void AdiosStManColumn::putArrayuShortV (uInt rownr, const Array<uShort>* dataPtr){
         Bool deleteIt;
         const uShort* data = dataPtr->getStorage (deleteIt);
-        putArrayGeneralV(rownr, data);
+        putGeneralV(rownr, data);
         dataPtr->freeStorage (data, deleteIt);
     }
     void AdiosStManColumn::putArrayIntV (uInt rownr, const Array<Int>* dataPtr){
         Bool deleteIt;
         const Int* data = dataPtr->getStorage (deleteIt);
-        putArrayGeneralV(rownr, data);
+        putGeneralV(rownr, data);
         dataPtr->freeStorage (data, deleteIt);
     }
     void AdiosStManColumn::putArrayuIntV (uInt rownr, const Array<uInt>* dataPtr){
         Bool deleteIt;
         const uInt* data = dataPtr->getStorage (deleteIt);
-        putArrayGeneralV(rownr, data);
+        putGeneralV(rownr, data);
         dataPtr->freeStorage (data, deleteIt);
     }
     void AdiosStManColumn::putArrayfloatV (uInt rownr, const Array<Float>* dataPtr){
         Bool deleteIt;
         const float* data = dataPtr->getStorage (deleteIt);
-        putArrayGeneralV(rownr, data);
+        putGeneralV(rownr, data);
         dataPtr->freeStorage (data, deleteIt);
     }
     void AdiosStManColumn::putArraydoubleV (uInt rownr, const Array<Double>* dataPtr){
         Bool deleteIt;
         const Double* data = dataPtr->getStorage (deleteIt);
-        putArrayGeneralV(rownr, data);
+        putGeneralV(rownr, data);
         dataPtr->freeStorage (data, deleteIt);
     }
     void AdiosStManColumn::putArrayComplexV (uInt rownr, const Array<Complex>* dataPtr){
         Bool deleteIt;
         const Complex* data = dataPtr->getStorage (deleteIt);
-        putArrayGeneralV(rownr, data);
+        putGeneralV(rownr, data);
         dataPtr->freeStorage (data, deleteIt);
     }
     void AdiosStManColumn::putArrayDComplexV (uInt rownr, const Array<DComplex>* dataPtr){
         Bool deleteIt;
         const DComplex* data = dataPtr->getStorage (deleteIt);
-        putArrayGeneralV(rownr, data);
+        putGeneralV(rownr, data);
         dataPtr->freeStorage (data, deleteIt);
     }
     void AdiosStManColumn::putArrayStringV (uInt rownr, const Array<String>* dataPtr){
         cout << "AdiosStManColumn Error: Sorry, AdiosStMan does not support string type at the moment!" << endl;
     }
+    */
     // get
     void AdiosStManColumn::getArrayBoolV (uInt aRowNr, Array<Bool>* aDataPtr){
         Bool deleteIt;
@@ -807,7 +886,6 @@ namespace casa{
 
 
     void AdiosStManColumn::initAdiosRead(){
-
         int ndim = itsShape.size();
         // if array column, allocate dimension vectors
         if (ndim > 0){
@@ -822,10 +900,6 @@ namespace casa{
         adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , (void*)dataPtr);
     }
 
-    // put a row into an array column
-    void AdiosStManColumn::putArrayGeneralV (uInt rownr, const void* dataPtr){
-        putGeneralV(rownr, dataPtr);
-    }
 
     // get a row from an array column
     void AdiosStManColumn::getArrayGeneralV (int64_t aRowNr, void* dataPtr){

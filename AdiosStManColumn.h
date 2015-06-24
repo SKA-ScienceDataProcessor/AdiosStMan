@@ -40,7 +40,7 @@
 #include "AdiosStMan.h"
 
 
-namespace casa { //# NAMESPACE CASA - BEGIN
+namespace casacore { //# NAMESPACE CASA - BEGIN
 
     class AdiosStManColumn : public StManColumn
     {
@@ -96,6 +96,8 @@ namespace casa { //# NAMESPACE CASA - BEGIN
 
             // *** access a row for an array column ***
             // put
+            virtual void putArrayV (uInt rownr, const void* dataPtr);
+            /*
             virtual void putArrayBoolV     (uInt aRowNr, const Array<Bool>* dataPtr);
             virtual void putArrayuCharV    (uInt aRowNr, const Array<uChar>* dataPtr);
             virtual void putArrayShortV    (uInt aRowNr, const Array<Short>* dataPtr);
@@ -107,6 +109,7 @@ namespace casa { //# NAMESPACE CASA - BEGIN
             virtual void putArrayComplexV  (uInt aRowNr, const Array<Complex>* dataPtr);
             virtual void putArrayDComplexV (uInt aRowNr, const Array<DComplex>* dataPtr);
             virtual void putArrayStringV   (uInt aRowNr, const Array<String>* dataPtr);
+            */
             // get
             virtual void getArrayBoolV     (uInt aRowNr, Array<Bool>* dataPtr);
             virtual void getArrayuCharV    (uInt aRowNr, Array<uChar>* dataPtr);
@@ -225,16 +228,16 @@ namespace casa { //# NAMESPACE CASA - BEGIN
             inline bool isZero (const Complex* dataPtr);
             inline bool isZero (const DComplex* dataPtr);
             // array
-            bool isZero (const Array<Bool>* dataPtr);
-            bool isZero (const Array<uChar>* dataPtr);
-            bool isZero (const Array<Short>* dataPtr);
-            bool isZero (const Array<uShort>* dataPtr);
-            bool isZero (const Array<Int>* dataPtr);
-            bool isZero (const Array<uInt>* dataPtr);
-            bool isZero (const Array<float>* dataPtr);
-            bool isZero (const Array<double>* dataPtr);
-            bool isZero (const Array<Complex>* dataPtr);
-            bool isZero (const Array<DComplex>* dataPtr);
+            inline bool isZero (const Array<Bool>* dataPtr);
+            inline bool isZero (const Array<uChar>* dataPtr);
+            inline bool isZero (const Array<Short>* dataPtr);
+            inline bool isZero (const Array<uShort>* dataPtr);
+            inline bool isZero (const Array<Int>* dataPtr);
+            inline bool isZero (const Array<uInt>* dataPtr);
+            inline bool isZero (const Array<float>* dataPtr);
+            inline bool isZero (const Array<double>* dataPtr);
+            inline bool isZero (const Array<Complex>* dataPtr);
+            inline bool isZero (const Array<DComplex>* dataPtr);
             // *** check if data is all zero ***
 
 
@@ -243,7 +246,6 @@ namespace casa { //# NAMESPACE CASA - BEGIN
             virtual void getGeneralV (uInt aRowNr, void* aDataPtr) = 0;
 
             // access a row for an array column
-            virtual void putArrayGeneralV (uInt aRowNr, const void* aDataPtr);
             virtual void getArrayGeneralV (int64_t aRowNr, void* data);
 
             // access a slice of a row for an array column

@@ -97,7 +97,7 @@ namespace casa {
         int isMpiInitialized;
         MPI_Initialized(&isMpiInitialized);
         if(isMpiInitInternal && isMpiInitialized){
-            MPI_Finalize();
+        //    MPI_Finalize();
         }
     }
 
@@ -140,25 +140,26 @@ namespace casa {
             sprintf(itsFileNameChar,"%s", itsFileName.c_str());
             MPI_Bcast(itsFileNameChar, itsFileNameLen + 1, MPI_CHAR, 0, itsMpiComm);
             // create ADIOS file
-	    adios_init_noxml(itsMpiComm);
-	    adios_allocate_buffer(ADIOS_BUFFER_ALLOC_NOW, itsAdiosBufsize);
-	    adios_declare_group(&itsAdiosGroup, "casatable", "", adios_flag_no);
-	    adios_select_method(itsAdiosGroup, itsAdiosTransMethod.c_str(), itsAdiosTransPara.c_str(), "");
-	    for (uInt i=0; i<itsNrCols; i++){
-		    itsColumnPtrBlk[i]->initAdiosWrite(itsNrRows);
-	    }
-	    itsAdiosGroupsize = 0;
-	    for (uInt i=0; i<itsNrCols; i++){
-		    // if scalar column
-		    if (itsColumnPtrBlk[i]->getShapeColumn().nelements() == 0){
-			    itsAdiosGroupsize = itsAdiosGroupsize + itsNrRows * itsColumnPtrBlk[i]->getDataTypeSize();
-		    }
-		    // if array column
-		    else{
-			    itsAdiosGroupsize = itsAdiosGroupsize + itsNrRows * itsColumnPtrBlk[i]->getDataTypeSize() * itsColumnPtrBlk[i]->getShapeColumn().product();
-		    }
-	    }
-	    adios_open(&itsAdiosFile, "casatable", itsFileNameChar, "w", itsMpiComm);
+            cout << "creating ADIOS file" << endl;
+            adios_init_noxml(itsMpiComm);
+            adios_allocate_buffer(ADIOS_BUFFER_ALLOC_NOW, itsAdiosBufsize);
+            adios_declare_group(&itsAdiosGroup, "casatable", "", adios_flag_no);
+            adios_select_method(itsAdiosGroup, itsAdiosTransMethod.c_str(), itsAdiosTransPara.c_str(), "");
+            for (uInt i=0; i<itsNrCols; i++){
+                itsColumnPtrBlk[i]->initAdiosWrite(itsNrRows);
+            }
+            itsAdiosGroupsize = 0;
+            for (uInt i=0; i<itsNrCols; i++){
+                // if scalar column
+                if (itsColumnPtrBlk[i]->getShapeColumn().nelements() == 0){
+                    itsAdiosGroupsize = itsAdiosGroupsize + itsNrRows * itsColumnPtrBlk[i]->getDataTypeSize();
+                }
+                // if array column
+                else{
+                    itsAdiosGroupsize = itsAdiosGroupsize + itsNrRows * itsColumnPtrBlk[i]->getDataTypeSize() * itsColumnPtrBlk[i]->getShapeColumn().product();
+                }
+            }
+            adios_open(&itsAdiosFile, "casatable", itsFileNameChar, "w", itsMpiComm);
             adios_group_size(itsAdiosFile, itsAdiosGroupsize, &itsAdiosTotalsize);
             delete [] itsFileNameChar;
         }
