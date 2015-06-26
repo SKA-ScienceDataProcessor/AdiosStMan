@@ -49,10 +49,9 @@ namespace casa {
             void initAdiosWrite(uInt aNrRows);
             Bool canAccessSlice(Bool &reask) const;
         protected:
-            // get a row from a scalar column
-            virtual void getGeneralV (uInt aRowNr, void* aValue);
-            // get a slice of a row (all rows if aRowNr < 0) from an array column
-            virtual void getSliceGeneralV (int64_t aRowNr, const Slicer& ns, void* dataPtr);
+            virtual void getScalarMetaV (uint64_t row, void* data);
+            virtual void getArrayMetaV (uint64_t rowStart, uint64_t nrRows, const Slicer& ns, void* dataPtr);
+            virtual void putMetaV (uint64_t row, const void* data);
     }; // end of class AdiosStManColumnV
 } // end of namespace casa
 

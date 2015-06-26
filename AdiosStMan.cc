@@ -140,7 +140,6 @@ namespace casa {
             sprintf(itsFileNameChar,"%s", itsFileName.c_str());
             MPI_Bcast(itsFileNameChar, itsFileNameLen + 1, MPI_CHAR, 0, itsMpiComm);
             // create ADIOS file
-            cout << "creating ADIOS file" << endl;
             adios_init_noxml(itsMpiComm);
             adios_allocate_buffer(ADIOS_BUFFER_ALLOC_NOW, itsAdiosBufsize);
             adios_declare_group(&itsAdiosGroup, "casatable", "", adios_flag_no);

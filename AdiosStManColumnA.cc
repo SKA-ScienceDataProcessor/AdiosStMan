@@ -44,6 +44,26 @@ namespace casa{
         :AdiosStManColumn (aParent, aDataType, aColNr){
         }
 
+    Bool AdiosStManColumnA::canAccessArrayColumn(Bool &reask) const{
+        reask = false;
+        if(itsStManPtr->getMode() == 'r')
+            return true;
+        return false;
+    }
+
+    Bool AdiosStManColumnA::canAccessSlice(Bool &reask) const{
+        reask = false;
+        if(itsStManPtr->getMode() == 'r')
+            return true;
+        return false;
+    }
+
+    Bool AdiosStManColumnA::canAccessColumnSlice(Bool &reask) const{
+        reask = false;
+        if(itsStManPtr->getMode() == 'r')
+            return true;
+        return false;
+    }
 
     void AdiosStManColumnA::initAdiosWrite(uInt aNrRows){
         for(int j=0; j<aNrRows; j++){
@@ -76,31 +96,12 @@ namespace casa{
         }
     }
 
-    Bool AdiosStManColumnA::canAccessArrayColumn(Bool &reask) const{
-        reask = false;
-        // only can access array column when reading
-        if(itsStManPtr->getMode() == 'r')
-            return true;
-        return false;
-    }
-
-    Bool AdiosStManColumnA::canAccessSlice(Bool &reask) const{
-        reask = false;
-        return true;
-    }
-
-    Bool AdiosStManColumnA::canAccessColumnSlice(Bool &reask) const{
-        reask = false;
-        return true;
-    }
-
-
     // get a row from a scalar column
-    void AdiosStManColumnA::getGeneralV (uInt aRowNr, void* aValue){
+    void AdiosStManColumnA::getScalarMetaV (uint64_t row, void* data){
         if(itsStManPtr->getAdiosReadFile()){
-            uint64_t rowid = aRowNr;
+            uint64_t rowid = row;
             ADIOS_SELECTION *sel = adios_selection_points (1, 1, &rowid);
-            adios_schedule_read (itsStManPtr->getAdiosReadFile(), sel, itsColumnName.c_str(), 0, 1, aValue);
+            adios_schedule_read (itsStManPtr->getAdiosReadFile(), sel, itsColumnName.c_str(), 0, 1, data);
             adios_perform_reads (itsStManPtr->getAdiosReadFile(), 1);
         }
         else{
@@ -109,29 +110,34 @@ namespace casa{
     }
 
     // get a slice of a row (all rows if aRowNr < 0) from an array column
-    void AdiosStManColumnA::getSliceGeneralV (int64_t aRowNr, const Slicer& ns, void* dataPtr){
+    void AdiosStManColumnA::getArrayMetaV (uint64_t rowStart, uint64_t nrRows, const Slicer& ns, void* dataPtr){
         if(itsStManPtr->getAdiosReadFile()){
-                if(aRowNr < 0){
-                    // if getting entire column
-                    readStart[0] = 0;
-                    readCount[0] = itsStManPtr->getNrRows();
-                }
-                else{
-                    // if getting a row
-                    readStart[0] = aRowNr;
-                    readCount[0] = 1;
-                }
-                for (int i=1; i<=itsShape.size(); i++){
-                    readStart[itsShape.size() - i + 1] = ns.start()(i-1);
-                    readCount[itsShape.size() - i + 1] = ns.length()(i-1);
-                }
-                ADIOS_SELECTION *sel = adios_selection_boundingbox (itsShape.size()+1, readStart, readCount);
-                adios_schedule_read (itsStManPtr->getAdiosReadFile(), sel, itsColumnName.c_str(), 0, 1, dataPtr);
-                adios_perform_reads (itsStManPtr->getAdiosReadFile(), 1);
+            if(nrRows == 0){
+                // if getting entire column
+                readStart[0] = 0;
+                readCount[0] = itsStManPtr->getNrRows();
+            }
+            else{
+                // if getting some rows
+                readStart[0] = rowStart;
+                readCount[0] = nrRows;
+            }
+            for (int i=1; i<=itsShape.size(); i++){
+                readStart[itsShape.size() - i + 1] = ns.start()(i-1);
+                readCount[itsShape.size() - i + 1] = ns.length()(i-1);
+            }
+            ADIOS_SELECTION *sel = adios_selection_boundingbox (itsShape.size()+1, readStart, readCount);
+            adios_schedule_read (itsStManPtr->getAdiosReadFile(), sel, itsColumnName.c_str(), 0, 1, dataPtr);
+            adios_perform_reads (itsStManPtr->getAdiosReadFile(), 1);
         }
         else{
             cout << "AdiosStManColumn Error: AdiosStMan is not working in read mode!" << endl;
         }
+    }
+
+    void AdiosStManColumnA::putMetaV (uint64_t row, const void* data){
+        itsStManPtr->adiosWriteOpen();
+        adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[row] , (void*)data);
     }
 }
 

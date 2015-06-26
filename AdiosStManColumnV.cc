@@ -45,19 +45,14 @@ namespace casa{
 
 
     void AdiosStManColumnV::initAdiosWrite(uInt aNrRows){
-
         int mpiRank;
         MPI_Comm_rank(MPI_COMM_WORLD, &mpiRank);
-
         for(int j=0; j<aNrRows; j++){
-
             if(itsAdiosWriteIDs == 0){
                 itsAdiosWriteIDs = (int64_t*) malloc(sizeof(int64_t) * aNrRows);
             }
-
             stringstream varName;
             varName << itsColumnName << "[" << j << "]";
-
             if (itsShape.nelements() == 0){
                 itsAdiosWriteIDs[j] = adios_define_var(itsStManPtr->getAdiosGroup(), varName.str().c_str(), itsColumnName.c_str(), itsAdiosDataType, "", "", ""); ////
             }
@@ -71,7 +66,6 @@ namespace casa{
                 for (int k=1; k<itsShape.nelements(); k++){
                     local_offsets += ",0";
                 }
-
                 itsAdiosWriteIDs[j] = adios_define_var(itsStManPtr->getAdiosGroup(), varName.str().c_str(), itsColumnName.c_str(), itsAdiosDataType, dimensions_pos_str.c_str(), dimensions_pos_str.c_str(), local_offsets.c_str());
             }
         }
@@ -79,15 +73,31 @@ namespace casa{
 
     Bool AdiosStManColumnV::canAccessSlice(Bool &reask) const{
         reask = false;
-        return true;
+        if(itsStManPtr->getMode() == 'r')
+            return true;
+        return false;
     }
 
 
-    void AdiosStManColumnV::getSliceGeneralV (int64_t aRowNr, const Slicer& ns, void* dataPtr){
+    void AdiosStManColumnV::getScalarMetaV (uint64_t row, void* data){
+        if(itsStManPtr->getAdiosReadFile()){
+            if(itsStManPtr->getStManColumnType() == AdiosStMan::ARRAY){
+                uint64_t rowid = row;
+                ADIOS_SELECTION *sel = adios_selection_points (1, 1, &rowid);
+                adios_schedule_read (itsStManPtr->getAdiosReadFile(), sel, itsColumnName.c_str(), 0, 1, data);
+                adios_perform_reads (itsStManPtr->getAdiosReadFile(), 1);
+            }
+        }
+        else{
+            cout << "AdiosStManColumn Error: AdiosStMan is working in write mode!" << endl;
+        }
+    }
+
+    void AdiosStManColumnV::getArrayMetaV (uint64_t rowStart, uint64_t nrRows, const Slicer& ns, void* dataPtr){
         if(itsStManPtr->getAdiosReadFile()){
             if(itsStManPtr->getStManColumnType() == AdiosStMan::VAR){
                 stringstream varName;
-                varName << itsColumnName << "/" << itsColumnName << "[" << aRowNr << "]";
+                varName << itsColumnName << "/" << itsColumnName << "[" << rowStart << "]";
                 for (int i=0; i<itsShape.size(); i++){
                     readStart[itsShape.size() - i - 1] = ns.start()(i);
                     readCount[itsShape.size() - i - 1] = ns.length()(i);
@@ -102,20 +112,10 @@ namespace casa{
         }
     }
 
-    void AdiosStManColumnV::getGeneralV (uInt aRowNr, void* aValue){
-        if(itsStManPtr->getAdiosReadFile()){
-            if(itsStManPtr->getStManColumnType() == AdiosStMan::ARRAY){
-                uint64_t rowid = aRowNr;
-                ADIOS_SELECTION *sel = adios_selection_points (1, 1, &rowid);
-                adios_schedule_read (itsStManPtr->getAdiosReadFile(), sel, itsColumnName.c_str(), 0, 1, aValue);
-                adios_perform_reads (itsStManPtr->getAdiosReadFile(), 1);
-            }
-        }
-        else{
-            cout << "AdiosStManColumn Error: AdiosStMan is working in write mode!" << endl;
-        }
+    void AdiosStManColumnV::putMetaV (uint64_t row, const void* data){
+        itsStManPtr->adiosWriteOpen();
+        adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[row] , (void*)data);
     }
-
 
 }
 
