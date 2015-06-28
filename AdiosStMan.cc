@@ -87,17 +87,15 @@ namespace casa {
     AdiosStMan::~AdiosStMan ()
     {
         adios_finalize(mpiRank);
-
         if(itsAdiosReadFile){
             adios_read_close(itsAdiosReadFile);
             MPI_Barrier(MPI_COMM_WORLD);
             adios_read_finalize_method(ADIOS_READ_METHOD_BP);
         }
-
         int isMpiInitialized;
         MPI_Initialized(&isMpiInitialized);
         if(isMpiInitInternal && isMpiInitialized){
-        //    MPI_Finalize();
+            MPI_Finalize();
         }
     }
 
@@ -124,6 +122,7 @@ namespace casa {
     }
 
     void AdiosStMan::addRow (uInt aNrRows){
+        cout << "AdiosStMan Error: addRow not supported!" << endl;
     }
 
     void AdiosStMan::adiosWriteOpen(){
