@@ -96,6 +96,7 @@ namespace casa {
 
             void setStManColumnType(StManColumnType aType);
             int getStManColumnType();
+            static int itsNrInstances;
 
         private:
 

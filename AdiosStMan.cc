@@ -40,6 +40,8 @@
 
 namespace casa {
 
+    int AdiosStMan::itsNrInstances = 0;
+
     AdiosStMan::AdiosStMan (int aType, string aMethod, string aPara, uint64_t aBufsize)
         :DataManager(),
         itsDataManName("AdiosStMan"),
@@ -53,12 +55,14 @@ namespace casa {
         itsAdiosBufsize(aBufsize),
         isMpiInitInternal(false)
     {
+        AdiosStMan::itsNrInstances++;
         int isMpiInitialized;
         MPI_Initialized(&isMpiInitialized);
         if(!isMpiInitialized){
             MPI_Init(0,0);
             isMpiInitInternal = true;
         }
+        MPI_Initialized(&isMpiInitialized);
         MPI_Comm_rank(MPI_COMM_WORLD, &mpiRank);
         MPI_Comm_size(MPI_COMM_WORLD, &mpiSize);
     }
@@ -76,6 +80,7 @@ namespace casa {
         itsAdiosBufsize(that.itsAdiosBufsize),
         isMpiInitInternal(false)
     {
+        AdiosStMan::itsNrInstances++;
         MPI_Comm_rank(MPI_COMM_WORLD, &mpiRank);
         MPI_Comm_size(MPI_COMM_WORLD, &mpiSize);
     }
@@ -86,6 +91,7 @@ namespace casa {
 
     AdiosStMan::~AdiosStMan ()
     {
+        AdiosStMan::itsNrInstances--;
         adios_finalize(mpiRank);
         if(itsAdiosReadFile){
             adios_read_close(itsAdiosReadFile);
@@ -95,7 +101,9 @@ namespace casa {
         int isMpiInitialized;
         MPI_Initialized(&isMpiInitialized);
         if(isMpiInitInternal && isMpiInitialized){
-            MPI_Finalize();
+            if(AdiosStMan::itsNrInstances==0)
+                if(mpiSize > 1)
+                    MPI_Finalize();
         }
     }
 
