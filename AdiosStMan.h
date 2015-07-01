@@ -96,7 +96,7 @@ namespace casa {
 
             void setStManColumnType(StManColumnType aType);
             int getStManColumnType();
-            static int itsNrInstances;
+            void logdbg(string func, string stat);
 
         private:
 
@@ -117,6 +117,7 @@ namespace casa {
             int mpiRank;
             int mpiSize;
             bool isMpiInitInternal;
+            static int itsNrInstances;
 
             PtrBlock<AdiosStManColumn*> itsColumnPtrBlk;
 

@@ -107,6 +107,12 @@ namespace casa {
         }
     }
 
+    void AdiosStMan::logdbg(string func, string stat){
+#ifdef ADIOSSTMAN_DEBUG
+        cout << func << " called,  " << "status:" << stat << endl;
+#endif
+    }
+
     DataManager* AdiosStMan::clone() const
     {
         return new AdiosStMan (*this);

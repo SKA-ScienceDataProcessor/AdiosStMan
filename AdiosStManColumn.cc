@@ -244,6 +244,7 @@ namespace casacore {
 
     // *** access a row for an array column ***
     void AdiosStManColumn::putArrayV (uInt rownr, const void* dataPtr){
+        itsStManPtr->logdbg("AdiosStManColumn::putArrayV","");
         Bool deleteIt;
         const void *data;
         switch (itsCasaDataType){
