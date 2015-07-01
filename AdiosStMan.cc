@@ -109,7 +109,14 @@ namespace casa {
 
     void AdiosStMan::logdbg(string func, string stat){
 #ifdef ADIOSSTMAN_DEBUG
-        cout << func << " called,  " << "status:" << stat << endl;
+        if(logdbgLast == func){
+            logdbgCount++;
+        }
+        else{
+            logdbgCount=0;
+        }
+        cout << func << " called,  " << "status:" << stat << ", count=" << logdbgCount << endl;
+        logdbgLast=func;
 #endif
     }
 
@@ -141,6 +148,7 @@ namespace casa {
 
     void AdiosStMan::adiosWriteOpen(){
         if(!itsAdiosFile){
+            logdbg("AdiosStMan::adiosWriteOpen","");
             // broadcast the filename string from the master to slaves.
             string itsFileName;
             int itsFileNameLen;
@@ -185,6 +193,7 @@ namespace casa {
     }
 
     void AdiosStMan::create (uInt aNrRows){
+        logdbg("AdiosStMan::create","");
         itsMode = 'w';
         itsNrRows = aNrRows;
         itsNrCols = ncolumn();
@@ -193,6 +202,7 @@ namespace casa {
     } // end of void AdiosStMan::create (uInt aNrRows)
 
     void AdiosStMan::open (uInt aNrRows, AipsIO& ios){
+        logdbg("AdiosStMan::open","");
         ios.getstart(itsDataManName);
         ios >> itsDataManName;
         ios >> itsStManColumnType;
@@ -213,10 +223,12 @@ namespace casa {
 
 
     DataManagerColumn* AdiosStMan::makeScalarColumn (const String& name, int aDataType,	const String& dataTypeId){
+        logdbg("AdiosStMan::makeScalarColumn","");
         return makeDirArrColumn(name, aDataType, dataTypeId);
     }
 
     DataManagerColumn* AdiosStMan::makeDirArrColumn (const String& name, int aDataType,	const String& dataTypeId){
+        logdbg("AdiosStMan::makeDirArrColumn","");
         if (ncolumn() >= itsColumnPtrBlk.nelements()) {
             itsColumnPtrBlk.resize (itsColumnPtrBlk.nelements() + 32);
         }
@@ -235,6 +247,7 @@ namespace casa {
     }
 
     DataManagerColumn* AdiosStMan::makeIndArrColumn (const String& name, int aDataType,	const String& dataTypeId){
+        logdbg("AdiosStMan::makeIndArrColumn","");
         return makeDirArrColumn(name, aDataType, dataTypeId);
     }
 

@@ -98,6 +98,7 @@ namespace casa{
 
     // get a row from a scalar column
     void AdiosStManColumnA::getScalarMetaV (uint64_t row, void* data){
+        itsStManPtr->logdbg("AdiosStManColumnA::getScalarMetaV","");
         if(itsStManPtr->getAdiosReadFile()){
             uint64_t rowid = row;
             ADIOS_SELECTION *sel = adios_selection_points (1, 1, &rowid);

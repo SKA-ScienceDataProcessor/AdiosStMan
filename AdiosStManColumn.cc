@@ -317,6 +317,7 @@ namespace casacore {
         }
     }
     void AdiosStManColumn::getArrayV (uInt rownr, void* dataPtr){
+        itsStManPtr->logdbg("AdiosStManColumn::getArrayV","");
         Slicer ns(IPosition(itsShape.size(),0,0,0,0,0,0,0,0,0,0), itsShape);
         getArrayWrapper(rownr, 1, ns, dataPtr);
     }
@@ -325,6 +326,7 @@ namespace casacore {
     // *** inactive by default
     // *** only active when canAccessSlice() returns true in child class
     void AdiosStManColumn::getSliceV(uInt aRowNr, const Slicer& ns, void* dataPtr){
+        itsStManPtr->logdbg("AdiosStManColumn::getSliceV","");
         getArrayWrapper(aRowNr, 1, ns, dataPtr);
     }
 
@@ -332,6 +334,7 @@ namespace casacore {
     // *** inactive by default
     // *** only active when canAccessArrayColumn() returns true in child class
     void AdiosStManColumn::getArrayColumnV(void* dataPtr){
+        itsStManPtr->logdbg("AdiosStManColumn::getArrayColumnV","");
         Slicer ns(IPosition(itsShape.size(),0,0,0,0,0,0,0,0,0,0), itsShape);
         getArrayWrapper(0, 0, ns, dataPtr);
     }
@@ -340,6 +343,7 @@ namespace casacore {
     // *** inactive by default
     // *** only active when canAccessColumnSlice() returns true in child class
     void AdiosStManColumn::getColumnSliceV(const Slicer& ns, void *dataPtr){
+        itsStManPtr->logdbg("AdiosStManColumn::getColumnSliceV","");
         getArrayWrapper(0, 0, ns, dataPtr);
     }
 

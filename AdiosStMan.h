@@ -128,6 +128,8 @@ namespace casa {
             char itsMode;
             int itsStManColumnType;
 
+            string logdbgLast;
+            uint64_t logdbgCount;
 
     }; // end of class AdiosStMan
 
