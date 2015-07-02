@@ -39,17 +39,21 @@
 
 namespace casa{
 
-    AdiosStManColumnV::AdiosStManColumnV (AdiosStMan* aParent, int aDataType, uInt aColNr)
+    AdiosStManColumnV::AdiosStManColumnV(AdiosStMan* aParent, int aDataType, uInt aColNr)
         :AdiosStManColumn (aParent, aDataType, aColNr){
         }
 
+    AdiosStManColumnV::~AdiosStManColumnV(){
+        if (itsAdiosWriteIDs)
+            delete [] itsAdiosWriteIDs;
+    }
 
     void AdiosStManColumnV::initAdiosWrite(uInt aNrRows){
         int mpiRank;
         MPI_Comm_rank(MPI_COMM_WORLD, &mpiRank);
-        for(int j=0; j<aNrRows; j++){
+        for(uInt j=0; j<aNrRows; j++){
             if(itsAdiosWriteIDs == 0){
-                itsAdiosWriteIDs = (int64_t*) malloc(sizeof(int64_t) * aNrRows);
+                itsAdiosWriteIDs = new int64_t[aNrRows];
             }
             stringstream varName;
             varName << itsColumnName << "[" << j << "]";
@@ -77,7 +81,6 @@ namespace casa{
             return true;
         return false;
     }
-
 
     void AdiosStManColumnV::getScalarMetaV (uint64_t row, void* data){
         if(itsStManPtr->getAdiosReadFile()){
@@ -117,5 +120,8 @@ namespace casa{
         adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[row] , (void*)data);
     }
 
+    void AdiosStManColumnV::flush(){
+
+    }
 }
 

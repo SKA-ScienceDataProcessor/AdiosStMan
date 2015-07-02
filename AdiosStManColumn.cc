@@ -42,8 +42,6 @@ namespace casacore {
     AdiosStManColumn::AdiosStManColumn (AdiosStMan* aParent, int aDataType, uInt aColNr)
         :StManColumn (aDataType),
         itsAdiosWriteIDs (0),
-        itsNrIDs (0),
-        itsNrIDsAllocated (0),
         readStart (0),
         readCount (0),
         itsStManPtr (aParent),

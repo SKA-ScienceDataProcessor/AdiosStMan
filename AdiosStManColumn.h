@@ -107,6 +107,8 @@ namespace casacore { //# NAMESPACE CASA - BEGIN
             virtual void getColumnSliceV(const Slicer& ns, void *dataPtr);
             void getArrayWrapper(uint64_t rowStart, uint64_t nrRows, const Slicer& ns, void* dataPtr);
 
+            virtual void flush() = 0;
+
         protected:
             // *** check if data is all zero ***
             // void
@@ -155,8 +157,6 @@ namespace casacore { //# NAMESPACE CASA - BEGIN
             // ADIOS write
             ADIOS_DATATYPES itsAdiosDataType;
             int64_t *itsAdiosWriteIDs;
-            uint64_t itsNrIDs;                  // number of ADIOS write IDs that have been defined
-            uint64_t itsNrIDsAllocated;			// number of ADIOS write IDs that have been allocated
 
 
             int itsCasaDataType;

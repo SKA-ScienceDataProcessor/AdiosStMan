@@ -259,6 +259,9 @@ namespace casa {
     }
 
     Bool AdiosStMan::flush (AipsIO& ios, Bool doFsync){
+        for (int i=0; i<ncolumn(); i++){
+            itsColumnPtrBlk[i]->flush();
+        }
         ios.putstart(itsDataManName, 2);
         ios << itsDataManName;
         ios << itsStManColumnType;

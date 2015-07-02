@@ -46,10 +46,12 @@ namespace casa {
     {
         public:
             AdiosStManColumnA(AdiosStMan *aParent, int aDataType, uInt aColNr);
+            ~AdiosStManColumnA();
             void initAdiosWrite(uInt aNrRows);
             Bool canAccessArrayColumn(Bool &reask) const;
             Bool canAccessColumnSlice(Bool &reask) const;
             Bool canAccessSlice(Bool &reask) const;
+            virtual void flush();
         private:
             virtual void getScalarMetaV (uint64_t row, void* data);
             virtual void getArrayMetaV (uint64_t rowStart, uint64_t nrRows, const Slicer& ns, void* dataPtr);

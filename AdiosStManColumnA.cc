@@ -44,6 +44,11 @@ namespace casa{
         :AdiosStManColumn (aParent, aDataType, aColNr){
         }
 
+    AdiosStManColumnA::~AdiosStManColumnA (){
+        if (itsAdiosWriteIDs)
+            delete [] itsAdiosWriteIDs;
+    }
+
     Bool AdiosStManColumnA::canAccessArrayColumn(Bool &reask) const{
         reask = false;
         if(itsStManPtr->getMode() == 'r')
@@ -66,17 +71,16 @@ namespace casa{
     }
 
     void AdiosStManColumnA::initAdiosWrite(uInt aNrRows){
-        for(int j=0; j<aNrRows; j++){
+        for(uInt j=0; j<aNrRows; j++){
             // if not allocated
             if(itsAdiosWriteIDs == 0){
-                itsNrIDsAllocated = aNrRows;
-                itsAdiosWriteIDs = (int64_t*) malloc(sizeof(int64_t) * itsNrIDsAllocated);
+                itsAdiosWriteIDs = new int64_t[aNrRows];
             }
             stringstream NrRows, RowID;
             NrRows << aNrRows;
-            RowID << itsNrIDs;
+            RowID << j;
             if (itsShape.nelements() == 0){
-                itsAdiosWriteIDs[itsNrIDs] = adios_define_var(itsStManPtr->getAdiosGroup(), itsColumnName.c_str(), "", itsAdiosDataType, "1", NrRows.str().c_str(), RowID.str().c_str() ); ////
+                itsAdiosWriteIDs[j] = adios_define_var(itsStManPtr->getAdiosGroup(), itsColumnName.c_str(), "", itsAdiosDataType, "1", NrRows.str().c_str(), RowID.str().c_str() ); ////
             }
             else{
                 IPosition dimensions_pos;
@@ -90,9 +94,8 @@ namespace casa{
                 for (int k=0; k<itsShape.nelements(); k++){
                     local_offsets += ",0";
                 }
-                itsAdiosWriteIDs[itsNrIDs] = adios_define_var(itsStManPtr->getAdiosGroup(), itsColumnName.c_str(), "", itsAdiosDataType, dimensions.c_str(), global_dimensions.c_str(), local_offsets.c_str());
+                itsAdiosWriteIDs[j] = adios_define_var(itsStManPtr->getAdiosGroup(), itsColumnName.c_str(), "", itsAdiosDataType, dimensions.c_str(), global_dimensions.c_str(), local_offsets.c_str());
             }
-            itsNrIDs++;
         }
     }
 
@@ -139,6 +142,10 @@ namespace casa{
     void AdiosStManColumnA::putMetaV (uint64_t row, const void* data){
         itsStManPtr->adiosWriteOpen();
         adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[row] , (void*)data);
+    }
+
+    void AdiosStManColumnA::flush(){
+
     }
 }
 
