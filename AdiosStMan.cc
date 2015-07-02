@@ -221,14 +221,22 @@ namespace casa {
     void AdiosStMan::deleteManager(){
     }
 
+    DataManagerColumn* AdiosStMan::makeDirArrColumn (const String& name, int aDataType,	const String& dataTypeId){
+        logdbg("AdiosStMan::makeDirArrColumn","");
+        return makeColumnMeta(name, aDataType, dataTypeId);
+    }
 
     DataManagerColumn* AdiosStMan::makeScalarColumn (const String& name, int aDataType,	const String& dataTypeId){
         logdbg("AdiosStMan::makeScalarColumn","");
-        return makeDirArrColumn(name, aDataType, dataTypeId);
+        return makeColumnMeta(name, aDataType, dataTypeId);
     }
 
-    DataManagerColumn* AdiosStMan::makeDirArrColumn (const String& name, int aDataType,	const String& dataTypeId){
-        logdbg("AdiosStMan::makeDirArrColumn","");
+    DataManagerColumn* AdiosStMan::makeIndArrColumn (const String& name, int aDataType,	const String& dataTypeId){
+        logdbg("AdiosStMan::makeIndArrColumn","");
+        return makeColumnMeta(name, aDataType, dataTypeId);
+    }
+
+    DataManagerColumn* AdiosStMan::makeColumnMeta (const String& name, int aDataType,	const String& dataTypeId){
         if (ncolumn() >= itsColumnPtrBlk.nelements()) {
             itsColumnPtrBlk.resize (itsColumnPtrBlk.nelements() + 32);
         }
@@ -244,11 +252,6 @@ namespace casa {
         aColumn->setColumnName(name);
         itsColumnPtrBlk[ncolumn()] = aColumn;
         return aColumn;
-    }
-
-    DataManagerColumn* AdiosStMan::makeIndArrColumn (const String& name, int aDataType,	const String& dataTypeId){
-        logdbg("AdiosStMan::makeIndArrColumn","");
-        return makeDirArrColumn(name, aDataType, dataTypeId);
     }
 
     uInt AdiosStMan::getNrRows(){

@@ -78,6 +78,8 @@ namespace casa{
     }
 
     void AdiosStManColumnA::initAdiosWrite(uInt aNrRows){
+        itsStManPtr->logdbg("AdiosStManColumnA::initAdiosWrite","start");
+        cout << getShapeColumn() << endl;
         if(itsAdiosWriteIDs == 0){
             if (itsShape.nelements() == 0){
                 itsAdiosWriteIDs = new int64_t;

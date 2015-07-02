@@ -70,6 +70,9 @@ namespace casa {
             virtual void resync (uInt aRowNr);
             virtual Bool flush (AipsIO&, Bool doFsync);
 
+            DataManagerColumn* makeColumnMeta (const String& aName,
+                    int aDataType,
+                    const String& aDataTypeID);
             virtual DataManagerColumn* makeScalarColumn (const String& aName,
                     int aDataType,
                     const String& aDataTypeID);
