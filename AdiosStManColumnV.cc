@@ -115,7 +115,12 @@ namespace casa{
         }
     }
 
-    void AdiosStManColumnV::putMetaV (uint64_t row, const void* data){
+    void AdiosStManColumnV::putScalarMetaV (uint64_t row, const void* data){
+        itsStManPtr->adiosWriteOpen();
+        adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[row] , (void*)data);
+    }
+
+    void AdiosStManColumnV::putArrayMetaV (uint64_t row, const void* data){
         itsStManPtr->adiosWriteOpen();
         adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[row] , (void*)data);
     }

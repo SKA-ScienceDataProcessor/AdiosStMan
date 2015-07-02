@@ -52,8 +52,9 @@ namespace casa {
             virtual void flush();
         protected:
             virtual void getScalarMetaV (uint64_t row, void* data);
+            virtual void putScalarMetaV (uint64_t row, const void* data);
             virtual void getArrayMetaV (uint64_t rowStart, uint64_t nrRows, const Slicer& ns, void* dataPtr);
-            virtual void putMetaV (uint64_t row, const void* data);
+            virtual void putArrayMetaV (uint64_t row, const void* data);
     }; // end of class AdiosStManColumnV
 } // end of namespace casa
 

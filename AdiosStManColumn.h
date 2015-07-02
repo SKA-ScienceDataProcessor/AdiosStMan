@@ -138,8 +138,10 @@ namespace casacore { //# NAMESPACE CASA - BEGIN
             // *** check if data is all zero ***
 
             virtual void getArrayMetaV (uint64_t rowStart, uint64_t nrRows, const Slicer& ns, void* data) = 0;
+            virtual void putArrayMetaV (uint64_t row, const void* data) = 0;
+
             virtual void getScalarMetaV (uint64_t row, void* data) = 0;
-            virtual void putMetaV (uint64_t row, const void* data) = 0;
+            virtual void putScalarMetaV (uint64_t row, const void* data) = 0;
 
             // StMan pointer
             AdiosStMan *itsStManPtr;
@@ -163,6 +165,7 @@ namespace casacore { //# NAMESPACE CASA - BEGIN
             bool isArrayColumn;
 
 
+            void *scalarCache;
 
     };
 
