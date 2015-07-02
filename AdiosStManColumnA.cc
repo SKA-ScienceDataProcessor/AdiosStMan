@@ -147,8 +147,6 @@ namespace casa{
 
     void AdiosStManColumnA::getScalarMetaV (uint64_t row, void* data){
         itsStManPtr->logdbg("AdiosStManColumnA::getScalarMetaV","start");
-        cout << gotScalarColumn << endl;
-        cout << itsStManPtr->getAdiosReadFile() << endl;
         if(gotScalarColumn == false){
             if(itsStManPtr->getAdiosReadFile()!=0){
                 readStart[0] = 0;
