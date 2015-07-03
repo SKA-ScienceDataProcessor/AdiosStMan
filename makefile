@@ -4,7 +4,7 @@ else
 	CC=mpic++
 endif
 
-DIRS=tools benchmark examples
+DIRS=benchmark examples
 TARGET=libadiosstman.so
 SRC=AdiosStMan.cc AdiosStManColumn.cc AdiosStManColumnA.cc AdiosStManColumnV.cc
 

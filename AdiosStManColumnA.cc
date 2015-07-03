@@ -88,6 +88,7 @@ namespace casa{
                 itsAdiosWriteIDs = new int64_t[aNrRows];
             }
         }
+        itsStManPtr->logdbg("AdiosStManColumnA::initAdiosWrite","end");
 
         for(uInt j=0; j<aNrRows; j++){
             stringstream NrRows, RowID;

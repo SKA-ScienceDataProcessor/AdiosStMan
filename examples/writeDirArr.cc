@@ -1,4 +1,4 @@
-//    rAdiosStMan.cc: example code for reading a casa table using AdiosStMan
+//    wAdiosStMan.cc: example code for writing a casa table using AdiosStMan
 //
 //    (c) University of Western Australia
 //    International Centre of Radio Astronomy Research
@@ -23,7 +23,6 @@
 //    jason.wang@icrar.org
 
 
-
 #include "../casacore_version.h"
 
 #ifdef CASACORE_VERSION_1
@@ -33,6 +32,7 @@
 #include <tables/Tables/ScalarColumn.h>
 #include <tables/Tables/ArrColDesc.h>
 #include <tables/Tables/ArrayColumn.h>
+#include <tables/Tables/TiledShapeStMan.h>
 #include <casa/namespace.h>
 #endif
 
@@ -43,42 +43,53 @@
 #include <casacore/tables/Tables/ScalarColumn.h>
 #include <casacore/tables/Tables/ArrColDesc.h>
 #include <casacore/tables/Tables/ArrayColumn.h>
+#include <casacore/tables/DataMan/TiledShapeStMan.h>
 #include <casacore/casa/namespace.h>
 #endif
 
-
+#include "../AdiosStMan.h"
 
 
 int main(int argc, char **argv){
 
     if (argc < 2){
-        cout << "./rAdiosStMan /path/to/file" << endl;
+        cout << "./wAdiosStMan /path/to/file" << endl;
         return -1;
     }
     string filename = argv[1];
 
-    Table casa_table(filename);
+    // define a dimension object for the array column
+    IPosition data_pos = IPosition(2,6,5);
+    int NrRows = 4;
+    // define data arrays that actually hold the data
+    Array<float> data_arr(data_pos);
+    // put some data in
+    indgen (data_arr);
 
-//    ROScalarColumn<uInt> index_col(casa_table, "index");
-    ROArrayColumn<float> data_col(casa_table, "data");
+    // define a storage manager
+//    AdiosStMan stman(AdiosStMan::VAR);
+//    AdiosStMan stman(AdiosStMan::ARRAY, "MPI", "", 100);
+//    AdiosStMan stman(AdiosStMan::ARRAY, "MPI_AGGREGATE", "num_aggregators=32", 100);
+//    AdiosStMan stman;
+    TiledShapeStMan stman("Ti", data_pos);
 
-//    Vector<uInt> index_vec = index_col.getColumn();
-    Array<float> data_arr = data_col.getColumn();
+    // define a table description & add a scalar column and an array column
+    TableDesc td("", "1", TableDesc::Scratch);
+    td.addColumn (ArrayColumnDesc<float>("data", data_pos, ColumnDesc::Direct));
 
-    Vector<float> data_vec = data_arr.reform(IPosition(1,data_arr.nelements()));
+    // create a table instance, bind it to the storage manager & allocate rows
+    SetupNewTable newtab(filename, td, Table::New);
+    newtab.bindAll(stman);
+    Table tab(newtab, NrRows);
 
-/*
-    cout << "index column: " << endl;
-    for (int i=0; i<index_vec.nelements(); i++){
-        cout << index_vec[i] << "  ";
+    // define column objects and link them to the table
+    ArrayColumn<float> data_col (tab, "data");
+
+    // write data into the column objects
+    for (uInt i=0; i<NrRows; i++) {
+        data_col.put(i, data_arr);
     }
-*/
 
-    cout << endl << endl << "data column: " << endl;
-    for (int i=0; i<data_arr.nelements(); i++){
-        cout << data_vec[i] << "  ";
-        if ((i+1) % (data_arr.shape())(0) == 0)	cout << endl;
-    }
     return 0;
 }
 
