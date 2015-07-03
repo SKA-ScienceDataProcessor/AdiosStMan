@@ -105,38 +105,12 @@ namespace casacore { //# NAMESPACE CASA - BEGIN
             // *** inactive by default
             // *** only active when canAccessColumnSlice() returns true in child class
             virtual void getColumnSliceV(const Slicer& ns, void *dataPtr);
-            void getArrayWrapper(uint64_t rowStart, uint64_t nrRows, const Slicer& ns, void* dataPtr);
 
             virtual void flush() = 0;
 
         protected:
-            // *** check if data is all zero ***
-            // void
-            bool isZero (const void *dataPtr);
-            // scalar
-            bool isZero (const Bool* dataPtr);
-            bool isZero (const uChar* dataPtr);
-            bool isZero (const Short* dataPtr);
-            bool isZero (const uShort* dataPtr);
-            bool isZero (const Int* dataPtr);
-            bool isZero (const uInt* dataPtr);
-            bool isZero (const float* dataPtr);
-            bool isZero (const double* dataPtr);
-            bool isZero (const Complex* dataPtr);
-            bool isZero (const DComplex* dataPtr);
-            // array
-            bool isZero (const Array<Bool>* dataPtr);
-            bool isZero (const Array<uChar>* dataPtr);
-            bool isZero (const Array<Short>* dataPtr);
-            bool isZero (const Array<uShort>* dataPtr);
-            bool isZero (const Array<Int>* dataPtr);
-            bool isZero (const Array<uInt>* dataPtr);
-            bool isZero (const Array<float>* dataPtr);
-            bool isZero (const Array<double>* dataPtr);
-            bool isZero (const Array<Complex>* dataPtr);
-            bool isZero (const Array<DComplex>* dataPtr);
-            // *** check if data is all zero ***
 
+            void getArrayWrapper(uint64_t rowStart, uint64_t nrRows, const Slicer& ns, void* dataPtr);
             virtual void getArrayMetaV (uint64_t rowStart, uint64_t nrRows, const Slicer& ns, void* data) = 0;
             virtual void putArrayMetaV (uint64_t row, const void* data) = 0;
 
@@ -148,28 +122,20 @@ namespace casacore { //# NAMESPACE CASA - BEGIN
 
             // Column property
             String itsColumnName;
+            char itsColumnType;  // 's' for scalar, 'd' for direct array, 'i' for indirect array
             IPosition itsShape;
-            uint64_t itsNrElem;
             int itsDataTypeSize;
+            int itsCasaDataType;
+            ADIOS_DATATYPES itsAdiosDataType;
 
             // ADIOS read
             uint64_t *readStart;
             uint64_t *readCount;
 
             // ADIOS write
-            ADIOS_DATATYPES itsAdiosDataType;
             int64_t *itsAdiosWriteIDs;
-
-
-            int itsCasaDataType;
-            bool isArrayColumn;
-
-
             void *scalarCache;
-
     };
-
-
 
 }
 

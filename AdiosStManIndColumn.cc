@@ -1,4 +1,4 @@
-//    AdiosStManColumnV.cc: StManColumn class for AdiosStMan,
+//    AdiosStManIndColumn.cc: StManColumn class for AdiosStMan,
 //    managing all rows in a single array for a column
 //
 //    (c) University of Western Australia
@@ -35,20 +35,20 @@
 #include <casacore/casa/Utilities/DataType.h>
 #endif
 
-#include "AdiosStManColumnV.h"
+#include "AdiosStManIndColumn.h"
 
 namespace casa{
 
-    AdiosStManColumnV::AdiosStManColumnV(AdiosStMan* aParent, int aDataType, uInt aColNr)
+    AdiosStManIndColumn::AdiosStManIndColumn(AdiosStMan* aParent, int aDataType, uInt aColNr)
         :AdiosStManColumn (aParent, aDataType, aColNr){
         }
 
-    AdiosStManColumnV::~AdiosStManColumnV(){
+    AdiosStManIndColumn::~AdiosStManIndColumn(){
         if (itsAdiosWriteIDs)
             delete [] itsAdiosWriteIDs;
     }
 
-    void AdiosStManColumnV::initAdiosWrite(uInt aNrRows){
+    void AdiosStManIndColumn::initAdiosWrite(uInt aNrRows){
         int mpiRank;
         MPI_Comm_rank(MPI_COMM_WORLD, &mpiRank);
         for(uInt j=0; j<aNrRows; j++){
@@ -75,14 +75,14 @@ namespace casa{
         }
     }
 
-    Bool AdiosStManColumnV::canAccessSlice(Bool &reask) const{
+    Bool AdiosStManIndColumn::canAccessSlice(Bool &reask) const{
         reask = false;
         if(itsStManPtr->getMode() == 'r')
             return true;
         return false;
     }
 
-    void AdiosStManColumnV::getScalarMetaV (uint64_t row, void* data){
+    void AdiosStManIndColumn::getScalarMetaV (uint64_t row, void* data){
         if(itsStManPtr->getAdiosReadFile()){
             if(itsStManPtr->getStManColumnType() == AdiosStMan::ARRAY){
                 uint64_t rowid = row;
@@ -96,7 +96,7 @@ namespace casa{
         }
     }
 
-    void AdiosStManColumnV::getArrayMetaV (uint64_t rowStart, uint64_t nrRows, const Slicer& ns, void* dataPtr){
+    void AdiosStManIndColumn::getArrayMetaV (uint64_t rowStart, uint64_t nrRows, const Slicer& ns, void* dataPtr){
         if(itsStManPtr->getAdiosReadFile()){
             if(itsStManPtr->getStManColumnType() == AdiosStMan::VAR){
                 stringstream varName;
@@ -115,17 +115,17 @@ namespace casa{
         }
     }
 
-    void AdiosStManColumnV::putScalarMetaV (uint64_t row, const void* data){
+    void AdiosStManIndColumn::putScalarMetaV (uint64_t row, const void* data){
         itsStManPtr->adiosWriteOpen();
         adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[row] , (void*)data);
     }
 
-    void AdiosStManColumnV::putArrayMetaV (uint64_t row, const void* data){
+    void AdiosStManIndColumn::putArrayMetaV (uint64_t row, const void* data){
         itsStManPtr->adiosWriteOpen();
         adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[row] , (void*)data);
     }
 
-    void AdiosStManColumnV::flush(){
+    void AdiosStManIndColumn::flush(){
 
     }
 }

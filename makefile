@@ -6,8 +6,7 @@ endif
 
 DIRS=benchmark examples
 TARGET=libadiosstman.so
-SRC=AdiosStMan.cc AdiosStManColumn.cc AdiosStManColumnA.cc AdiosStManColumnV.cc
-
+SRC=AdiosStMan.cc AdiosStManColumn.cc AdiosStManScaColumn.cc AdiosStManDirColumn.cc AdiosStManIndColumn.cc
 
 $(TARGET):$(SRC) 
 	$(CC) $(SRC) -fPIC --shared -o $(TARGET) -lcasa_tables -lcasa_casa -ladios -lmxml -lz 

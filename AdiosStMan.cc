@@ -34,8 +34,9 @@
 #endif
 
 
-#include "AdiosStManColumnA.h"
-#include "AdiosStManColumnV.h"
+#include "AdiosStManIndColumn.h"
+#include "AdiosStManDirColumn.h"
+#include "AdiosStManScaColumn.h"
 
 
 namespace casa {
@@ -221,32 +222,35 @@ namespace casa {
     void AdiosStMan::deleteManager(){
     }
 
-    DataManagerColumn* AdiosStMan::makeDirArrColumn (const String& name, int aDataType,	const String& dataTypeId){
-        logdbg("AdiosStMan::makeDirArrColumn","");
-        return makeColumnMeta(name, aDataType, dataTypeId);
-    }
-
-    DataManagerColumn* AdiosStMan::makeScalarColumn (const String& name, int aDataType,	const String& dataTypeId){
+    DataManagerColumn* AdiosStMan::makeScalarColumn (const String& name, int aDataType, const String& dataTypeId){
         logdbg("AdiosStMan::makeScalarColumn","");
-        return makeColumnMeta(name, aDataType, dataTypeId);
+        return makeColumnMeta(name, aDataType, dataTypeId, 's');
     }
 
-    DataManagerColumn* AdiosStMan::makeIndArrColumn (const String& name, int aDataType,	const String& dataTypeId){
+    DataManagerColumn* AdiosStMan::makeDirArrColumn (const String& name, int aDataType, const String& dataTypeId){
+        logdbg("AdiosStMan::makeDirArrColumn","");
+        return makeColumnMeta(name, aDataType, dataTypeId, 'd');
+    }
+
+    DataManagerColumn* AdiosStMan::makeIndArrColumn (const String& name, int aDataType, const String& dataTypeId){
         logdbg("AdiosStMan::makeIndArrColumn","");
-        return makeColumnMeta(name, aDataType, dataTypeId);
+        return makeColumnMeta(name, aDataType, dataTypeId, 'i');
     }
 
-    DataManagerColumn* AdiosStMan::makeColumnMeta (const String& name, int aDataType,	const String& dataTypeId){
+    DataManagerColumn* AdiosStMan::makeColumnMeta (const String& name, int aDataType, const String& dataTypeId, char columnType){
         if (ncolumn() >= itsColumnPtrBlk.nelements()) {
             itsColumnPtrBlk.resize (itsColumnPtrBlk.nelements() + 32);
         }
         AdiosStManColumn* aColumn;
-        switch (itsStManColumnType){
-            case ARRAY:
-                aColumn = new AdiosStManColumnA (this, aDataType, ncolumn());
+        switch (columnType){
+            case 's':
+                aColumn = new AdiosStManScaColumn (this, aDataType, ncolumn());
                 break;
-            case VAR:
-                aColumn = new AdiosStManColumnV (this, aDataType, ncolumn());
+            case 'd':
+                aColumn = new AdiosStManDirColumn (this, aDataType, ncolumn());
+                break;
+            case 'i':
+                aColumn = new AdiosStManIndColumn (this, aDataType, ncolumn());
                 break;
         }
         aColumn->setColumnName(name);

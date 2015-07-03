@@ -70,18 +70,10 @@ namespace casa {
             virtual void resync (uInt aRowNr);
             virtual Bool flush (AipsIO&, Bool doFsync);
 
-            DataManagerColumn* makeColumnMeta (const String& aName,
-                    int aDataType,
-                    const String& aDataTypeID);
-            virtual DataManagerColumn* makeScalarColumn (const String& aName,
-                    int aDataType,
-                    const String& aDataTypeID);
-            virtual DataManagerColumn* makeDirArrColumn (const String& aName,
-                    int aDataType,
-                    const String& aDataTypeID);
-            virtual DataManagerColumn* makeIndArrColumn (const String& aName,
-                    int aDataType,
-                    const String& aDataTypeID);
+            DataManagerColumn* makeColumnMeta (const String& aName, int aDataType, const String& aDataTypeID, char columnType);
+            virtual DataManagerColumn* makeScalarColumn (const String& aName, int aDataType, const String& aDataTypeID);
+            virtual DataManagerColumn* makeDirArrColumn (const String& aName, int aDataType, const String& aDataTypeID);
+            virtual DataManagerColumn* makeIndArrColumn (const String& aName, int aDataType, const String& aDataTypeID);
             virtual void deleteManager();
             virtual void addRow (uInt aNrRows);
 
@@ -89,8 +81,7 @@ namespace casa {
             int64_t getAdiosGroup();
             ADIOS_FILE* getAdiosReadFile();
 
-            static DataManager* makeObject (const casa::String& aDataManType,
-                    const casa::Record& spec);
+            static DataManager* makeObject (const casa::String& aDataManType, const casa::Record& spec);
 
             void adiosWriteOpen();
             void adiosWriteClose();

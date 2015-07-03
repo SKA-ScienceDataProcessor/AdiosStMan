@@ -68,8 +68,8 @@ int main(int argc, char **argv){
 //    AdiosStMan stman(AdiosStMan::VAR);
 //    AdiosStMan stman(AdiosStMan::ARRAY, "MPI", "", 100);
 //    AdiosStMan stman(AdiosStMan::ARRAY, "MPI_AGGREGATE", "num_aggregators=32", 100);
-//    AdiosStMan stman;
-    TiledShapeStMan stman("Ti", data_pos);
+    AdiosStMan stman;
+//    TiledShapeStMan stman("Ti", data_pos);
 
     // define a table description & add a scalar column and an array column
     TableDesc td("", "1", TableDesc::Scratch);
@@ -78,7 +78,7 @@ int main(int argc, char **argv){
     // create a table instance, bind it to the storage manager & allocate rows
     SetupNewTable newtab(filename, td, Table::New);
 //    newtab.setShapeColumn("data", data_pos);
-//    newtab.bindAll(stman);
+    newtab.bindAll(stman);
     Table tab(newtab, NrRows);
 
     // define column objects and link them to the table

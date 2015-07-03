@@ -1,4 +1,4 @@
-//    AdiosStManColumnV.h: StManColumn class for AdiosStMan,
+//    AdiosStManScaColumn.h: StManColumn class for AdiosStMan,
 //    managing all rows in a single array for a column
 //
 //    (c) University of Western Australia
@@ -23,8 +23,8 @@
 //    Any bugs, questions, concerns and/or suggestions please email to
 //    jason.wang@icrar.org
 
-#ifndef ADIOSSTMANCOLUMNV_H
-#define ADIOSSTMANCOLUMNV_H
+#ifndef ADIOSSTMANSCACOLUMN_H
+#define ADIOSSTMANSCACOLUMN_H
 
 #include "casacore_version.h"
 
@@ -41,21 +41,20 @@
 
 
 namespace casa {
-
-    class AdiosStManColumnV : public AdiosStManColumn
+    class AdiosStManScaColumn : public AdiosStManColumn
     {
         public:
-            AdiosStManColumnV(AdiosStMan *aParent, int aDataType, uInt aColNr);
-            ~AdiosStManColumnV();
+            AdiosStManScaColumn(AdiosStMan *aParent, int aDataType, uInt aColNr);
+            ~AdiosStManScaColumn();
             void initAdiosWrite(uInt aNrRows);
-            Bool canAccessSlice(Bool &reask) const;
             virtual void flush();
-        protected:
+        private:
             virtual void getScalarMetaV (uint64_t row, void* data);
             virtual void putScalarMetaV (uint64_t row, const void* data);
-            virtual void getArrayMetaV (uint64_t rowStart, uint64_t nrRows, const Slicer& ns, void* dataPtr);
+            virtual void getArrayMetaV (uint64_t rowStart, uint64_t nrRows, const Slicer& ns, void* data);
             virtual void putArrayMetaV (uint64_t row, const void* data);
-    }; // end of class AdiosStManColumnV
+            bool gotScalarColumn;
+    }; // end of class AdiosStManScaColumn
 } // end of namespace casa
 
 #endif

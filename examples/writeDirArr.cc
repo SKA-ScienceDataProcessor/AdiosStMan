@@ -70,8 +70,8 @@ int main(int argc, char **argv){
 //    AdiosStMan stman(AdiosStMan::VAR);
 //    AdiosStMan stman(AdiosStMan::ARRAY, "MPI", "", 100);
 //    AdiosStMan stman(AdiosStMan::ARRAY, "MPI_AGGREGATE", "num_aggregators=32", 100);
-//    AdiosStMan stman;
-    TiledShapeStMan stman("Ti", data_pos);
+    AdiosStMan stman;
+//    TiledShapeStMan stman("Ti", data_pos);
 
     // define a table description & add a scalar column and an array column
     TableDesc td("", "1", TableDesc::Scratch);
