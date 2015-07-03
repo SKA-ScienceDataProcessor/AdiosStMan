@@ -23,20 +23,8 @@
 //    Any bugs, questions, concerns and/or suggestions please email to
 //    jason.wang@icrar.org
 
-#include "casacore_version.h"
-
-#ifdef CASACORE_VERSION_1
-#include <casa/Arrays/Array.h>
-#include <casa/Utilities/DataType.h>
-#endif
-
-#ifdef CASACORE_VERSION_2
-#include <casacore/casa/Arrays/Array.h>
-#include <casacore/casa/Utilities/DataType.h>
-#endif
-
-
 #include "AdiosStManScaColumn.h"
+
 
 namespace casa{
 

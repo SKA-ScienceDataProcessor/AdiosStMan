@@ -26,19 +26,7 @@
 #ifndef ADIOSSTMANINDCOLUMN_H
 #define ADIOSSTMANINDCOLUMN_H
 
-#include "casacore_version.h"
-
-#ifdef CASACORE_VERSION_1
-#include <casa/Arrays/IPosition.h>
-#endif
-
-#ifdef CASACORE_VERSION_2
-#include <casacore/casa/Arrays/IPosition.h>
-#endif
-
-#include "AdiosStMan.h"
 #include "AdiosStManColumn.h"
-
 
 namespace casa {
 

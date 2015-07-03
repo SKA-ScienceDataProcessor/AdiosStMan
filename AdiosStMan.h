@@ -26,18 +26,16 @@
 #ifndef ADIOSSTMAN_H
 #define ADIOSSTMAN_H
 
-#include "casacore_version.h"
+#include "AdiosStManGlobal.h"
 
 #ifdef CASACORE_VERSION_1
-#include <casa/aips.h>
-#include <casa/Containers/Block.h>
 #include <tables/Tables/DataManager.h>
+#include <casa/IO/AipsIO.h>
 #endif
 
 #ifdef CASACORE_VERSION_2
-#include <casacore/casa/aips.h>
-#include <casacore/casa/Containers/Block.h>
 #include <casacore/tables/DataMan/DataManager.h>
+#include <casacore/casa/IO/AipsIO.h>
 #endif
 
 #include <adios.h>
@@ -47,19 +45,12 @@
 namespace casa {
 
     class AdiosStManColumn;
-    class AdiosStManColumnA;
-    class AdiosStManColumnV;
 
     class AdiosStMan : public DataManager
     {
         public:
 
-            enum StManColumnType{
-                ARRAY = 0,
-                VAR = 1,
-            };
-
-            AdiosStMan(int aType=0, string aMethod="MPI", string aPara="", uint64_t aBufsize=1000);
+            AdiosStMan(string aMethod="MPI", string aPara="", uint64_t aBufsize=1000);
             ~AdiosStMan();
 
             virtual DataManager* clone() const;
@@ -88,8 +79,6 @@ namespace casa {
             uInt getNrRows();
             char getMode();
 
-            void setStManColumnType(StManColumnType aType);
-            int getStManColumnType();
             void logdbg(string func, string stat);
 
         private:

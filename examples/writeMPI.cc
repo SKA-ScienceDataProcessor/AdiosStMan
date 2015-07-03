@@ -41,7 +41,7 @@
 // necessary to reproduce the casa table.
 
 
-#include "../casacore_version.h"
+#include "../AdiosStMan.h"
 
 #ifdef CASACORE_VERSION_1
 #include <tables/Tables/TableDesc.h>
@@ -63,7 +63,6 @@
 #include <casacore/casa/namespace.h>
 #endif
 
-#include "../AdiosStMan.h"
 
 
 

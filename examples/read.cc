@@ -24,7 +24,7 @@
 
 
 
-#include "../casacore_version.h"
+#include "../AdiosStManGlobal.h"
 
 #ifdef CASACORE_VERSION_1
 #include <tables/Tables/TableDesc.h>

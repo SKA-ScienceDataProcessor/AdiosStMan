@@ -25,20 +25,17 @@
 #ifndef ADIOSSTMANCOLUMN_H
 #define ADIOSSTMANCOLUMN_H
 
-#include "casacore_version.h"
+#include "AdiosStMan.h"
 
 #ifdef CASACORE_VERSION_1
 #include <tables/Tables/StManColumn.h>
-#include <casa/Arrays/IPosition.h>
+#include <casa/Arrays/Array.h>
 #endif
 
 #ifdef CASACORE_VERSION_2
 #include <casacore/tables/DataMan/StManColumn.h>
-#include <casacore/casa/Arrays/IPosition.h>
+#include <casacore/casa/Arrays/Array.h>
 #endif
-
-#include "AdiosStMan.h"
-
 
 namespace casacore { //# NAMESPACE CASA - BEGIN
 

@@ -23,17 +23,6 @@
 //    Any bugs, questions, concerns and/or suggestions please email to
 //    jason.wang@icrar.org
 
-#include "casacore_version.h"
-
-#ifdef CASACORE_VERSION_1
-#include <casa/IO/AipsIO.h>
-#endif
-
-#ifdef CASACORE_VERSION_2
-#include <casacore/casa/IO/AipsIO.h>
-#endif
-
-
 #include "AdiosStManIndColumn.h"
 #include "AdiosStManDirColumn.h"
 #include "AdiosStManScaColumn.h"
@@ -43,14 +32,13 @@ namespace casa {
 
     int AdiosStMan::itsNrInstances = 0;
 
-    AdiosStMan::AdiosStMan (int aType, string aMethod, string aPara, uint64_t aBufsize)
+    AdiosStMan::AdiosStMan(string aMethod, string aPara, uint64_t aBufsize)
         :DataManager(),
         itsDataManName("AdiosStMan"),
         itsAdiosFile(0),
         itsAdiosReadFile(0),
         itsNrAdiosFiles(0),
         itsMpiComm(MPI_COMM_WORLD),
-        itsStManColumnType(aType),
         itsAdiosTransMethod(aMethod),
         itsAdiosTransPara(aPara),
         itsAdiosBufsize(aBufsize),
@@ -234,7 +222,11 @@ namespace casa {
 
     DataManagerColumn* AdiosStMan::makeIndArrColumn (const String& name, int aDataType, const String& dataTypeId){
         logdbg("AdiosStMan::makeIndArrColumn","");
+#ifdef ADIOSSTMAN_FORCE_DIRECT_ARRAY
+        return makeColumnMeta(name, aDataType, dataTypeId, 'd');
+#else
         return makeColumnMeta(name, aDataType, dataTypeId, 'i');
+#endif
     }
 
     DataManagerColumn* AdiosStMan::makeColumnMeta (const String& name, int aDataType, const String& dataTypeId, char columnType){
@@ -279,14 +271,6 @@ namespace casa {
 
     char AdiosStMan::getMode (){
         return itsMode;
-    }
-
-    void AdiosStMan::setStManColumnType(StManColumnType aType){
-        itsStManColumnType = aType;
-    }
-
-    int AdiosStMan::getStManColumnType(){
-        return itsStManColumnType;
     }
 
     String AdiosStMan::dataManagerName() const
