@@ -35,7 +35,7 @@ namespace casa {
     AdiosStMan::AdiosStMan(string aMethod, string aPara, uint64_t aBufsize)
         :DataManager(),
         itsDataManName("AdiosStMan"),
-        itsAdiosFile(0),
+        itsAdiosWriteFile(0),
         itsAdiosReadFile(0),
         itsNrAdiosFiles(0),
         itsMpiComm(MPI_COMM_WORLD),
@@ -59,7 +59,7 @@ namespace casa {
     AdiosStMan::AdiosStMan (const AdiosStMan& that)
         :DataManager(),
         itsDataManName(that.itsDataManName),
-        itsAdiosFile(that.itsAdiosFile),
+        itsAdiosWriteFile(that.itsAdiosWriteFile),
         itsAdiosReadFile(that.itsAdiosReadFile),
         itsNrAdiosFiles(that.itsNrAdiosFiles),
         itsMpiComm(MPI_COMM_WORLD),
@@ -124,7 +124,7 @@ namespace casa {
     }
 
     int64_t AdiosStMan::getAdiosFile(){
-        return itsAdiosFile;
+        return itsAdiosWriteFile;
     }
 
     ADIOS_FILE* AdiosStMan::getAdiosReadFile(){
@@ -136,7 +136,7 @@ namespace casa {
     }
 
     void AdiosStMan::adiosWriteOpen(){
-        if(!itsAdiosFile){
+        if(!itsAdiosWriteFile){
             logdbg("AdiosStMan::adiosWriteOpen","");
             // broadcast the filename string from the master to slaves.
             string itsFileName;
@@ -168,16 +168,16 @@ namespace casa {
                     itsAdiosGroupsize = itsAdiosGroupsize + itsNrRows * itsColumnPtrBlk[i]->getDataTypeSize() * itsColumnPtrBlk[i]->getShapeColumn().product();
                 }
             }
-            adios_open(&itsAdiosFile, "casatable", itsFileNameChar, "w", itsMpiComm);
-            adios_group_size(itsAdiosFile, itsAdiosGroupsize, &itsAdiosTotalsize);
+            adios_open(&itsAdiosWriteFile, "casatable", itsFileNameChar, "w", itsMpiComm);
+            adios_group_size(itsAdiosWriteFile, itsAdiosGroupsize, &itsAdiosTotalsize);
             delete [] itsFileNameChar;
         }
     }
 
     void AdiosStMan::adiosWriteClose(){
-        if(itsAdiosFile){
-            adios_close(itsAdiosFile);
-            itsAdiosFile = 0;
+        if(itsAdiosWriteFile){
+            adios_close(itsAdiosWriteFile);
+            itsAdiosWriteFile = 0;
         }
     }
 

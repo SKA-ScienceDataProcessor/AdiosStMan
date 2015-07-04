@@ -29,8 +29,7 @@
 namespace casa{
 
     AdiosStManDirColumn::AdiosStManDirColumn (AdiosStMan* aParent, int aDataType, uInt aColNr)
-        :gotScalarColumn(false),
-        AdiosStManColumn (aParent, aDataType, aColNr){
+        :AdiosStManColumn (aParent, aDataType, aColNr){
         }
 
     AdiosStManDirColumn::~AdiosStManDirColumn (){
@@ -42,6 +41,23 @@ namespace casa{
                 delete [] itsAdiosWriteIDs;
             }
         }
+    }
+
+    void AdiosStManDirColumn::setShapeColumn (const IPosition& shape){
+        itsStManPtr->logdbg("AdiosStManColumn::setShapeColumn","");
+        itsShape  = shape;
+    }
+
+    void AdiosStManDirColumn::setShape (uInt row, const IPosition& shape){
+        itsStManPtr->logdbg("AdiosStManColumn::setShape","");
+        itsShape  = shape;
+    }
+    Bool AdiosStManDirColumn::canChangeShape() const {
+#ifdef ADIOSSTMAN_FORCE_DIRECT_ARRAY
+        return true;
+#else
+        return false;
+#endif
     }
 
     Bool AdiosStManDirColumn::canAccessArrayColumn(Bool &reask) const{

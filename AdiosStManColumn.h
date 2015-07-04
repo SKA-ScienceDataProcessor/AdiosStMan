@@ -46,7 +46,6 @@ namespace casacore { //# NAMESPACE CASA - BEGIN
             AdiosStManColumn (AdiosStMan* aParent, int aDataType, uInt aColNr);
             ~AdiosStManColumn ();
 
-            virtual void setShapeColumn (const IPosition& aShape);
             IPosition getShapeColumn();
             virtual IPosition shape(uInt RowID);
 

@@ -72,12 +72,12 @@ int main(int argc, char **argv){
 
     // define a table description & add a scalar column and an array column
     TableDesc td("", "1", TableDesc::Scratch);
-    td.addColumn (ArrayColumnDesc<float>("data", data_pos, ColumnDesc::FixedShape));
+    td.addColumn (ArrayColumnDesc<float>("data", -1, ColumnDesc::FixedShape));
 
     // create a table instance, bind it to the storage manager & allocate rows
     SetupNewTable newtab(filename, td, Table::New);
-    newtab.setShapeColumn("data", data_pos);
     newtab.bindAll(stman);
+    newtab.setShapeColumn("data", data_pos);
     Table tab(newtab, NrRows);
 
     // define column objects and link them to the table

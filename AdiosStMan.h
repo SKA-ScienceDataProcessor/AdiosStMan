@@ -86,7 +86,7 @@ namespace casa {
             AdiosStMan(const AdiosStMan& that);
 
             String  itsDataManName;
-            int64_t itsAdiosFile;
+            int64_t itsAdiosWriteFile;
             int64_t itsAdiosGroup;
             uint64_t itsNrAdiosFiles;
             uint64_t itsAdiosBufsize;

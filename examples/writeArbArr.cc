@@ -57,9 +57,9 @@ int main(int argc, char **argv){
     }
     string filename = argv[1];
 
+    int NrRows = 4;
     IPosition data_pos = IPosition(2,6,5);
 
-    int NrRows = 4;
     Array<float> data_arr(data_pos);
     indgen (data_arr);
 
@@ -70,21 +70,17 @@ int main(int argc, char **argv){
     AdiosStMan stman;
 //    TiledShapeStMan stman("Ti", data_pos);
 
-    // define a table description & add a scalar column and an array column
     TableDesc td("", "1", TableDesc::Scratch);
-    td.addColumn (ArrayColumnDesc<float>("data", 2, ColumnDesc::Undefined));
+    td.addColumn (ArrayColumnDesc<float>("data", 2));
 
-    // create a table instance, bind it to the storage manager & allocate rows
     SetupNewTable newtab(filename, td, Table::New);
-//    newtab.setShapeColumn("data", data_pos);
     newtab.bindAll(stman);
     Table tab(newtab, NrRows);
 
-    // define column objects and link them to the table
     ArrayColumn<float> data_col (tab, "data");
 
-    // write data into the column objects
     for (uInt i=0; i<NrRows; i++) {
+        data_col.setShape(i, data_pos);
         data_col.put(i, data_arr);
     }
 

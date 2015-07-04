@@ -169,10 +169,6 @@ namespace casacore {
         return itsCasaDataType;
     }
 
-    void AdiosStManColumn::setShapeColumn (const IPosition& aShape){
-        itsShape  = aShape;
-    }
-
     void AdiosStManColumn::initAdiosRead(){
         int ndim = itsShape.size();
         // if array column, allocate dimension vectors
