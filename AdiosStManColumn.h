@@ -47,7 +47,6 @@ namespace casacore { //# NAMESPACE CASA - BEGIN
             ~AdiosStManColumn ();
 
             IPosition getShapeColumn();
-            virtual IPosition shape(uInt RowID);
 
             int getDataTypeSize();
             int getDataType();
@@ -125,8 +124,8 @@ namespace casacore { //# NAMESPACE CASA - BEGIN
             ADIOS_DATATYPES itsAdiosDataType;
 
             // ADIOS read
-            uint64_t *readStart;
-            uint64_t *readCount;
+            uint64_t readStart[10];
+            uint64_t readCount[10];
 
             // ADIOS write
             int64_t *itsAdiosWriteIDs;

@@ -58,10 +58,8 @@ int main(int argc, char **argv){
 
     Table casa_table(filename);
 
-    ROScalarColumn<uInt> index_col(casa_table, "index");
     ROArrayColumn<float> data_col(casa_table, "data");
 
-    Array<uInt> index_arr = index_col.getColumn();
     Array<float> data_arr = data_col.getColumn(sli);
 
     Vector<float> data_vec = data_arr.reform(IPosition(1,data_arr.nelements()));

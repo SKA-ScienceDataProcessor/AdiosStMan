@@ -38,10 +38,11 @@ namespace casa {
             Bool canAccessArrayColumn(Bool &reask) const;
             Bool canAccessColumnSlice(Bool &reask) const;
             Bool canAccessSlice(Bool &reask) const;
+            Bool canChangeShape() const;
             virtual void flush();
             virtual void setShapeColumn (const IPosition& shape);
             virtual void setShape (uInt row, const IPosition& shape);
-            Bool canChangeShape() const;
+            virtual IPosition shape(uInt RowID);
         private:
             virtual void getScalarMetaV (uint64_t row, void* data);
             virtual void putScalarMetaV (uint64_t row, const void* data);

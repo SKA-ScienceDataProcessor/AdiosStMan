@@ -30,8 +30,6 @@ namespace casacore {
     AdiosStManColumn::AdiosStManColumn (AdiosStMan* aParent, int aDataType, uInt aColNr)
         :StManColumn (aDataType),
         itsAdiosWriteIDs (0),
-        readStart (0),
-        readCount (0),
         itsStManPtr (aParent),
         itsCasaDataType(aDataType),
         itsShape(0),
@@ -102,8 +100,6 @@ namespace casacore {
     }
 
     AdiosStManColumn::~AdiosStManColumn (){
-        if (readStart)   delete [] readStart;
-        if (readCount)   delete [] readCount;
         if (scalarCache){
             switch (itsCasaDataType){
                 case TpBool:
@@ -157,10 +153,6 @@ namespace casacore {
         return itsShape;
     }
 
-    IPosition AdiosStManColumn::shape (uInt RowID){
-        return itsShape;
-    }
-
     int AdiosStManColumn::getDataTypeSize(){
         return itsDataTypeSize;
     }
@@ -170,10 +162,9 @@ namespace casacore {
     }
 
     void AdiosStManColumn::initAdiosRead(){
+        itsStManPtr->logdbg("AdiosStManColumn::initAdiosRead","");
         int ndim = itsShape.size();
-        // if array column, allocate dimension vectors
-        readStart = new uint64_t[ndim+1];
-        readCount = new uint64_t[ndim+1];
+        cout << ndim << endl;
     }
 
     // ------------------------------------------------------------------------------------------------------
