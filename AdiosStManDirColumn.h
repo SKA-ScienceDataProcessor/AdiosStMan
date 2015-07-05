@@ -28,7 +28,7 @@
 
 #include "AdiosStManColumn.h"
 
-namespace casa {
+namespace casacore {
     class AdiosStManDirColumn : public AdiosStManColumn
     {
         public:
@@ -45,8 +45,6 @@ namespace casa {
             virtual void setShape (uInt row, const IPosition& shape);
             virtual IPosition shape(uInt RowID);
         private:
-            virtual void getScalarMetaV (uint64_t row, void* data);
-            virtual void putScalarMetaV (uint64_t row, const void* data);
             virtual void getArrayMetaV (uint64_t rowStart, uint64_t nrRows, const Slicer& ns, void* data);
             virtual void putArrayMetaV (uint64_t row, const void* data);
     }; // end of class AdiosStManDirColumn

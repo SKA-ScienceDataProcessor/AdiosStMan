@@ -26,7 +26,7 @@
 #include "AdiosStManScaColumn.h"
 
 
-namespace casa{
+namespace casacore {
 
     AdiosStManScaColumn::AdiosStManScaColumn (AdiosStMan* aParent, int aDataType, uInt aColNr)
         :gotScalarColumn(false),
@@ -34,9 +34,149 @@ namespace casa{
         }
 
     AdiosStManScaColumn::~AdiosStManScaColumn (){
+        if (columnCache){
+            switch (itsCasaDataType){
+                case TpBool:
+                    delete [] (Bool*)columnCache;
+                    break;
+                case TpChar:
+                    delete [] (Char*)columnCache;
+                    break;
+                case TpUChar:
+                    delete [] (uChar*)columnCache;
+                    break;
+                case TpShort:
+                    delete [] (Short*)columnCache;
+                    break;
+                case TpUShort:
+                    delete [] (uShort*)columnCache;
+                    break;
+                case TpInt:
+                    delete [] (Int*)columnCache;
+                    break;
+                case TpUInt:
+                    delete [] (uInt*)columnCache;
+                    break;
+                case TpFloat:
+                    delete [] (float*)columnCache;
+                    break;
+                case TpDouble:
+                    delete [] (double*)columnCache;
+                    break;
+                case TpComplex:
+                    delete [] (Complex*)columnCache;
+                    break;
+                case TpDComplex:
+                    delete [] (DComplex*)columnCache;
+                    break;
+                case TpString:
+                    break;
+            }
+        }
         if (itsAdiosWriteIDs){
             delete itsAdiosWriteIDs;
         }
+    }
+
+    // *** access a row for a scalar column ***
+    // put
+    void AdiosStManScaColumn::putBoolV (uInt rownr, const Bool* dataPtr){
+        if(columnCache == 0) {columnCache = new Bool[itsStManPtr->getNrRows()];}
+        ((Bool*)columnCache)[rownr] = *dataPtr;
+    }
+    void AdiosStManScaColumn::putuCharV (uInt rownr, const uChar* dataPtr){
+        if(columnCache == 0) {columnCache = new uChar[itsStManPtr->getNrRows()];}
+        ((uChar*)columnCache)[rownr] = *dataPtr;
+    }
+    void AdiosStManScaColumn::putShortV (uInt rownr, const Short* dataPtr){
+        if(columnCache == 0) {columnCache = new Short[itsStManPtr->getNrRows()];}
+        ((Short*)columnCache)[rownr] = *dataPtr;
+    }
+    void AdiosStManScaColumn::putuShortV (uInt rownr, const uShort* dataPtr){
+        if(columnCache == 0) {columnCache = new uShort[itsStManPtr->getNrRows()];}
+        ((uShort*)columnCache)[rownr] = *dataPtr;
+    }
+    void AdiosStManScaColumn::putIntV (uInt rownr, const Int* dataPtr){
+        if(columnCache == 0) {columnCache = new Int[itsStManPtr->getNrRows()];}
+        ((Int*)columnCache)[rownr] = *dataPtr;
+    }
+    void AdiosStManScaColumn::putuIntV (uInt rownr, const uInt* dataPtr){
+        if(columnCache == 0) {columnCache = new uInt[itsStManPtr->getNrRows()];}
+        ((uInt*)columnCache)[rownr] = *dataPtr;
+    }
+    void AdiosStManScaColumn::putfloatV (uInt rownr, const float* dataPtr){
+        if(columnCache == 0) {columnCache = new float[itsStManPtr->getNrRows()];}
+        ((float*)columnCache)[rownr] = *dataPtr;
+    }
+    void AdiosStManScaColumn::putdoubleV (uInt rownr, const double* dataPtr){
+        if(columnCache == 0) {columnCache = new double[itsStManPtr->getNrRows()];}
+        ((double*)columnCache)[rownr] = *dataPtr;
+    }
+    void AdiosStManScaColumn::putComplexV (uInt rownr, const Complex* dataPtr){
+        if(columnCache == 0) {columnCache = new Complex[itsStManPtr->getNrRows()];}
+        ((Complex*)columnCache)[rownr] = *dataPtr;
+    }
+    void AdiosStManScaColumn::putDComplexV (uInt rownr, const DComplex* dataPtr){
+        if(columnCache == 0) {columnCache = new DComplex[itsStManPtr->getNrRows()];}
+        ((DComplex*)columnCache)[rownr] = *dataPtr;
+    }
+    void AdiosStManScaColumn::putStringV (uInt rownr, const String* dataPtr){
+        cout << "AdiosStManColumn Error: Sorry, AdiosStMan does not support string type at the moment!" << endl;
+    }
+
+    // get
+    void AdiosStManScaColumn::getBoolV (uInt aRowNr, Bool* aValue){
+        if(columnCache == 0) {columnCache = new Bool[itsStManPtr->getNrRows()];}
+        getScalarMetaV(aRowNr, aValue);
+        *aValue = ((Bool*)columnCache)[aRowNr];
+    }
+    void AdiosStManScaColumn::getuCharV (uInt aRowNr, uChar* aValue){
+        if(columnCache == 0) {columnCache = new uChar[itsStManPtr->getNrRows()];}
+        getScalarMetaV(aRowNr, aValue);
+        *aValue = ((uChar*)columnCache)[aRowNr];
+    }
+    void AdiosStManScaColumn::getShortV (uInt aRowNr, Short* aValue){
+        if(columnCache == 0) {columnCache = new Short[itsStManPtr->getNrRows()];}
+        getScalarMetaV(aRowNr, aValue);
+        *aValue = ((Short*)columnCache)[aRowNr];
+    }
+    void AdiosStManScaColumn::getuShortV (uInt aRowNr, uShort* aValue){
+        if(columnCache == 0) {columnCache = new uShort[itsStManPtr->getNrRows()];}
+        getScalarMetaV(aRowNr, aValue);
+        *aValue = ((uShort*)columnCache)[aRowNr];
+    }
+    void AdiosStManScaColumn::getIntV (uInt aRowNr, Int* aValue){
+        if(columnCache == 0) {columnCache = new Int[itsStManPtr->getNrRows()];}
+        getScalarMetaV(aRowNr, aValue);
+        *aValue = ((Int*)columnCache)[aRowNr];
+    }
+    void AdiosStManScaColumn::getuIntV (uInt aRowNr, uInt* aValue){
+        if(columnCache == 0) {columnCache = new uInt[itsStManPtr->getNrRows()];}
+        getScalarMetaV(aRowNr, aValue);
+        *aValue = ((uInt*)columnCache)[aRowNr];
+    }
+    void AdiosStManScaColumn::getfloatV (uInt aRowNr, float* aValue){
+        if(columnCache == 0) {columnCache = new float[itsStManPtr->getNrRows()];}
+        getScalarMetaV(aRowNr, aValue);
+        *aValue = ((float*)columnCache)[aRowNr];
+    }
+    void AdiosStManScaColumn::getdoubleV (uInt aRowNr, double* aValue){
+        if(columnCache == 0) {columnCache = new double[itsStManPtr->getNrRows()];}
+        getScalarMetaV(aRowNr, aValue);
+        *aValue = ((double*)columnCache)[aRowNr];
+    }
+    void AdiosStManScaColumn::getComplexV (uInt aRowNr, Complex* aValue){
+        if(columnCache == 0) {columnCache = new Complex[itsStManPtr->getNrRows()];}
+        getScalarMetaV(aRowNr, aValue);
+        *aValue = ((Complex*)columnCache)[aRowNr];
+    }
+    void AdiosStManScaColumn::getDComplexV (uInt aRowNr,DComplex* aValue){
+        if(columnCache == 0) {columnCache = new DComplex[itsStManPtr->getNrRows()];}
+        getScalarMetaV(aRowNr, aValue);
+        *aValue = ((DComplex*)columnCache)[aRowNr];
+    }
+    void AdiosStManScaColumn::getStringV (uInt aRowNr, String* aValue){
+        cout << "AdiosStManColumn Error: Sorry, AdiosStMan does not support string type at this point!" << endl;
     }
 
     void AdiosStManScaColumn::initAdiosRead(){
@@ -54,15 +194,6 @@ namespace casa{
         }
     }
 
-    void AdiosStManScaColumn::putArrayMetaV (uint64_t row, const void* data){
-    }
-
-    void AdiosStManScaColumn::getArrayMetaV (uint64_t rowStart, uint64_t nrRows, const Slicer& ns, void* data){
-    }
-
-    void AdiosStManScaColumn::putScalarMetaV (uint64_t row, const void* data){
-    }
-
     void AdiosStManScaColumn::getScalarMetaV (uint64_t row, void* data){
         itsStManPtr->logdbg("AdiosStManScaColumn::getScalarMetaV","start");
         if(gotScalarColumn == false){
@@ -70,7 +201,7 @@ namespace casa{
                 readStart[0] = 0;
                 readCount[0] = itsStManPtr->getNrRows();
                 ADIOS_SELECTION *sel = adios_selection_boundingbox (1, readStart, readCount);
-                adios_schedule_read (itsStManPtr->getAdiosReadFile(), sel, itsColumnName.c_str(), 0, 1, scalarCache);
+                adios_schedule_read (itsStManPtr->getAdiosReadFile(), sel, itsColumnName.c_str(), 0, 1, columnCache);
                 adios_perform_reads (itsStManPtr->getAdiosReadFile(), 1);
                 gotScalarColumn = true;
             }
@@ -83,7 +214,7 @@ namespace casa{
     void AdiosStManScaColumn::flush(){
         itsStManPtr->logdbg("AdiosStManScaColumn::flush","");
         itsStManPtr->adiosWriteOpen();
-        adios_write_byid(itsStManPtr->getAdiosFile(), *itsAdiosWriteIDs , (void*)scalarCache);
+        adios_write_byid(itsStManPtr->getAdiosFile(), *itsAdiosWriteIDs , (void*)columnCache);
     }
 }
 

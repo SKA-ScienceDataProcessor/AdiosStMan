@@ -42,7 +42,7 @@
 #include <adios_read.h>
 
 
-namespace casa {
+namespace casacore {
 
     class AdiosStManColumn;
 
@@ -50,7 +50,7 @@ namespace casa {
     {
         public:
 
-            AdiosStMan(string aMethod="MPI", string aPara="", uint64_t aBufsize=1000);
+            AdiosStMan(string aMethod="MPI", string aPara="", uint64_t writeBufsize=1000, uint64_t readBufsize=200);
             ~AdiosStMan();
 
             virtual DataManager* clone() const;
@@ -78,6 +78,7 @@ namespace casa {
             void adiosWriteClose();
             uInt getNrRows();
             char getMode();
+            uint64_t getReadBufsize();
 
             void logdbg(string func, string stat, int para=0);
 
@@ -89,7 +90,8 @@ namespace casa {
             int64_t itsAdiosWriteFile;
             int64_t itsAdiosGroup;
             uint64_t itsNrAdiosFiles;
-            uint64_t itsAdiosBufsize;
+            uint64_t itsAdiosWriteBufsize;
+            uint64_t itsAdiosReadBufsize;
             uint64_t itsAdiosGroupsize;
             uint64_t itsAdiosTotalsize;
             string itsAdiosTransMethod;

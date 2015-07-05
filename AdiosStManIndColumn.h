@@ -28,7 +28,7 @@
 
 #include "AdiosStManColumn.h"
 
-namespace casa {
+namespace casacore {
 
     class AdiosStManIndColumn : public AdiosStManColumn
     {
@@ -39,9 +39,7 @@ namespace casa {
             virtual void initAdiosRead();
             Bool canAccessSlice(Bool &reask) const;
             virtual void flush();
-        protected:
-            virtual void getScalarMetaV (uint64_t row, void* data);
-            virtual void putScalarMetaV (uint64_t row, const void* data);
+        private:
             virtual void getArrayMetaV (uint64_t rowStart, uint64_t nrRows, const Slicer& ns, void* dataPtr);
             virtual void putArrayMetaV (uint64_t row, const void* data);
     }; // end of class AdiosStManIndColumn

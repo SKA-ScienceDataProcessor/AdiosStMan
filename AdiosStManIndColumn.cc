@@ -26,7 +26,7 @@
 #include "AdiosStManIndColumn.h"
 
 
-namespace casa{
+namespace casacore {
 
     AdiosStManIndColumn::AdiosStManIndColumn(AdiosStMan* aParent, int aDataType, uInt aColNr)
         :AdiosStManColumn (aParent, aDataType, aColNr)
@@ -97,10 +97,6 @@ namespace casa{
         adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[row] , (void*)data);
     }
 
-    void AdiosStManIndColumn::putScalarMetaV (uint64_t row, const void* data){
-    }
-    void AdiosStManIndColumn::getScalarMetaV (uint64_t row, void* data){
-    }
     void AdiosStManIndColumn::flush(){
     }
 }

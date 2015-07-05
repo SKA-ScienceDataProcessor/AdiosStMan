@@ -28,7 +28,7 @@
 
 #include "AdiosStManColumn.h"
 
-namespace casa {
+namespace casacore {
     class AdiosStManScaColumn : public AdiosStManColumn
     {
         public:
@@ -37,12 +37,35 @@ namespace casa {
             virtual void initAdiosWrite(uInt aNrRows);
             virtual void initAdiosRead();
             virtual void flush();
+            // *** access a row for a scalar column ***
+            // put
+            virtual void putBoolV     (uInt aRowNr, const Bool* aDataPtr);
+            virtual void putuCharV    (uInt aRowNr, const uChar* aDataPtr);
+            virtual void putShortV    (uInt aRowNr, const Short* aDataPtr);
+            virtual void putuShortV   (uInt aRowNr, const uShort* aDataPtr);
+            virtual void putIntV      (uInt aRowNr, const Int* aDataPtr);
+            virtual void putuIntV     (uInt aRowNr, const uInt* aDataPtr);
+            virtual void putfloatV    (uInt aRowNr, const Float* aDataPtr);
+            virtual void putdoubleV   (uInt aRowNr, const Double* aDataPtr);
+            virtual void putComplexV  (uInt aRowNr, const Complex* aDataPtr);
+            virtual void putDComplexV (uInt aRowNr, const DComplex* aDataPtr);
+            virtual void putStringV   (uInt aRowNr, const String* aDataPtr);
+            // get
+            virtual void getBoolV     (uInt aRowNr, Bool* aDataPtr);
+            virtual void getuCharV    (uInt aRowNr, uChar* aDataPtr);
+            virtual void getShortV    (uInt aRowNr, Short* aDataPtr);
+            virtual void getuShortV   (uInt aRowNr, uShort* aDataPtr);
+            virtual void getIntV      (uInt aRowNr, Int* aDataPtr);
+            virtual void getuIntV     (uInt aRowNr, uInt* aDataPtr);
+            virtual void getfloatV    (uInt aRowNr, float* aDataPtr);
+            virtual void getdoubleV   (uInt aRowNr, double* aDataPtr);
+            virtual void getComplexV  (uInt aRowNr, Complex* aDataPtr);
+            virtual void getDComplexV (uInt aRowNr, DComplex* aDataPtr);
+            virtual void getStringV   (uInt aRowNr, String* aDataPtr);
         private:
-            virtual void getScalarMetaV (uint64_t row, void* data);
-            virtual void putScalarMetaV (uint64_t row, const void* data);
-            virtual void getArrayMetaV (uint64_t rowStart, uint64_t nrRows, const Slicer& ns, void* data);
-            virtual void putArrayMetaV (uint64_t row, const void* data);
+            void getScalarMetaV (uint64_t row, void* data);
             bool gotScalarColumn;
+            void *columnCache;
     }; // end of class AdiosStManScaColumn
 } // end of namespace casa
 

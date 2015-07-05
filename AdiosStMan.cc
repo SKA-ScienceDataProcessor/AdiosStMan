@@ -28,11 +28,11 @@
 #include "AdiosStManScaColumn.h"
 
 
-namespace casa {
+namespace casacore {
 
     int AdiosStMan::itsNrInstances = 0;
 
-    AdiosStMan::AdiosStMan(string aMethod, string aPara, uint64_t aBufsize)
+    AdiosStMan::AdiosStMan(string aMethod, string aPara, uint64_t writeBufsize, uint64_t readBufsize)
         :DataManager(),
         itsDataManName("AdiosStMan"),
         itsAdiosWriteFile(0),
@@ -41,7 +41,8 @@ namespace casa {
         itsMpiComm(MPI_COMM_WORLD),
         itsAdiosTransMethod(aMethod),
         itsAdiosTransPara(aPara),
-        itsAdiosBufsize(aBufsize),
+        itsAdiosWriteBufsize(writeBufsize),
+        itsAdiosReadBufsize(readBufsize),
         isMpiInitInternal(false)
     {
         AdiosStMan::itsNrInstances++;
@@ -66,7 +67,8 @@ namespace casa {
         itsStManColumnType(that.itsStManColumnType),
         itsAdiosTransMethod(that.itsAdiosTransMethod),
         itsAdiosTransPara(that.itsAdiosTransPara),
-        itsAdiosBufsize(that.itsAdiosBufsize),
+        itsAdiosWriteBufsize(that.itsAdiosWriteBufsize),
+        itsAdiosReadBufsize(that.itsAdiosReadBufsize),
         isMpiInitInternal(false)
     {
         AdiosStMan::itsNrInstances++;
@@ -91,6 +93,13 @@ namespace casa {
         MPI_Initialized(&isMpiInitialized);
         if(isMpiInitInternal && isMpiInitialized){
             if(AdiosStMan::itsNrInstances==0)
+                // Some python-casacore code instantiates storage managers multiple times in a run,
+                // while MPI standard does not allow calling anything MPI after MPI_Finalize() is called,
+                // even another MPI_Init() is not allowed, otherwise there will be an error.
+                // So this is currently the only way to avoid that -- only call MPI_Finalize when
+                // 1, there are multiple MPI ranks existing;
+                // 2, this is the last existing AdiosStMan instance;
+                // 3, MPI_Init was called inside AdiosStMan
                 if(mpiSize > 1)
                     MPI_Finalize();
         }
@@ -152,7 +161,7 @@ namespace casa {
             MPI_Bcast(itsFileNameChar, itsFileNameLen + 1, MPI_CHAR, 0, itsMpiComm);
             // create ADIOS file
             adios_init_noxml(itsMpiComm);
-            adios_allocate_buffer(ADIOS_BUFFER_ALLOC_NOW, itsAdiosBufsize);
+            adios_allocate_buffer(ADIOS_BUFFER_ALLOC_NOW, itsAdiosWriteBufsize);
             adios_declare_group(&itsAdiosGroup, "casatable", "", adios_flag_no);
             adios_select_method(itsAdiosGroup, itsAdiosTransMethod.c_str(), itsAdiosTransPara.c_str(), "");
             for (uInt i=0; i<itsNrCols; i++){
@@ -274,6 +283,10 @@ namespace casa {
         return itsMode;
     }
 
+    uint64_t AdiosStMan::getReadBufsize (){
+        return itsAdiosReadBufsize;
+    }
+
     String AdiosStMan::dataManagerName() const
     {
         return itsDataManName;
@@ -281,5 +294,5 @@ namespace casa {
     void register_adiosstman(){
         DataManager::registerCtor ("AdiosStMan", AdiosStMan::makeObject);
     }
-} // end of namespace casa
+}
 

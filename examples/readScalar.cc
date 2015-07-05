@@ -59,27 +59,15 @@ int main(int argc, char **argv){
 
     Table casa_table(filename);
 
-//    ROScalarColumn<uInt> index_col(casa_table, "index");
-    ROArrayColumn<float> data_col(casa_table, "data");
+    ROScalarColumn<uInt> index_col(casa_table, "index");
 
-//    Vector<uInt> index_vec = index_col.getColumn();
-//    Array<float> data_arr = data_col.getColumn();
-    Array<float> data_arr = data_col.get(0);
+    Vector<uInt> index_vec = index_col.getColumn();
 
-    Vector<float> data_vec = data_arr.reform(IPosition(1,data_arr.nelements()));
-
-/*
     cout << "index column: " << endl;
     for (int i=0; i<index_vec.nelements(); i++){
         cout << index_vec[i] << "  ";
     }
-*/
 
-    cout << endl << endl << "data column: " << endl;
-    for (int i=0; i<data_arr.nelements(); i++){
-        cout << data_vec[i] << "  ";
-        if ((i+1) % (data_arr.shape())(0) == 0)	cout << endl;
-    }
     return 0;
 }
 

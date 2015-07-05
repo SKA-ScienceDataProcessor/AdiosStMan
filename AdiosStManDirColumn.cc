@@ -26,7 +26,7 @@
 #include "AdiosStManDirColumn.h"
 
 
-namespace casa{
+namespace casacore {
 
     AdiosStManDirColumn::AdiosStManDirColumn (AdiosStMan* aParent, int aDataType, uInt aColNr)
         :AdiosStManColumn (aParent, aDataType, aColNr){
@@ -158,12 +158,6 @@ namespace casa{
         else{
             cout << "AdiosStManColumn Error: AdiosStMan is not working in read mode!" << endl;
         }
-    }
-
-    void AdiosStManDirColumn::putScalarMetaV (uint64_t row, const void* data){
-    }
-
-    void AdiosStManDirColumn::getScalarMetaV (uint64_t row, void* data){
     }
 
     void AdiosStManDirColumn::flush(){

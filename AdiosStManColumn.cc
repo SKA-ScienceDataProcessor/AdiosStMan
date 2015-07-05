@@ -32,8 +32,7 @@ namespace casacore {
         itsAdiosWriteIDs (0),
         itsStManPtr (aParent),
         itsCasaDataType(aDataType),
-        itsShape(0),
-        scalarCache(0)
+        itsShape(0)
     {
         switch (aDataType){
             case TpBool:
@@ -100,45 +99,6 @@ namespace casacore {
     }
 
     AdiosStManColumn::~AdiosStManColumn (){
-        if (scalarCache){
-            switch (itsCasaDataType){
-                case TpBool:
-                    delete [] (Bool*)scalarCache;
-                    break;
-                case TpChar:
-                    delete [] (Char*)scalarCache;
-                    break;
-                case TpUChar:
-                    delete [] (uChar*)scalarCache;
-                    break;
-                case TpShort:
-                    delete [] (Short*)scalarCache;
-                    break;
-                case TpUShort:
-                    delete [] (uShort*)scalarCache;
-                    break;
-                case TpInt:
-                    delete [] (Int*)scalarCache;
-                    break;
-                case TpUInt:
-                    delete [] (uInt*)scalarCache;
-                    break;
-                case TpFloat:
-                    delete [] (float*)scalarCache;
-                    break;
-                case TpDouble:
-                    delete [] (double*)scalarCache;
-                    break;
-                case TpComplex:
-                    delete [] (Complex*)scalarCache;
-                    break;
-                case TpDComplex:
-                    delete [] (DComplex*)scalarCache;
-                    break;
-                case TpString:
-                    break;
-            }
-        }
     }
 
     void AdiosStManColumn::setColumnName (String aName){
@@ -165,116 +125,10 @@ namespace casacore {
     // ------------------------------------------------------------------------------------------------------
     // ------------------------------------------------------------------------------------------------------
 
-
-    // *** access a row for a scalar column ***
-    // put
-    void AdiosStManColumn::putBoolV (uInt rownr, const Bool* dataPtr){
-        if(scalarCache == 0) {scalarCache = new Bool[itsStManPtr->getNrRows()];}
-        ((Bool*)scalarCache)[rownr] = *dataPtr;
-        putScalarMetaV(rownr, dataPtr);
-    }
-    void AdiosStManColumn::putuCharV (uInt rownr, const uChar* dataPtr){
-        if(scalarCache == 0) {scalarCache = new uChar[itsStManPtr->getNrRows()];}
-        ((uChar*)scalarCache)[rownr] = *dataPtr;
-        putScalarMetaV(rownr, dataPtr);
-    }
-    void AdiosStManColumn::putShortV (uInt rownr, const Short* dataPtr){
-        if(scalarCache == 0) {scalarCache = new Short[itsStManPtr->getNrRows()];}
-        ((Short*)scalarCache)[rownr] = *dataPtr;
-        putScalarMetaV(rownr, dataPtr);
-    }
-    void AdiosStManColumn::putuShortV (uInt rownr, const uShort* dataPtr){
-        if(scalarCache == 0) {scalarCache = new uShort[itsStManPtr->getNrRows()];}
-        ((uShort*)scalarCache)[rownr] = *dataPtr;
-        putScalarMetaV(rownr, dataPtr);
-    }
-    void AdiosStManColumn::putIntV (uInt rownr, const Int* dataPtr){
-        if(scalarCache == 0) {scalarCache = new Int[itsStManPtr->getNrRows()];}
-        ((Int*)scalarCache)[rownr] = *dataPtr;
-        putScalarMetaV(rownr, dataPtr);
-    }
-    void AdiosStManColumn::putuIntV (uInt rownr, const uInt* dataPtr){
-        if(scalarCache == 0) {scalarCache = new uInt[itsStManPtr->getNrRows()];}
-        ((uInt*)scalarCache)[rownr] = *dataPtr;
-        putScalarMetaV(rownr, dataPtr);
-    }
-    void AdiosStManColumn::putfloatV (uInt rownr, const float* dataPtr){
-        if(scalarCache == 0) {scalarCache = new float[itsStManPtr->getNrRows()];}
-        ((float*)scalarCache)[rownr] = *dataPtr;
-        putScalarMetaV(rownr, dataPtr);
-    }
-    void AdiosStManColumn::putdoubleV (uInt rownr, const double* dataPtr){
-        if(scalarCache == 0) {scalarCache = new double[itsStManPtr->getNrRows()];}
-        ((double*)scalarCache)[rownr] = *dataPtr;
-        putScalarMetaV(rownr, dataPtr);
-    }
-    void AdiosStManColumn::putComplexV (uInt rownr, const Complex* dataPtr){
-        if(scalarCache == 0) {scalarCache = new Complex[itsStManPtr->getNrRows()];}
-        ((Complex*)scalarCache)[rownr] = *dataPtr;
-        putScalarMetaV(rownr, dataPtr);
-    }
-    void AdiosStManColumn::putDComplexV (uInt rownr, const DComplex* dataPtr){
-        if(scalarCache == 0) {scalarCache = new DComplex[itsStManPtr->getNrRows()];}
-        ((DComplex*)scalarCache)[rownr] = *dataPtr;
-        putScalarMetaV(rownr, dataPtr);
-    }
-    void AdiosStManColumn::putStringV (uInt rownr, const String* dataPtr){
-        cout << "AdiosStManColumn Error: Sorry, AdiosStMan does not support string type at the moment!" << endl;
+    void AdiosStManColumn::putArrayMetaV (uint64_t row, const void* data){
     }
 
-    // get
-    void AdiosStManColumn::getBoolV (uInt aRowNr, Bool* aValue){
-        if(scalarCache == 0) {scalarCache = new Bool[itsStManPtr->getNrRows()];}
-        getScalarMetaV(aRowNr, aValue);
-        *aValue = ((Bool*)scalarCache)[aRowNr];
-    }
-    void AdiosStManColumn::getuCharV (uInt aRowNr, uChar* aValue){
-        if(scalarCache == 0) {scalarCache = new uChar[itsStManPtr->getNrRows()];}
-        getScalarMetaV(aRowNr, aValue);
-        *aValue = ((uChar*)scalarCache)[aRowNr];
-    }
-    void AdiosStManColumn::getShortV (uInt aRowNr, Short* aValue){
-        if(scalarCache == 0) {scalarCache = new Short[itsStManPtr->getNrRows()];}
-        getScalarMetaV(aRowNr, aValue);
-        *aValue = ((Short*)scalarCache)[aRowNr];
-    }
-    void AdiosStManColumn::getuShortV (uInt aRowNr, uShort* aValue){
-        if(scalarCache == 0) {scalarCache = new uShort[itsStManPtr->getNrRows()];}
-        getScalarMetaV(aRowNr, aValue);
-        *aValue = ((uShort*)scalarCache)[aRowNr];
-    }
-    void AdiosStManColumn::getIntV (uInt aRowNr, Int* aValue){
-        if(scalarCache == 0) {scalarCache = new Int[itsStManPtr->getNrRows()];}
-        getScalarMetaV(aRowNr, aValue);
-        *aValue = ((Int*)scalarCache)[aRowNr];
-    }
-    void AdiosStManColumn::getuIntV (uInt aRowNr, uInt* aValue){
-        if(scalarCache == 0) {scalarCache = new uInt[itsStManPtr->getNrRows()];}
-        getScalarMetaV(aRowNr, aValue);
-        *aValue = ((uInt*)scalarCache)[aRowNr];
-    }
-    void AdiosStManColumn::getfloatV (uInt aRowNr, float* aValue){
-        if(scalarCache == 0) {scalarCache = new float[itsStManPtr->getNrRows()];}
-        getScalarMetaV(aRowNr, aValue);
-        *aValue = ((float*)scalarCache)[aRowNr];
-    }
-    void AdiosStManColumn::getdoubleV (uInt aRowNr, double* aValue){
-        if(scalarCache == 0) {scalarCache = new double[itsStManPtr->getNrRows()];}
-        getScalarMetaV(aRowNr, aValue);
-        *aValue = ((double*)scalarCache)[aRowNr];
-    }
-    void AdiosStManColumn::getComplexV (uInt aRowNr, Complex* aValue){
-        if(scalarCache == 0) {scalarCache = new Complex[itsStManPtr->getNrRows()];}
-        getScalarMetaV(aRowNr, aValue);
-        *aValue = ((Complex*)scalarCache)[aRowNr];
-    }
-    void AdiosStManColumn::getDComplexV (uInt aRowNr,DComplex* aValue){
-        if(scalarCache == 0) {scalarCache = new DComplex[itsStManPtr->getNrRows()];}
-        getScalarMetaV(aRowNr, aValue);
-        *aValue = ((DComplex*)scalarCache)[aRowNr];
-    }
-    void AdiosStManColumn::getStringV (uInt aRowNr, String* aValue){
-        cout << "AdiosStManColumn Error: Sorry, AdiosStMan does not support string type at this point!" << endl;
+    void AdiosStManColumn::getArrayMetaV (uint64_t rowStart, uint64_t nrRows, const Slicer& ns, void* data){
     }
 
 
