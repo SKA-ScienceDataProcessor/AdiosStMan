@@ -226,7 +226,7 @@ namespace casacore {
     void AdiosStManColumn::getArrayColumnV(void* dataPtr){
         itsStManPtr->logdbg("AdiosStManColumn::getArrayColumnV","");
         Slicer ns(IPosition(itsShape.size(),0,0,0,0,0,0,0,0,0,0), itsShape);
-        getArrayWrapper(0, 0, ns, dataPtr);
+        getArrayWrapper(0, itsStManPtr->getNrRows(), ns, dataPtr);
     }
 
     // *** access a slice of all rows for an array column ***
@@ -234,7 +234,7 @@ namespace casacore {
     // *** only active when canAccessColumnSlice() returns true in child class
     void AdiosStManColumn::getColumnSliceV(const Slicer& ns, void *dataPtr){
         itsStManPtr->logdbg("AdiosStManColumn::getColumnSliceV","");
-        getArrayWrapper(0, 0, ns, dataPtr);
+        getArrayWrapper(0, itsStManPtr->getNrRows(), ns, dataPtr);
     }
 
     void AdiosStManColumn::getArrayWrapper(uint64_t rowStart, uint64_t nrRows, const Slicer& ns, void* dataPtr){

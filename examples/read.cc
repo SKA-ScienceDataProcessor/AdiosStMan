@@ -63,8 +63,8 @@ int main(int argc, char **argv){
     ROArrayColumn<float> data_col(casa_table, "data");
 
 //    Vector<uInt> index_vec = index_col.getColumn();
-//    Array<float> data_arr = data_col.getColumn();
-    Array<float> data_arr = data_col.get(0);
+    Array<float> data_arr = data_col.getColumn();
+//    Array<float> data_arr = data_col.get(0);
 
     Vector<float> data_vec = data_arr.reform(IPosition(1,data_arr.nelements()));
 

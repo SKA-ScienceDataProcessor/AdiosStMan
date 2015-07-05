@@ -47,7 +47,12 @@ namespace casacore {
         private:
             virtual void getArrayMetaV (uint64_t rowStart, uint64_t nrRows, const Slicer& ns, void* data);
             virtual void putArrayMetaV (uint64_t row, const void* data);
-    }; // end of class AdiosStManDirColumn
-} // end of namespace casa
+            bool checkReadCache(uint64_t rowStart, uint64_t nrRows, const Slicer& ns, void* data);
+            void *readCache;
+            uint64_t readCacheNrRows;
+            uint64_t readCacheStartRow;
+            bool readCacheOn;
+    };
+}
 
 #endif

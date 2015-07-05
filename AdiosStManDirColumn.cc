@@ -29,17 +29,20 @@
 namespace casacore {
 
     AdiosStManDirColumn::AdiosStManDirColumn (AdiosStMan* aParent, int aDataType, uInt aColNr)
-        :AdiosStManColumn (aParent, aDataType, aColNr){
-        }
+        :AdiosStManColumn (aParent, aDataType, aColNr),
+        readCache(0),
+        readCacheStartRow(0),
+        readCacheNrRows(0)
+    {
+        readCacheNrRows = aParent->getReadBufsize();
+    }
 
     AdiosStManDirColumn::~AdiosStManDirColumn (){
+        if (readCache){
+            free(readCache);
+        }
         if (itsAdiosWriteIDs){
-            if (itsShape.nelements() == 0){
-                delete itsAdiosWriteIDs;
-            }
-            else{
-                delete [] itsAdiosWriteIDs;
-            }
+            delete [] itsAdiosWriteIDs;
         }
     }
 
@@ -58,6 +61,10 @@ namespace casacore {
             }
         }
 #endif
+        if(itsStManPtr->getNrRows() < readCacheNrRows){
+            readCacheNrRows = itsStManPtr->getNrRows();
+        }
+        readCache = malloc(itsDataTypeSize * itsShape.product() * readCacheNrRows);
     }
 
     void AdiosStManDirColumn::setShapeColumn (const IPosition& shape){
@@ -128,35 +135,57 @@ namespace casacore {
         }
     }
 
-
     void AdiosStManDirColumn::putArrayMetaV (uint64_t row, const void* data){
         itsStManPtr->adiosWriteOpen();
         adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[row] , (void*)data);
     }
 
+    bool AdiosStManDirColumn::checkReadCache (uint64_t rowStart, uint64_t nrRows, const Slicer& ns, void* data){
+        if(readCacheOn && readCacheNrRows >= nrRows){
+            cout << "read cache" << endl;
+            uint64_t rowEnd = rowStart + nrRows - 1;
+            uint64_t readCacheEndRow = readCacheStartRow + readCacheNrRows - 1;
+            cout << "rowStart " << rowStart << "  rowEnd" << rowEnd << "   readCacheStartRow" << readCacheStartRow << "   readCacheEndRow" << readCacheEndRow << endl;
+            if(rowStart >= readCacheStartRow && rowEnd <= readCacheEndRow){
+                uint64_t index = itsDataTypeSize * ns.length().product() * (rowStart - readCacheStartRow);
+                uint64_t length = itsDataTypeSize * ns.length().product() * nrRows;
+                memcpy(data, &((char*)readCache)[index], length);
+                cout << "read cache" << endl;
+            }
+        }
+        return false;
+    }
+
     void AdiosStManDirColumn::getArrayMetaV (uint64_t rowStart, uint64_t nrRows, const Slicer& ns, void* data){
+        if(checkReadCache(rowStart, nrRows, ns, data)){
+            return;
+        }
         if(itsStManPtr->getAdiosReadFile()){
-            if(nrRows == 0){
-                // if getting entire column
-                readStart[0] = 0;
-                readCount[0] = itsStManPtr->getNrRows();
-            }
-            else{
-                // if getting some rows
-                readStart[0] = rowStart;
-                readCount[0] = nrRows;
-            }
+            readStart[0] = rowStart;
+            readCount[0] = nrRows;
             for (int i=1; i<=itsShape.size(); i++){
                 readStart[itsShape.size() - i + 1] = ns.start()(i-1);
                 readCount[itsShape.size() - i + 1] = ns.length()(i-1);
             }
             ADIOS_SELECTION *sel = adios_selection_boundingbox (itsShape.size()+1, readStart, readCount);
-            adios_schedule_read (itsStManPtr->getAdiosReadFile(), sel, itsColumnName.c_str(), 0, 1, data);
+
+            cout << readCacheNrRows << endl;
+            if(readCacheNrRows >= nrRows){
+                readCacheOn = true;
+                readCacheStartRow = rowStart;
+                readCount[0] = readCacheNrRows;
+                adios_schedule_read (itsStManPtr->getAdiosReadFile(), sel, itsColumnName.c_str(), 0, 1, readCache);
+            }
+            else{
+                adios_schedule_read (itsStManPtr->getAdiosReadFile(), sel, itsColumnName.c_str(), 0, 1, data);
+            }
             adios_perform_reads (itsStManPtr->getAdiosReadFile(), 1);
+            checkReadCache(rowStart, nrRows, ns, data);
+
             cout << "nrRows = " << rowStart << ", slice = " << ns << endl;
         }
         else{
-            cout << "AdiosStManColumn Error: AdiosStMan is not working in read mode!" << endl;
+            cout << "AdiosStManDirColumn Error: AdiosStMan is not working in read mode!" << endl;
         }
     }
 
