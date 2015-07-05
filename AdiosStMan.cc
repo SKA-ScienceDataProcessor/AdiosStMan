@@ -96,7 +96,7 @@ namespace casa {
         }
     }
 
-    void AdiosStMan::logdbg(string func, string stat){
+    void AdiosStMan::logdbg(string func, string stat, int para){
 #ifdef ADIOSSTMAN_DEBUG
         if(logdbgLast == func){
             logdbgCount++;
@@ -104,7 +104,8 @@ namespace casa {
         else{
             logdbgCount=0;
         }
-        cout << func << " called,  " << "status:" << stat << ", count=" << logdbgCount << endl;
+        cout << func << " called, count=" << logdbgCount << ".";
+        cout << stat << para << endl;
         logdbgLast=func;
 #endif
     }

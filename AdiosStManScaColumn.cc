@@ -39,6 +39,9 @@ namespace casa{
         }
     }
 
+    void AdiosStManScaColumn::initAdiosRead(){
+    }
+
     void AdiosStManScaColumn::initAdiosWrite(uInt aNrRows){
         itsStManPtr->logdbg("AdiosStManScaColumn::initAdiosWrite","start");
         if(!itsAdiosWriteIDs){

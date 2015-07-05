@@ -161,12 +161,6 @@ namespace casacore {
         return itsCasaDataType;
     }
 
-    void AdiosStManColumn::initAdiosRead(){
-        itsStManPtr->logdbg("AdiosStManColumn::initAdiosRead","");
-        int ndim = itsShape.size();
-        cout << ndim << endl;
-    }
-
     // ------------------------------------------------------------------------------------------------------
     // ------------------------------------------------------------------------------------------------------
     // ------------------------------------------------------------------------------------------------------
@@ -368,7 +362,7 @@ namespace casacore {
     // *** inactive by default
     // *** only active when canAccessSlice() returns true in child class
     void AdiosStManColumn::getSliceV(uInt aRowNr, const Slicer& ns, void* dataPtr){
-        itsStManPtr->logdbg("AdiosStManColumn::getSliceV","");
+        itsStManPtr->logdbg("AdiosStManColumn::getSliceV","row number=", aRowNr);
         getArrayWrapper(aRowNr, 1, ns, dataPtr);
     }
 

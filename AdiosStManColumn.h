@@ -53,7 +53,7 @@ namespace casacore { //# NAMESPACE CASA - BEGIN
             void setColumnName(String aName);
             String getColumnName();
 
-            virtual void initAdiosRead();
+            virtual void initAdiosRead() = 0;
             virtual void initAdiosWrite(uInt aNrRows) = 0;
 
             // *** access a row for a scalar column ***

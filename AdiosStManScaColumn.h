@@ -34,7 +34,8 @@ namespace casa {
         public:
             AdiosStManScaColumn(AdiosStMan *aParent, int aDataType, uInt aColNr);
             ~AdiosStManScaColumn();
-            void initAdiosWrite(uInt aNrRows);
+            virtual void initAdiosWrite(uInt aNrRows);
+            virtual void initAdiosRead();
             virtual void flush();
         private:
             virtual void getScalarMetaV (uint64_t row, void* data);

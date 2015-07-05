@@ -35,7 +35,8 @@ namespace casa {
         public:
             AdiosStManIndColumn(AdiosStMan *aParent, int aDataType, uInt aColNr);
             ~AdiosStManIndColumn();
-            void initAdiosWrite(uInt aNrRows);
+            virtual void initAdiosWrite(uInt aNrRows);
+            virtual void initAdiosRead();
             Bool canAccessSlice(Bool &reask) const;
             virtual void flush();
         protected:

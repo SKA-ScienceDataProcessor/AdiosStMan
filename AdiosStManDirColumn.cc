@@ -43,6 +43,23 @@ namespace casa{
         }
     }
 
+    void AdiosStManDirColumn::initAdiosRead(){
+        itsStManPtr->logdbg("AdiosStManColumn::initAdiosRead","");
+#ifdef ADIOSSTMAN_FORCE_DIRECT_ARRAY
+        if (itsShape == 0){
+            if (itsStManPtr->getMode() == 'r'){
+                ADIOS_VARINFO *adiosinfo = adios_inq_var(itsStManPtr->getAdiosReadFile(), itsColumnName.c_str());
+                int ndim = adiosinfo->ndim;
+                itsShape = IPosition(ndim - 1);
+                for (int i=1; i<ndim; i++){
+                    itsShape[ndim - i - 1] = adiosinfo->dims[i];
+                }
+                adios_free_varinfo(adiosinfo);
+            }
+        }
+#endif
+    }
+
     void AdiosStManDirColumn::setShapeColumn (const IPosition& shape){
         itsStManPtr->logdbg("AdiosStManDirColumn::setShapeColumn","");
         itsShape  = shape;
@@ -55,24 +72,6 @@ namespace casa{
 
     IPosition AdiosStManDirColumn::shape (uInt RowID){
         itsStManPtr->logdbg("AdiosStManDirColumn::shape","");
-#ifdef ADIOSSTMAN_FORCE_DIRECT_ARRAY
-        if (itsShape == 0){
-            if (itsStManPtr->getMode() == 'r'){
-                ADIOS_VARINFO *adiosinfo = adios_inq_var(itsStManPtr->getAdiosReadFile(), itsColumnName.c_str());
-                int ndim = adiosinfo->ndim;
-                itsShape = IPosition(ndim - 1);
-
-                cout << ndim << endl;
-                for (int i=1; i<ndim; i++){
-                    itsShape[ndim - i - 1] = adiosinfo->dims[i];
-                    cout << adiosinfo->dims[i] << endl;
-                }
-
-                adios_free_varinfo(adiosinfo);
-            }
-        }
-#endif
-        cout << itsShape << endl;
         return itsShape;
     }
 
@@ -136,8 +135,6 @@ namespace casa{
     }
 
     void AdiosStManDirColumn::getArrayMetaV (uint64_t rowStart, uint64_t nrRows, const Slicer& ns, void* data){
-        itsStManPtr->logdbg("AdiosStManDirColumn::getArrayMetaV","start");
-        cout << itsShape << endl;
         if(itsStManPtr->getAdiosReadFile()){
             if(nrRows == 0){
                 // if getting entire column
@@ -153,14 +150,10 @@ namespace casa{
                 readStart[itsShape.size() - i + 1] = ns.start()(i-1);
                 readCount[itsShape.size() - i + 1] = ns.length()(i-1);
             }
-            cout << "ns: " <<  ns << endl;
-            for (int i=0; i<itsShape.size(); i++){
-                cout << "read Start" << readStart[i] << endl;
-                cout << "read Count" << readCount[i] << endl;
-            }
             ADIOS_SELECTION *sel = adios_selection_boundingbox (itsShape.size()+1, readStart, readCount);
             adios_schedule_read (itsStManPtr->getAdiosReadFile(), sel, itsColumnName.c_str(), 0, 1, data);
             adios_perform_reads (itsStManPtr->getAdiosReadFile(), 1);
+            cout << "nrRows = " << rowStart << ", slice = " << ns << endl;
         }
         else{
             cout << "AdiosStManColumn Error: AdiosStMan is not working in read mode!" << endl;

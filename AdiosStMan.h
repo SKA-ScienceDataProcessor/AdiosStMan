@@ -79,7 +79,7 @@ namespace casa {
             uInt getNrRows();
             char getMode();
 
-            void logdbg(string func, string stat);
+            void logdbg(string func, string stat, int para=0);
 
         private:
 

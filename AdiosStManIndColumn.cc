@@ -38,6 +38,9 @@ namespace casa{
             delete [] itsAdiosWriteIDs;
     }
 
+    void AdiosStManIndColumn::initAdiosRead(){
+    }
+
     void AdiosStManIndColumn::initAdiosWrite(uInt aNrRows){
         int mpiRank;
         MPI_Comm_rank(MPI_COMM_WORLD, &mpiRank);
