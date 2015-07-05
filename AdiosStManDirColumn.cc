@@ -142,15 +142,13 @@ namespace casacore {
 
     bool AdiosStManDirColumn::checkReadCache (uint64_t rowStart, uint64_t nrRows, const Slicer& ns, void* data){
         if(readCacheOn && readCacheNrRows >= nrRows){
-            cout << "read cache" << endl;
             uint64_t rowEnd = rowStart + nrRows - 1;
             uint64_t readCacheEndRow = readCacheStartRow + readCacheNrRows - 1;
-            cout << "rowStart " << rowStart << "  rowEnd" << rowEnd << "   readCacheStartRow" << readCacheStartRow << "   readCacheEndRow" << readCacheEndRow << endl;
             if(rowStart >= readCacheStartRow && rowEnd <= readCacheEndRow){
                 uint64_t index = itsDataTypeSize * ns.length().product() * (rowStart - readCacheStartRow);
                 uint64_t length = itsDataTypeSize * ns.length().product() * nrRows;
                 memcpy(data, &((char*)readCache)[index], length);
-                cout << "read cache" << endl;
+                return true;
             }
         }
         return false;
@@ -168,8 +166,6 @@ namespace casacore {
                 readCount[itsShape.size() - i + 1] = ns.length()(i-1);
             }
             ADIOS_SELECTION *sel = adios_selection_boundingbox (itsShape.size()+1, readStart, readCount);
-
-            cout << readCacheNrRows << endl;
             if(readCacheNrRows >= nrRows){
                 readCacheOn = true;
                 readCacheStartRow = rowStart;
@@ -181,8 +177,6 @@ namespace casacore {
             }
             adios_perform_reads (itsStManPtr->getAdiosReadFile(), 1);
             checkReadCache(rowStart, nrRows, ns, data);
-
-            cout << "nrRows = " << rowStart << ", slice = " << ns << endl;
         }
         else{
             cout << "AdiosStManDirColumn Error: AdiosStMan is not working in read mode!" << endl;
