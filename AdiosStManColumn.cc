@@ -244,43 +244,43 @@ namespace casacore {
             case TpArrayBool:
             case TpBool:
                 data = ((Array<Bool>*)dataPtr)->getStorage (deleteIt);
-                getArrayMetaV(0, 0, ns, data);
+                getArrayMetaV(rowStart, nrRows, ns, data);
                 ((Array<Bool>*)dataPtr)->putStorage ((Bool *&)data, deleteIt);
                 break;
             case TpArrayChar:
             case TpChar:
                 data = ((Array<Char>*)dataPtr)->getStorage (deleteIt);
-                getArrayMetaV(0, 0, ns, data);
+                getArrayMetaV(rowStart, nrRows, ns, data);
                 ((Array<Char>*)dataPtr)->putStorage ((Char *&)data, deleteIt);
                 break;
             case TpArrayUChar:
             case TpUChar:
                 data = ((Array<uChar>*)dataPtr)->getStorage (deleteIt);
-                getArrayMetaV(0, 0, ns, data);
+                getArrayMetaV(rowStart, nrRows, ns, data);
                 ((Array<uChar>*)dataPtr)->putStorage ((uChar *&)data, deleteIt);
                 break;
             case TpArrayShort:
             case TpShort:
                 data = ((Array<Short>*)dataPtr)->getStorage (deleteIt);
-                getArrayMetaV(0, 0, ns, data);
+                getArrayMetaV(rowStart, nrRows, ns, data);
                 ((Array<Short>*)dataPtr)->putStorage ((Short *&)data, deleteIt);
                 break;
             case TpArrayUShort:
             case TpUShort:
                 data = ((Array<uShort>*)dataPtr)->getStorage (deleteIt);
-                getArrayMetaV(0, 0, ns, data);
+                getArrayMetaV(rowStart, nrRows, ns, data);
                 ((Array<uShort>*)dataPtr)->putStorage ((uShort *&)data, deleteIt);
                 break;
             case TpArrayInt:
             case TpInt:
                 data = ((Array<Int>*)dataPtr)->getStorage (deleteIt);
-                getArrayMetaV(0, 0, ns, data);
+                getArrayMetaV(rowStart, nrRows, ns, data);
                 ((Array<Int>*)dataPtr)->putStorage ((Int *&)data, deleteIt);
                 break;
             case TpArrayUInt:
             case TpUInt:
                 data = ((Array<uInt>*)dataPtr)->getStorage (deleteIt);
-                getArrayMetaV(0, 0, ns, data);
+                getArrayMetaV(rowStart, nrRows, ns, data);
                 ((Array<uInt>*)dataPtr)->putStorage ((uInt *&)data, deleteIt);
                 break;
             case TpArrayFloat:

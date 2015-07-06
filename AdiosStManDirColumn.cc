@@ -171,9 +171,11 @@ namespace casacore {
                 readCacheStartRow = rowStart;
                 readCount[0] = readCacheNrRows;
                 adios_schedule_read (itsStManPtr->getAdiosReadFile(), sel, itsColumnName.c_str(), 0, 1, readCache);
+                cout << "read in cache" << endl;
             }
             else{
                 adios_schedule_read (itsStManPtr->getAdiosReadFile(), sel, itsColumnName.c_str(), 0, 1, data);
+                cout << "read in data" << endl;
             }
             adios_perform_reads (itsStManPtr->getAdiosReadFile(), 1);
             checkReadCache(rowStart, nrRows, ns, data);

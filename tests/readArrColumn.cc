@@ -46,7 +46,7 @@ int main(int argc, char **argv){
     Vector<uChar> vec_uChar = arr_uChar.reform(IPosition(1,arr_uChar.nelements()));
     cout << endl << "Column: data_uChar, Shape: " << arr_uChar.shape() << endl;
     for (int i=0; i<arr_uChar.nelements(); i++){
-        cout << vec_uChar[i] << "  ";
+        cout << (uInt)vec_uChar[i] << "  ";
         if ((i+1) % (arr_uChar.shape())(0) == 0)
             cout << endl;
     }
