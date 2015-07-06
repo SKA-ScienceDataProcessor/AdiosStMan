@@ -7,7 +7,10 @@ endif
 CCFLAGS= 
 LDFLAGS=-ladios -lcasa_tables -lcasa_casa
 STMANFILES=libadiosstman.so
-TARGET=serial_array_write serial_array_read_slice serial_array_read_random parallel_array_write
+TARGET=serial_array_write \
+	   parallel_array_write \
+	   ms_read_slice \
+	   ms_read_column_slice 
 
 all: $(TARGET) cl
 
