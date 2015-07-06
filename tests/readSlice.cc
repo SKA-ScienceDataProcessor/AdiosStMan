@@ -1,5 +1,3 @@
-//    rAdiosStMan.cc: example code for reading a casa table using AdiosStMan
-//
 //    (c) University of Western Australia
 //    International Centre of Radio Astronomy Research
 //    M468, 35 Stirling Hwy
@@ -22,52 +20,25 @@
 //    Any bugs, questions, concerns and/or suggestions please email to
 //    jason.wang@icrar.org
 
-
-
-#include "../AdiosStManGlobal.h"
-
-#ifdef CASACORE_VERSION_1
-#include <tables/Tables/TableDesc.h>
-#include <tables/Tables/SetupNewTab.h>
-#include <tables/Tables/ScaColDesc.h>
-#include <tables/Tables/ScalarColumn.h>
-#include <tables/Tables/ArrColDesc.h>
-#include <tables/Tables/ArrayColumn.h>
-#include <casa/namespace.h>
-#endif
-
-#ifdef CASACORE_VERSION_2
-#include <casacore/tables/Tables/TableDesc.h>
-#include <casacore/tables/Tables/SetupNewTab.h>
-#include <casacore/tables/Tables/ScaColDesc.h>
-#include <casacore/tables/Tables/ScalarColumn.h>
-#include <casacore/tables/Tables/ArrColDesc.h>
 #include <casacore/tables/Tables/ArrayColumn.h>
 #include <casacore/casa/namespace.h>
-#endif
-
-
-
 
 int main(int argc, char **argv){
-
     if (argc < 2){
         cout << "./rAdiosStMan /path/to/file" << endl;
         return -1;
     }
     string filename = argv[1];
-
+    Slicer sli(IPosition(2,1,2), IPosition(2,2,3));
     Table casa_table(filename);
-
-    ROScalarColumn<uInt> index_col(casa_table, "index");
-
-    Vector<uInt> index_vec = index_col.getColumn();
-
-    cout << "index column: " << endl;
-    for (int i=0; i<index_vec.nelements(); i++){
-        cout << index_vec[i] << "  ";
+    ROArrayColumn<float> data_col(casa_table, "data");
+    Array<float> data_arr = data_col.getColumn(sli);
+    Vector<float> data_vec = data_arr.reform(IPosition(1,data_arr.nelements()));
+    for (int i=0; i<data_arr.nelements(); i++){
+        cout << data_vec[i] << "  ";
+        if ((i+1) % (data_arr.shape())(0) == 0)
+            cout << endl;
     }
-
     return 0;
 }
 

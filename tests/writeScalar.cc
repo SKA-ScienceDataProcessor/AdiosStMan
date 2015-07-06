@@ -24,30 +24,9 @@
 
 
 #include "../AdiosStMan.h"
-
-#ifdef CASACORE_VERSION_1
-#include <tables/Tables/TableDesc.h>
-#include <tables/Tables/SetupNewTab.h>
-#include <tables/Tables/ScaColDesc.h>
-#include <tables/Tables/ScalarColumn.h>
-#include <tables/Tables/ArrColDesc.h>
-#include <tables/Tables/ArrayColumn.h>
-#include <tables/Tables/TiledShapeStMan.h>
-#include <casa/namespace.h>
-#endif
-
-#ifdef CASACORE_VERSION_2
-#include <casacore/tables/Tables/TableDesc.h>
 #include <casacore/tables/Tables/SetupNewTab.h>
 #include <casacore/tables/Tables/ScaColDesc.h>
-#include <casacore/tables/Tables/ScalarColumn.h>
-#include <casacore/tables/Tables/ArrColDesc.h>
-#include <casacore/tables/Tables/ArrayColumn.h>
-#include <casacore/tables/DataMan/TiledShapeStMan.h>
 #include <casacore/casa/namespace.h>
-#endif
-
-
 
 int main(int argc, char **argv){
 
@@ -57,36 +36,55 @@ int main(int argc, char **argv){
     }
     string filename = argv[1];
 
-    // define a dimension object for the array column
-    IPosition data_pos = IPosition(2,6,5);
     int NrRows = 4;
-    // define data arrays that actually hold the data
-    Array<float> data_arr(data_pos);
-    // put some data in
-    indgen (data_arr);
 
     // define a storage manager
-//    AdiosStMan stman(AdiosStMan::VAR);
-//    AdiosStMan stman(AdiosStMan::ARRAY, "MPI", "", 100);
-//    AdiosStMan stman(AdiosStMan::ARRAY, "MPI_AGGREGATE", "num_aggregators=32", 100);
+//    AdiosStMan stman("MPI", "", 100);
+//    AdiosStMan stman("MPI_AGGREGATE", "num_aggregators=32", 100);
     AdiosStMan stman;
-//    TiledShapeStMan stman("Ti", data_pos);
 
-    // define a table description & add a scalar column and an array column
+    // define a table description and add a scalar column
     TableDesc td("", "1", TableDesc::Scratch);
-    td.addColumn (ArrayColumnDesc<float>("data", data_pos, ColumnDesc::Direct));
+    td.addColumn (ScalarColumnDesc<Bool>("index_Bool"));
+    td.addColumn (ScalarColumnDesc<uChar>("index_uChar"));
+    td.addColumn (ScalarColumnDesc<Short>("index_Short"));
+    td.addColumn (ScalarColumnDesc<uShort>("index_uShort"));
+    td.addColumn (ScalarColumnDesc<Int>("index_Int"));
+    td.addColumn (ScalarColumnDesc<uInt>("index_uInt"));
+    td.addColumn (ScalarColumnDesc<Float>("index_Float"));
+    td.addColumn (ScalarColumnDesc<Double>("index_Double"));
+    td.addColumn (ScalarColumnDesc<Complex>("index_Complex"));
+    td.addColumn (ScalarColumnDesc<DComplex>("index_DComplex"));
 
-    // create a table instance, bind it to the storage manager & allocate rows
+    // create a table instance, bind it to the storage manager
     SetupNewTable newtab(filename, td, Table::New);
     newtab.bindAll(stman);
     Table tab(newtab, NrRows);
 
     // define column objects and link them to the table
-    ArrayColumn<float> data_col (tab, "data");
+    ScalarColumn<Bool> col_Bool (tab, "index_Bool");
+    ScalarColumn<uChar> col_uChar (tab, "index_uChar");
+    ScalarColumn<Short> col_Short (tab, "index_Short");
+    ScalarColumn<uShort> col_uShort (tab, "index_uShort");
+    ScalarColumn<Int> col_Int (tab, "index_Int");
+    ScalarColumn<uInt> col_uInt (tab, "index_uInt");
+    ScalarColumn<Float> col_Float (tab, "index_Float");
+    ScalarColumn<Double> col_Double (tab, "index_Double");
+    ScalarColumn<Complex> col_Complex (tab, "index_Complex");
+    ScalarColumn<DComplex> col_DComplex (tab, "index_DComplex");
 
     // write data into the column objects
     for (uInt i=0; i<NrRows; i++) {
-        data_col.put(i, data_arr);
+        col_Bool.put (i, i);
+        col_uChar.put (i, i);
+        col_Short.put (i, i);
+        col_uShort.put (i, i);
+        col_Int.put (i, i);
+        col_uInt.put (i, i);
+        col_Float.put (i, i);
+        col_Double.put (i, i);
+        col_Complex.put (i, i);
+        col_DComplex.put (i, i);
     }
 
     return 0;

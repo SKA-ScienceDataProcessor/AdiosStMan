@@ -7,7 +7,15 @@ endif
 CCFLAGS=
 LDFLAGS=-lcasa_tables -lcasa_casa 
 STMANFILES=libadiosstman.so
-TARGET=writeScalar writeDirArr writeFixArr writeArbArr writeMPI read readScalar readSlice
+TARGET=writeScalar \
+	   writeDirArr \
+	   writeFixArr \
+	   writeArbArr \
+	   writeMPI \
+	   readSlice \
+	   readArrColumn \
+	   readArr \
+	   readScalar
 
 all: $(TARGET) cl
 

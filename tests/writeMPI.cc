@@ -1,6 +1,3 @@
-//    wAdiosStManMPI.cc: example code for writing a casa table with AdiosStMan
-//    columns from multiple MPI processes in parallel
-//
 //    (c) University of Western Australia
 //    International Centre of Radio Astronomy Research
 //    M468, 35 Stirling Hwy
@@ -40,20 +37,7 @@
 // these table files together with ADIOS files will contain all information that is
 // necessary to reproduce the casa table.
 
-
 #include "../AdiosStMan.h"
-
-#ifdef CASACORE_VERSION_1
-#include <tables/Tables/TableDesc.h>
-#include <tables/Tables/SetupNewTab.h>
-#include <tables/Tables/ScaColDesc.h>
-#include <tables/Tables/ScalarColumn.h>
-#include <tables/Tables/ArrColDesc.h>
-#include <tables/Tables/ArrayColumn.h>
-#include <casa/namespace.h>
-#endif
-
-#ifdef CASACORE_VERSION_2
 #include <casacore/tables/Tables/TableDesc.h>
 #include <casacore/tables/Tables/SetupNewTab.h>
 #include <casacore/tables/Tables/ScaColDesc.h>
@@ -61,14 +45,8 @@
 #include <casacore/tables/Tables/ArrColDesc.h>
 #include <casacore/tables/Tables/ArrayColumn.h>
 #include <casacore/casa/namespace.h>
-#endif
-
-
-
-
 
 int main(int argc, char **argv){
-
 
     if (argc < 2){
         cout << "./wAdiosStMan /path/to/file" << endl;
@@ -99,7 +77,6 @@ int main(int argc, char **argv){
     Array<Float> data_arr(data_pos);
     // put some data into the data array
     indgen (data_arr);
-
 
     // define a table description & add a scalar column and an array column
     TableDesc td("", "1", TableDesc::Scratch);
