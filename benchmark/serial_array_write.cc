@@ -25,21 +25,6 @@
 //    jason.wang@icrar.org
 
 
-#include "../casacore_version.h"
-
-#ifdef CASACORE_VERSION_1
-#include <tables/Tables/TableDesc.h>
-#include <tables/Tables/SetupNewTab.h>
-#include <tables/Tables/TiledShapeStMan.h>
-#include <tables/Tables/StandardStMan.h>
-#include <tables/Tables/ScaColDesc.h>
-#include <tables/Tables/ScalarColumn.h>
-#include <tables/Tables/ArrColDesc.h>
-#include <tables/Tables/ArrayColumn.h>
-#include <casa/namespace.h>
-#endif
-
-#ifdef CASACORE_VERSION_2
 #include <casacore/tables/Tables/TableDesc.h>
 #include <casacore/tables/Tables/SetupNewTab.h>
 #include <casacore/tables/Tables/ScaColDesc.h>
@@ -49,10 +34,9 @@
 #include <casacore/tables/DataMan/TiledShapeStMan.h>
 #include <casacore/tables/DataMan/StandardStMan.h>
 #include <casacore/casa/namespace.h>
-#endif
 
 #include "../AdiosStMan.h"
-#include "../tools/tictak.h"
+#include "tictak.h"
 
 // shape of the array column
 IPosition *data_pos;

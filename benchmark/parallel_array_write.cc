@@ -42,30 +42,13 @@
 
 
 
-#include "../casacore_version.h"
-
-#ifdef CASACORE_VERSION_1
-#include <tables/Tables/TableDesc.h>
-#include <tables/Tables/SetupNewTab.h>
-#include <tables/Tables/ScaColDesc.h>
-#include <tables/Tables/ScalarColumn.h>
-#include <tables/Tables/ArrColDesc.h>
-#include <tables/Tables/ArrayColumn.h>
-#include <casa/namespace.h>
-#endif
-
-#ifdef CASACORE_VERSION_2
-#include <casacore/tables/Tables/TableDesc.h>
 #include <casacore/tables/Tables/SetupNewTab.h>
 #include <casacore/tables/Tables/ScaColDesc.h>
-#include <casacore/tables/Tables/ScalarColumn.h>
 #include <casacore/tables/Tables/ArrColDesc.h>
 #include <casacore/tables/Tables/ArrayColumn.h>
 #include <casacore/casa/namespace.h>
-#endif
-
 #include "../AdiosStMan.h"
-#include "../tools/tictak.h"
+#include "tictak.h"
 
 
 int NrRows = 10;
@@ -78,11 +61,11 @@ Array<Float> data_arr;
 
 void write_table(){
 
-	AdiosStMan stman(AdiosStMan::ARRAY);
+	AdiosStMan stman;
 
 	// define a table description & add a scalar column and an array column
 	TableDesc td("", "1", TableDesc::Scratch);
-//	td.addColumn (ScalarColumnDesc<uInt>("index"));
+	td.addColumn (ScalarColumnDesc<uInt>("index"));
 	td.addColumn (ArrayColumnDesc<Float>("data", data_pos, ColumnDesc::Direct));
 
 	// create a table instance, bind it to the storage manager & allocate rows
@@ -91,80 +74,80 @@ void write_table(){
 	Table casa_table(newtab, NrRows);
 
 	// define column objects and link them to the table
-//	ScalarColumn<uInt> index_col(casa_table, "index");
+	ScalarColumn<uInt> index_col(casa_table, "index");
 	ArrayColumn<Float> data_col(casa_table, "data");
 
-	// each mpi rank writes a subset of the data
-	for (uInt i=mpiRank; i<NrRows; i+=mpiSize) {
-//		if (i < NrRows/mpiSize*mpiSize )
-//			MPI_Barrier(MPI_COMM_WORLD);
-//		index_col.put (i, i);
-		data_col.put (i, data_arr);
-//		cout << i << " rows finished from Rank " << mpiRank << endl;
-	}
+    // each mpi rank writes a subset of the data
+    for (uInt i=mpiRank; i<NrRows; i+=mpiSize) {
+        //		if (i < NrRows/mpiSize*mpiSize )
+        //			MPI_Barrier(MPI_COMM_WORLD);
+        index_col.put (i, i);
+        data_col.put (i, data_arr);
+        //		cout << i << " rows finished from Rank " << mpiRank << endl;
+    }
 
 }
 
 
 int main (int argc, char **argv){
 
-	MPI_Init(0,0);
-	MPI_Comm_rank(MPI_COMM_WORLD, &mpiRank);
-	MPI_Comm_size(MPI_COMM_WORLD, &mpiSize);
+    MPI_Init(0,0);
+    MPI_Comm_rank(MPI_COMM_WORLD, &mpiRank);
+    MPI_Comm_size(MPI_COMM_WORLD, &mpiSize);
 
-	if(argc < 5){
-		cout << "./parallel_array_write (int)nrRows (int)arrayX (int)arrayY (string)filename" << endl;
-		exit(1);
-	}
+    if(argc < 5){
+        cout << "./parallel_array_write (int)nrRows (int)arrayX (int)arrayY (string)filename" << endl;
+        exit(1);
+    }
 
-	NrRows = atoi(argv[1]);
-	filename = argv[4];
+    NrRows = atoi(argv[1]);
+    filename = argv[4];
 
-	data_pos = IPosition(2, atoi(argv[2]), atoi(argv[3]));
-	data_arr = Array<Float>(data_pos);
+    data_pos = IPosition(2, atoi(argv[2]), atoi(argv[3]));
+    data_arr = Array<Float>(data_pos);
 
-	if(NrRows<mpiSize){
-		exit(-1);
-	}
-	// generate filenames for slave processes
-	// these files are not used later on, so just put them
-	// into /tmp and clean them up when job is finished
-	if(mpiRank>0){
-		stringstream filename_s;
-		filename_s << "/tmp/v" << mpiRank << ".casa";
-		filename = filename_s.str();
-	}
+    if(NrRows<mpiSize){
+        exit(-1);
+    }
+    // generate filenames for slave processes
+    // these files are not used later on, so just put them
+    // into /tmp and clean them up when job is finished
+    if(mpiRank>0){
+        stringstream filename_s;
+        filename_s << "/tmp/v" << mpiRank << ".casa";
+        filename = filename_s.str();
+    }
 
-	// put some data into the data array
-	indgen (data_arr);
+    // put some data into the data array
+    indgen (data_arr);
 
-	MPI_Barrier(MPI_COMM_WORLD);
-	tictak_add((char*)filename.c_str(),0);
-	write_table();
-	MPI_Barrier(MPI_COMM_WORLD);
-	tictak_add((char*)"end",0);
+    MPI_Barrier(MPI_COMM_WORLD);
+    tictak_add((char*)filename.c_str(),0);
+    write_table();
+    MPI_Barrier(MPI_COMM_WORLD);
+    tictak_add((char*)"end",0);
 
-	if(mpiRank == 0){
+    if(mpiRank == 0){
 
-		float Seconds = tictak_total(0);
-		uint64_t CellSize = atoi(argv[2])*atoi(argv[3])*sizeof(float);
-		uint64_t TableSize = CellSize * NrRows;
-		int Mps = TableSize / Seconds / 1000000;
+        float Seconds = tictak_total(0);
+        uint64_t CellSize = atoi(argv[2])*atoi(argv[3])*sizeof(float);
+        uint64_t TableSize = CellSize * NrRows;
+        int Mps = TableSize / Seconds / 1000000;
 
-		cout << "MB/s," << Mps;
-		cout << ",Seconds," << Seconds;
-		cout << ",TableSize(Byte)," << TableSize;
-		cout << ",NrRows," << NrRows;
-		cout << ",CellSize(Byte)," << CellSize;
-		cout << ",MpiSize," << mpiSize;
-		cout << ",Xlength," << atoi(argv[2]);
-		cout << ",Ylength," << atoi(argv[3]);
-		cout << endl;
-	}
+        cout << "MB/s," << Mps;
+        cout << ",Seconds," << Seconds;
+        cout << ",TableSize(Byte)," << TableSize;
+        cout << ",NrRows," << NrRows;
+        cout << ",CellSize(Byte)," << CellSize;
+        cout << ",MpiSize," << mpiSize;
+        cout << ",Xlength," << atoi(argv[2]);
+        cout << ",Ylength," << atoi(argv[3]);
+        cout << endl;
+    }
 
-	MPI_Finalize();
+    MPI_Finalize();
 
-	return 0;
+    return 0;
 }
 
 
