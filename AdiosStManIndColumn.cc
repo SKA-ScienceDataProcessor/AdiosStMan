@@ -68,6 +68,20 @@ namespace casacore {
         }
     }
 
+    void AdiosStManIndColumn::setShapeColumn (const IPosition& shape){
+        itsStManPtr->logdbg("AdiosStManIndColumn::setShapeColumn","");
+        itsShape  = shape;
+    }
+
+    void AdiosStManIndColumn::setShape (uInt row, const IPosition& shape){
+        itsStManPtr->logdbg("AdiosStManIndColumn::setShape","");
+        itsShape  = shape;
+    }
+
+    IPosition AdiosStManIndColumn::shape (uInt RowID){
+        itsStManPtr->logdbg("AdiosStManIndColumn::shape","");
+        return itsShape;
+    }
     Bool AdiosStManIndColumn::canAccessSlice(Bool &reask) const{
         reask = false;
         if(itsStManPtr->getMode() == 'r')

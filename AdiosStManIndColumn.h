@@ -39,6 +39,9 @@ namespace casacore {
             virtual void initAdiosRead();
             Bool canAccessSlice(Bool &reask) const;
             virtual void flush();
+            virtual void setShapeColumn (const IPosition& shape);
+            virtual void setShape (uInt row, const IPosition& shape);
+            virtual IPosition shape(uInt RowID);
         private:
             virtual void getArrayMetaV (uint64_t rowStart, uint64_t nrRows, const Slicer& ns, void* dataPtr);
             virtual void putArrayMetaV (uint64_t row, const void* data);
