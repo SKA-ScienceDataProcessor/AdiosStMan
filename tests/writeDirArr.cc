@@ -95,9 +95,9 @@ int main(int argc, char **argv){
         arr_uShort = 4; col_uShort.put(i, arr_uShort);
         indgen(arr_Int, (Int)i*100); col_Int.put(i, arr_Int);
         indgen(arr_uInt, (uInt)i*100); col_uInt.put(i, arr_uInt);
-        indgen(arr_Float, (Float)i*100); col_Float.put(i, arr_Float);
-        indgen(arr_Double, (Double)i*100); col_Double.put(i, arr_Double);
-        indgen(arr_Complex, (Complex)i*100); col_Complex.put(i, arr_Complex);
+        indgen(arr_Float, (Float)i*100, (Float)0.1); col_Float.put(i, arr_Float);
+        indgen(arr_Double, (Double)i*100, (Double)0.01); col_Double.put(i, arr_Double);
+        indgen(arr_Complex, (Complex)i*100, (Complex)0.001); col_Complex.put(i, arr_Complex);
         arr_DComplex = 5; col_DComplex.put(i, arr_DComplex);
     }
 

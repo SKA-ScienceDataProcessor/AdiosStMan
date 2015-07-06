@@ -29,14 +29,11 @@ int main(int argc, char **argv){
         return -1;
     }
     string filename = argv[1];
+    Slicer sli(IPosition(2,1,2), IPosition(2,2,3));
     Table casa_table(filename);
-    uInt gettingRow = 1;
-    if (argc == 3){
-        gettingRow = atoi(argv[2]);
-    }
 
     ROArrayColumn<Bool> col_Bool(casa_table, "data_Bool");
-    Array<Bool> arr_Bool = col_Bool.get(gettingRow);
+    Array<Bool> arr_Bool = col_Bool.getColumn(sli);
     Vector<Bool> vec_Bool = arr_Bool.reform(IPosition(1,arr_Bool.nelements()));
     cout << endl << "Column: data_Bool, Shape: " << arr_Bool.shape() << endl;
     for (int i=0; i<arr_Bool.nelements(); i++){
@@ -46,7 +43,7 @@ int main(int argc, char **argv){
     }
 
     ROArrayColumn<uChar> col_uChar(casa_table, "data_uChar");
-    Array<uChar> arr_uChar = col_uChar.get(gettingRow);
+    Array<uChar> arr_uChar = col_uChar.getColumn(sli);
     Vector<uChar> vec_uChar = arr_uChar.reform(IPosition(1,arr_uChar.nelements()));
     cout << endl << "Column: data_uChar, Shape: " << arr_uChar.shape() << endl;
     for (int i=0; i<arr_uChar.nelements(); i++){
@@ -56,7 +53,7 @@ int main(int argc, char **argv){
     }
 
     ROArrayColumn<Short> col_Short(casa_table, "data_Short");
-    Array<Short> arr_Short = col_Short.get(gettingRow);
+    Array<Short> arr_Short = col_Short.getColumn(sli);
     Vector<Short> vec_Short = arr_Short.reform(IPosition(1,arr_Short.nelements()));
     cout << endl << "Column: data_Short, Shape: " << arr_Short.shape() << endl;
     for (int i=0; i<arr_Short.nelements(); i++){
@@ -66,7 +63,7 @@ int main(int argc, char **argv){
     }
 
     ROArrayColumn<uShort> col_uShort(casa_table, "data_uShort");
-    Array<uShort> arr_uShort = col_uShort.get(gettingRow);
+    Array<uShort> arr_uShort = col_uShort.getColumn(sli);
     Vector<uShort> vec_uShort = arr_uShort.reform(IPosition(1,arr_uShort.nelements()));
     cout << endl << "Column: data_uShort, Shape: " << arr_uShort.shape() << endl;
     for (int i=0; i<arr_uShort.nelements(); i++){
@@ -76,7 +73,7 @@ int main(int argc, char **argv){
     }
 
     ROArrayColumn<Int> col_Int(casa_table, "data_Int");
-    Array<Int> arr_Int = col_Int.get(gettingRow);
+    Array<Int> arr_Int = col_Int.getColumn(sli);
     Vector<Int> vec_Int = arr_Int.reform(IPosition(1,arr_Int.nelements()));
     cout << endl << "Column: data_Int, Shape: " << arr_Int.shape() << endl;
     for (int i=0; i<arr_Int.nelements(); i++){
@@ -86,7 +83,7 @@ int main(int argc, char **argv){
     }
 
     ROArrayColumn<uInt> col_uInt(casa_table, "data_uInt");
-    Array<uInt> arr_uInt = col_uInt.get(gettingRow);
+    Array<uInt> arr_uInt = col_uInt.getColumn(sli);
     Vector<uInt> vec_uInt = arr_uInt.reform(IPosition(1,arr_uInt.nelements()));
     cout << endl << "Column: data_uInt, Shape: " << arr_uInt.shape() << endl;
     for (int i=0; i<arr_uInt.nelements(); i++){
@@ -96,7 +93,7 @@ int main(int argc, char **argv){
     }
 
     ROArrayColumn<Float> col_Float(casa_table, "data_Float");
-    Array<Float> arr_Float = col_Float.get(gettingRow);
+    Array<Float> arr_Float = col_Float.getColumn(sli);
     Vector<Float> vec_Float = arr_Float.reform(IPosition(1,arr_Float.nelements()));
     cout << endl << "Column: data_Float, Shape: " << arr_Float.shape() << endl;
     for (int i=0; i<arr_Float.nelements(); i++){
@@ -106,7 +103,7 @@ int main(int argc, char **argv){
     }
 
     ROArrayColumn<Double> col_Double(casa_table, "data_Double");
-    Array<Double> arr_Double = col_Double.get(gettingRow);
+    Array<Double> arr_Double = col_Double.getColumn(sli);
     Vector<Double> vec_Double = arr_Double.reform(IPosition(1,arr_Double.nelements()));
     cout << endl << "Column: data_Double, Shape: " << arr_Double.shape() << endl;
     for (int i=0; i<arr_Double.nelements(); i++){
@@ -116,7 +113,7 @@ int main(int argc, char **argv){
     }
 
     ROArrayColumn<Complex> col_Complex(casa_table, "data_Complex");
-    Array<Complex> arr_Complex = col_Complex.get(gettingRow);
+    Array<Complex> arr_Complex = col_Complex.getColumn(sli);
     Vector<Complex> vec_Complex = arr_Complex.reform(IPosition(1,arr_Complex.nelements()));
     cout << endl << "Column: data_Complex, Shape: " << arr_Complex.shape() << endl;
     for (int i=0; i<arr_Complex.nelements(); i++){
@@ -126,7 +123,7 @@ int main(int argc, char **argv){
     }
 
     ROArrayColumn<DComplex> col_DComplex(casa_table, "data_DComplex");
-    Array<DComplex> arr_DComplex = col_DComplex.get(gettingRow);
+    Array<DComplex> arr_DComplex = col_DComplex.getColumn(sli);
     Vector<DComplex> vec_DComplex = arr_DComplex.reform(IPosition(1,arr_DComplex.nelements()));
     cout << endl << "Column: data_DComplex, Shape: " << arr_DComplex.shape() << endl;
     for (int i=0; i<arr_DComplex.nelements(); i++){
@@ -135,9 +132,5 @@ int main(int argc, char **argv){
             cout << endl;
     }
 
-
-
     return 0;
 }
-
-

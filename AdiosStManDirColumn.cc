@@ -155,6 +155,11 @@ namespace casacore {
     }
 
     void AdiosStManDirColumn::getArrayMetaV (uint64_t rowStart, uint64_t nrRows, const Slicer& ns, void* data){
+        uint64_t rowEnd = rowStart + nrRows - 1;
+        if(rowEnd >= itsStManPtr->getNrRows()){
+            cout << "AdiosStManDirColumn Error: Trying to read more rows than existing" << endl;
+            return;
+        }
         if(checkReadCache(rowStart, nrRows, ns, data)){
             return;
         }
@@ -169,9 +174,14 @@ namespace casacore {
             if(readCacheNrRows >= nrRows){
                 readCacheOn = true;
                 readCacheStartRow = rowStart;
+                uint64_t readCacheEndRow = readCacheStartRow + readCacheNrRows - 1;
+                if (readCacheEndRow >= itsStManPtr->getNrRows()){
+                    readCacheStartRow = readCacheStartRow - (readCacheEndRow - itsStManPtr->getNrRows()) - 1;
+                    readStart[0] = readCacheStartRow;
+                }
                 readCount[0] = readCacheNrRows;
                 adios_schedule_read (itsStManPtr->getAdiosReadFile(), sel, itsColumnName.c_str(), 0, 1, readCache);
-                cout << "read in cache" << endl;
+                cout << "read in cache" << ns << "readCacheStartRow=" << readCacheStartRow << endl;
             }
             else{
                 adios_schedule_read (itsStManPtr->getAdiosReadFile(), sel, itsColumnName.c_str(), 0, 1, data);

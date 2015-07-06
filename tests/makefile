@@ -12,9 +12,9 @@ TARGET=writeScalar \
 	   writeFixArr \
 	   writeArbArr \
 	   writeMPI \
-	   readSlice \
-	   readArrColumn \
 	   readArr \
+	   readArrColumn \
+	   readArrColumnSlice \
 	   readScalar
 
 all: $(TARGET) cl
