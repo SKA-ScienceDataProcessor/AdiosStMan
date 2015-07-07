@@ -12,12 +12,12 @@
 #    modify it under the terms of the GNU General Public License as published
 #    by the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
-#   
+#
 #    This library is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU General Public License for more details.
-#   
+#
 #    You should have received a copy of the GNU General Public License along
 #    with this library. If not, see <http://www.gnu.org/licenses/>.
 #
@@ -40,10 +40,10 @@ array_size = 16
 node_max = 0
 node_min = 100
 
-row_max = 1 
+row_max = 1
 row_min = 10000
 
-mbps_max = 1 
+mbps_max = 1
 mbps_min = 10000
 
 def check_boundaries(linedic):
@@ -76,14 +76,14 @@ def add_point(linedic):
 	#######
 	plt.figure(1)
 	color = (linedic['NrRows']-row_min)/(row_max-row_min)
-	plt.scatter(linedic['MpiSize']/ppn, linedic['Mps'], c=(color, 1 - color , 0), s=5, edgecolors='none') 
+	plt.scatter(linedic['MpiSize']/ppn, linedic['Mps'], c=(color, 1 - color , 0), s=5, edgecolors='none')
 
 	#######
 	plt.figure(2)
 	color = (linedic['MpiSize']/ppn - node_min) / (node_max - node_min)
 	if color > 1:
 		color = 1
-	plt.scatter(linedic['NrRows'], linedic['Mps'], c=(color, 1 - color , 0), s=5, edgecolors='none') 
+	plt.scatter(linedic['NrRows'], linedic['Mps'], c=(color, 1 - color , 0), s=5, edgecolors='none')
 
 
 def save_fig():
@@ -102,7 +102,7 @@ def save_fig():
 	plt.xlabel('Number of Nodes ({0} processes per node)'.format(ppn))
 	plt.ylabel('Total throughput in MB/s (cache saturated)')
 	plt.figtext(.10, .94, "Parallel AdiosStMan (v0.3.6) testing, iVEC Fornax, Lustre Stripe Size = 8, \nSingle column with direct arrays, Array size = {0}MB, Table size = {0}MB * Rows".format(array_size))
-	plt.savefig('fig1.png', dpi = 200)
+	plt.savefig('fig1.eps')
 
 	#######
 	plt.figure(2)
@@ -116,7 +116,7 @@ def save_fig():
 	plt.xlabel('Number of Rows')
 	plt.ylabel('Total throughput in MB/s (cache saturated)')
 	plt.figtext(.10, .94, "Parallel AdiosStMan (v0.3.6) testing, iVEC Fornax, Lustre Stripe Size = 8, \nSingle column with direct arrays, Array size = {0}MB, Table size = {0}MB * Rows".format(array_size))
-	plt.savefig('fig2.png', dpi = 200)
+	plt.savefig('fig2.eps')
 
 #######  main
 
@@ -150,11 +150,11 @@ for line in logfile:
 		continue
 
 save_fig()
-		
 
-	
 
-	
+
+
+
 
 
 

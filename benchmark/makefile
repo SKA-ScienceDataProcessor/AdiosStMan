@@ -9,21 +9,20 @@ LDFLAGS=-ladios -lcasa_tables -lcasa_casa
 STMANFILES=libadiosstman.so
 TARGET=serial_array_write \
 	   parallel_array_write \
-	   ms_read_slice \
-	   ms_read_column_slice 
+	   ms_read_column 
 
 all: $(TARGET) cl
 
 $(TARGET): $(TARGET:=.cc) $(STMANFILES)
 	$(CC) $@.cc -o $@ $(CCFLAGS) $(LDFLAGS) $(STMANFILES) 
 
-$(STMANFILES):  
+$(STMANFILES):
 	cd ..; make ln;
 
 cl:
-	rm -rf *.casa *.png *.e* *.o* *.log
+	rm -rf *.casa *.eps *.e* *.o* *.log
 
 clean:cl
-	rm -rf $(TARGET) *.dSYM  *.so log
+	rm -rf $(TARGET) *.dSYM *.so log
 
 re: clean all

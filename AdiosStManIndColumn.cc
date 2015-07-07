@@ -1,6 +1,3 @@
-//    AdiosStManIndColumn.cc: StManColumn class for AdiosStMan,
-//    managing all rows in a single array for a column
-//
 //    (c) University of Western Australia
 //    International Centre of Radio Astronomy Research
 //    M468, 35 Stirling Hwy
@@ -75,6 +72,7 @@ namespace casacore {
 
     void AdiosStManIndColumn::setShape (uInt row, const IPosition& shape){
         itsStManPtr->logdbg("AdiosStManIndColumn::setShape","");
+        cout << "AdiosStManIndColumn Error: AdiosStMan is currently not compatible with non-fixed shape array columns!" << endl;
         itsShape  = shape;
     }
 

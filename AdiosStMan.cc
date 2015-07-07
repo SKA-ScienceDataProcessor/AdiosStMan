@@ -1,6 +1,3 @@
-//    AdiosStMan.cc: Storage Manager for general CASA tables using ADIOS
-//    as the underlying IO & storage library
-//
 //    (c) University of Western Australia
 //    International Centre of Radio Astronomy Research
 //    M468, 35 Stirling Hwy

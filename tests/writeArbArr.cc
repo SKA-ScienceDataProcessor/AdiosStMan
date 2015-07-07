@@ -45,7 +45,6 @@ int main(int argc, char **argv){
     IPosition data_pos = IPosition(2,6,5);
     int NrRows = 4;
 
-    /*
     Array<Bool> arr_Bool(data_pos);
     Array<uChar> arr_uChar(data_pos);
     Array<Short> arr_Short(data_pos);
@@ -55,13 +54,11 @@ int main(int argc, char **argv){
     Array<Float> arr_Float(data_pos);
     Array<Double> arr_Double(data_pos);
     Array<Complex> arr_Complex(data_pos);
-    */
     Array<DComplex> arr_DComplex(data_pos);
 
 
     // define a table description & add a scalar column and an array column
     TableDesc td("", "1", TableDesc::Scratch);
-    /*
     td.addColumn (ArrayColumnDesc<Bool>("data_Bool", -1));
     td.addColumn (ArrayColumnDesc<uChar>("data_uChar", -1 ));
     td.addColumn (ArrayColumnDesc<Short>("data_Short", -1 ));
@@ -71,7 +68,6 @@ int main(int argc, char **argv){
     td.addColumn (ArrayColumnDesc<Float>("data_Float", -1 ));
     td.addColumn (ArrayColumnDesc<Double>("data_Double", -1 ));
     td.addColumn (ArrayColumnDesc<Complex>("data_Complex", -1 ));
-    */
     td.addColumn (ArrayColumnDesc<DComplex>("data_DComplex", -1 ));
 
 
@@ -80,7 +76,6 @@ int main(int argc, char **argv){
     Table tab(newtab, NrRows);
 
     // define column objects and link them to the table
-    /*
     ArrayColumn<Bool> col_Bool (tab, "data_Bool");
     ArrayColumn<uChar> col_uChar (tab, "data_uChar");
     ArrayColumn<Short> col_Short (tab, "data_Short");
@@ -90,12 +85,10 @@ int main(int argc, char **argv){
     ArrayColumn<Float> col_Float (tab, "data_Float");
     ArrayColumn<Double> col_Double (tab, "data_Double");
     ArrayColumn<Complex> col_Complex (tab, "data_Complex");
-    */
     ArrayColumn<DComplex> col_DComplex (tab, "data_DComplex");
 
     // write data into the column objects
     for (uInt i=0; i<NrRows; i++) {
-    /*
         arr_Bool = 1; col_Bool.put(i, arr_Bool);
         arr_uChar = 2; col_uChar.put(i, arr_uChar);
         arr_Short = -3; col_Short.put(i, arr_Short);
@@ -105,7 +98,6 @@ int main(int argc, char **argv){
         indgen(arr_Float, (Float)i*100, (Float)0.1); col_Float.put(i, arr_Float);
         indgen(arr_Double, (Double)i*100, (Double)0.01); col_Double.put(i, arr_Double);
         indgen(arr_Complex, (Complex)i*100, (Complex)0.001); col_Complex.put(i, arr_Complex);
-    */
         arr_DComplex = 5; col_DComplex.put(i, arr_DComplex);
     }
 

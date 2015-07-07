@@ -84,7 +84,7 @@ def print_row():
         plt.xlabel('number of rows')
         plt.ylabel('throughput in MB/s')
         plt.figtext(.40, .92, "side length of array = {0}\narray size = {1} MB".format(s, float(s * s * 4 / 1000000) ))
-        plt.savefig('row-MBps-{0}.png'.format(s))
+        plt.savefig('row-MBps-{0}.eps'.format(s))
 
 def print_arrsize():
     Ir = -1
@@ -102,7 +102,7 @@ def print_arrsize():
         plt.xlabel('side length of the square array for each cell')
         plt.ylabel('throughput in MB/s')
         plt.figtext(.40, .92, "number of rows = {0}".format(r))
-        plt.savefig('arrsize-MBps-{0}.png'.format(r))
+        plt.savefig('arrsize-MBps-{0}.eps'.format(r))
 
 
 #  ----------------- main flow

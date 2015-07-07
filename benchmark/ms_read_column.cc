@@ -1,5 +1,3 @@
-//    rAdiosStManSlice.cc: example code for reading a casa table using AdiosStMan
-//
 //    (c) University of Western Australia
 //    International Centre of Radio Astronomy Research
 //    M468, 35 Stirling Hwy
@@ -34,43 +32,33 @@
 #include "tictak.h"
 
 
-String filename;
 
-void table_read(){
+void table_read(string filename){
 
     Table casa_table(filename);
-    uInt nrrow = casa_table.nrow();
-
     ROArrayColumn<Complex> data_col(casa_table, "DATA");
+    Array<Complex> data_arr = data_col.getColumn();
 
-    IPosition start(2,0,0);
-    IPosition end(2,1,768);
-    Slicer sli(start, end);
-
-    Array<Complex> data_arr = data_col.getColumn(sli);
+    /*
+    // this block is for printing
     Vector<Complex> data_vec = data_arr.reform(IPosition(1,data_arr.nelements()));
-
     for (int i=0; i<32; i++){
         cout << data_vec[i] << "  ";
         if ((i+1) % (data_arr.shape())(0) == 0)	cout << endl;
     }
+    */
 
 }
 
 
-int main (){
+int main(int argc, char **argv){
 
-
-    tictak_add((char*)"AdiosStMan",0);
-    filename = "/scratch/jason/1067892840_adiosV.ms";
-    table_read();
-
-    tictak_add((char*)"TiledStMan",0);
-    filename = "/scratch/jason/1067892840_tsm.ms";
-    table_read();
+    for(int i=0; i<argc; i++){
+        tictak_add((char*)"AdiosStMan",0);
+        table_read(argv[i]);
+    }
 
     tictak_add((char*)"End",0);
-
     tictak_dump(0);
 
     return 0;

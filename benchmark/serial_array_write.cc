@@ -1,7 +1,3 @@
-//    serial_array_write.cc: Benchmark code for comparing storage managers.
-//    This is supposed to be used together with serial_array_write.py,
-//    which is a python code controlling the benchmark flow.
-//
 //    (c) University of Western Australia
 //    International Centre of Radio Astronomy Research
 //    M468, 35 Stirling Hwy

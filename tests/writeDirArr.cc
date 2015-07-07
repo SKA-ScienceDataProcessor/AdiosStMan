@@ -59,15 +59,25 @@ int main(int argc, char **argv){
 
     // define a table description & add a scalar column and an array column
     TableDesc td("", "1", TableDesc::Scratch);
+    stman.logdbg ("addColumn(data_Bool)", "", 0) ;
     td.addColumn (ArrayColumnDesc<Bool>("data_Bool", data_pos, ColumnDesc::Direct));
+    stman.logdbg ("addColumn(data_uChar)", "", 0) ;
     td.addColumn (ArrayColumnDesc<uChar>("data_uChar", data_pos, ColumnDesc::Direct));
+    stman.logdbg ("addColumn(data_Short)", "", 0) ;
     td.addColumn (ArrayColumnDesc<Short>("data_Short", data_pos, ColumnDesc::Direct));
+    stman.logdbg ("addColumn(data_uShort)", "", 0) ;
     td.addColumn (ArrayColumnDesc<uShort>("data_uShort", data_pos, ColumnDesc::Direct));
+    stman.logdbg ("addColumn(data_Int)", "", 0) ;
     td.addColumn (ArrayColumnDesc<Int>("data_Int", data_pos, ColumnDesc::Direct));
+    stman.logdbg ("addColumn(data_uInt)", "", 0) ;
     td.addColumn (ArrayColumnDesc<uInt>("data_uInt", data_pos, ColumnDesc::Direct));
+    stman.logdbg ("addColumn(data_Float)", "", 0) ;
     td.addColumn (ArrayColumnDesc<Float>("data_Float", data_pos, ColumnDesc::Direct));
+    stman.logdbg ("addColumn(data_Double)", "", 0) ;
     td.addColumn (ArrayColumnDesc<Double>("data_Double", data_pos, ColumnDesc::Direct));
+    stman.logdbg ("addColumn(data_Complex)", "", 0) ;
     td.addColumn (ArrayColumnDesc<Complex>("data_Complex", data_pos, ColumnDesc::Direct));
+    stman.logdbg ("addColumn(data_DComplex)", "", 0) ;
     td.addColumn (ArrayColumnDesc<DComplex>("data_DComplex", data_pos, ColumnDesc::Direct));
 
     // create a table instance, bind it to the storage manager & allocate rows
@@ -76,15 +86,25 @@ int main(int argc, char **argv){
     Table tab(newtab, NrRows);
 
     // define column objects and link them to the table
+    stman.logdbg ("linkColumn(data_Bool)", "", 0) ;
     ArrayColumn<Bool> col_Bool (tab, "data_Bool");
+    stman.logdbg ("linkColumn(data_uChar)", "", 0) ;
     ArrayColumn<uChar> col_uChar (tab, "data_uChar");
+    stman.logdbg ("linkColumn(data_Short)", "", 0) ;
     ArrayColumn<Short> col_Short (tab, "data_Short");
+    stman.logdbg ("linkColumn(data_uShort)", "", 0) ;
     ArrayColumn<uShort> col_uShort (tab, "data_uShort");
+    stman.logdbg ("linkColumn(data_Int)", "", 0) ;
     ArrayColumn<Int> col_Int (tab, "data_Int");
+    stman.logdbg ("linkColumn(data_uInt)", "", 0) ;
     ArrayColumn<uInt> col_uInt (tab, "data_uInt");
+    stman.logdbg ("linkColumn(data_Float)", "", 0) ;
     ArrayColumn<Float> col_Float (tab, "data_Float");
+    stman.logdbg ("linkColumn(data_Double)", "", 0) ;
     ArrayColumn<Double> col_Double (tab, "data_Double");
+    stman.logdbg ("linkColumn(data_Complex)", "", 0) ;
     ArrayColumn<Complex> col_Complex (tab, "data_Complex");
+    stman.logdbg ("linkColumn(data_DComplex)", "", 0) ;
     ArrayColumn<DComplex> col_DComplex (tab, "data_DComplex");
 
     // write data into the column objects

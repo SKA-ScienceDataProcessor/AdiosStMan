@@ -1,6 +1,3 @@
-//    AdiosStMan.h: Storage Manager for general CASA tables using ADIOS
-//    as the underlying IO & storage library
-//
 //    (c) University of Western Australia
 //    International Centre of Radio Astronomy Research
 //    M468, 35 Stirling Hwy
@@ -30,11 +27,13 @@
 
 #ifdef CASACORE_VERSION_1
 #include <tables/Tables/DataManager.h>
+#include <tables/Tables/Table.h>
 #include <casa/IO/AipsIO.h>
 #endif
 
 #ifdef CASACORE_VERSION_2
 #include <casacore/tables/DataMan/DataManager.h>
+#include <casacore/tables/Tables/Table.h>
 #include <casacore/casa/IO/AipsIO.h>
 #endif
 

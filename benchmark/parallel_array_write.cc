@@ -1,6 +1,3 @@
-//    wAdiosStManMPI.cc: example code for writing a casa table with AdiosStMan
-//    columns from multiple MPI processes in parallel
-//
 //    (c) University of Western Australia
 //    International Centre of Radio Astronomy Research
 //    M468, 35 Stirling Hwy

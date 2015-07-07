@@ -1,6 +1,3 @@
-//    AdiosStManDirColumn.cc: StManColumn class for AdiosStMan,
-//    managing all rows in a single array for a column
-//
 //    (c) University of Western Australia
 //    International Centre of Radio Astronomy Research
 //    M468, 35 Stirling Hwy
@@ -47,7 +44,7 @@ namespace casacore {
     }
 
     void AdiosStManDirColumn::initAdiosRead(){
-        itsStManPtr->logdbg("AdiosStManColumn::initAdiosRead","");
+        itsStManPtr->logdbg("AdiosStManDirColumn::initAdiosRead","");
 #ifdef ADIOSSTMAN_FORCE_DIRECT_ARRAY
         if (itsShape == 0){
             if (itsStManPtr->getMode() == 'r'){
