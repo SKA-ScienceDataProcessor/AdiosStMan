@@ -53,8 +53,8 @@ void table_read(string filename){
 
 int main(int argc, char **argv){
 
-    for(int i=0; i<argc; i++){
-        tictak_add((char*)"AdiosStMan",0);
+    for(int i=1; i<argc; i++){
+        tictak_add(argv[i],0);
         table_read(argv[i]);
     }
 
