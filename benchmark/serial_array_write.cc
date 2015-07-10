@@ -43,64 +43,64 @@ int nrRows;
 
 void writetable(DataManager *stman, Array<float> *data_arr, string filename){
 
-	// define a table description & add a scalar column and an array column
-	TableDesc td("", "1", TableDesc::Scratch);
-//	td.addColumn (ScalarColumnDesc<int>("index"));
-	td.addColumn (ArrayColumnDesc<float>("data", *data_pos, ColumnDesc::Direct));
+    // define a table description & add a scalar column and an array column
+    TableDesc td("", "1", TableDesc::Scratch);
+    //	td.addColumn (ScalarColumnDesc<int>("index"));
+    td.addColumn (ArrayColumnDesc<float>("data", *data_pos, ColumnDesc::Direct));
 
-	// create a table instance, bind it to the storage manager & allocate rows
-	SetupNewTable newtab(filename, td, Table::New);
-	newtab.bindAll(*stman);
-	Table tab(newtab, nrRows);
+    // create a table instance, bind it to the storage manager & allocate rows
+    SetupNewTable newtab(filename, td, Table::New);
+    newtab.bindAll(*stman);
+    Table tab(newtab, nrRows);
 
-	// define column objects and link them to the table
-//	ScalarColumn<int> index_col (tab, "index");
-	ArrayColumn<float> data_col (tab, "data");
+    // define column objects and link them to the table
+    //	ScalarColumn<int> index_col (tab, "index");
+    ArrayColumn<float> data_col (tab, "data");
 
-	// write data into the column objects
-	for (uInt i=0; i<nrRows; i++) {
-//		index_col.put (i, i);
-		data_col.put(i, *data_arr);
-	}
+    // write data into the column objects
+    for (uInt i=0; i<nrRows; i++) {
+        //		index_col.put (i, i);
+        data_col.put(i, *data_arr);
+    }
 }
 
 void bench(DataManager *stman, Array<float> *data_arr, string filename){
 
-	tictak_add((char*)filename.c_str(),0);
-	writetable(stman, data_arr, filename);
-	delete stman;
-	stman = 0;
-	tictak_add((char*)"end",0);
-	cout << tictak_total(0) << endl;
+    tictak_add((char*)filename.c_str(),0);
+    writetable(stman, data_arr, filename);
+    delete stman;
+    stman = 0;
+    tictak_add((char*)"end",0);
+    cout << tictak_total(0,0) << endl;
 
 }
 
 int main(int argc, char** argv){
 
-	if(argc < 6){
-		cout << "./bench (int)nrRows (int)arrayX (int)arrayY (string)nameStMan (string)filename" << endl;
-		exit(1);
-	}
+    if(argc < 6){
+        cout << "./bench (int)nrRows (int)arrayX (int)arrayY (string)nameStMan (string)filename" << endl;
+        exit(1);
+    }
 
-	nrRows = atoi(argv[1]);
-	data_pos = new IPosition(2, atoi(argv[2]), atoi(argv[3]));
+    nrRows = atoi(argv[1]);
+    data_pos = new IPosition(2, atoi(argv[2]), atoi(argv[3]));
 
-	Array<float> data_arr(*data_pos);
-	indgen (data_arr);
+    Array<float> data_arr(*data_pos);
+    indgen (data_arr);
 
-	string nameStMan = argv[4];
-	string filename = argv[5];
-	DataManager *stman = 0;
+    string nameStMan = argv[4];
+    string filename = argv[5];
+    DataManager *stman = 0;
 
-	if(nameStMan == "AdiosStMan")  stman = new AdiosStMan;
-	if(nameStMan == "StandardStMan")  stman = new StandardStMan;
-	if(nameStMan == "TiledShapeStMan")  stman = new TiledShapeStMan("data", IPosition(2, (*data_pos)[0] / 10, (*data_pos)[1] / 10));
+    if(nameStMan == "AdiosStMan")  stman = new AdiosStMan;
+    if(nameStMan == "StandardStMan")  stman = new StandardStMan;
+    if(nameStMan == "TiledShapeStMan")  stman = new TiledShapeStMan("data", IPosition(2, (*data_pos)[0] / 10, (*data_pos)[1] / 10));
 
-	if(stman)  bench(stman, &data_arr, filename);
-	else cout << "invalid nameStMan" << endl;
+    if(stman)  bench(stman, &data_arr, filename);
+    else cout << "invalid nameStMan" << endl;
 
-	if(data_pos) delete data_pos;
-	return 0;
+    if(data_pos) delete data_pos;
+    return 0;
 }
 
 

@@ -58,21 +58,21 @@ Array<Float> data_arr;
 
 void write_table(){
 
-	AdiosStMan stman;
+    AdiosStMan stman;
 
-	// define a table description & add a scalar column and an array column
-	TableDesc td("", "1", TableDesc::Scratch);
-	td.addColumn (ScalarColumnDesc<uInt>("index"));
-	td.addColumn (ArrayColumnDesc<Float>("data", data_pos, ColumnDesc::Direct));
+    // define a table description & add a scalar column and an array column
+    TableDesc td("", "1", TableDesc::Scratch);
+    td.addColumn (ScalarColumnDesc<uInt>("index"));
+    td.addColumn (ArrayColumnDesc<Float>("data", data_pos, ColumnDesc::Direct));
 
-	// create a table instance, bind it to the storage manager & allocate rows
-	SetupNewTable newtab(filename, td, Table::New);
-	newtab.bindAll(stman);
-	Table casa_table(newtab, NrRows);
+    // create a table instance, bind it to the storage manager & allocate rows
+    SetupNewTable newtab(filename, td, Table::New);
+    newtab.bindAll(stman);
+    Table casa_table(newtab, NrRows);
 
-	// define column objects and link them to the table
-	ScalarColumn<uInt> index_col(casa_table, "index");
-	ArrayColumn<Float> data_col(casa_table, "data");
+    // define column objects and link them to the table
+    ScalarColumn<uInt> index_col(casa_table, "index");
+    ArrayColumn<Float> data_col(casa_table, "data");
 
     // each mpi rank writes a subset of the data
     for (uInt i=mpiRank; i<NrRows; i+=mpiSize) {
@@ -126,7 +126,7 @@ int main (int argc, char **argv){
 
     if(mpiRank == 0){
 
-        float Seconds = tictak_total(0);
+        float Seconds = tictak_total(0,0);
         uint64_t CellSize = atoi(argv[2])*atoi(argv[3])*sizeof(float);
         uint64_t TableSize = CellSize * NrRows;
         int Mps = TableSize / Seconds / 1000000;
