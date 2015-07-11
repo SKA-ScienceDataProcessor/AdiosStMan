@@ -30,6 +30,7 @@
 #include <casacore/tables/Tables/ArrayColumn.h>
 #include <casacore/casa/namespace.h>
 #include "tictak.h"
+#include <mpi.h>
 
 
 
@@ -53,14 +54,25 @@ void table_read(string filename){
 
 int main(int argc, char **argv){
 
+    int mpiRank, mpiSize;
+    MPI_Init(0,0);
+    MPI_Comm_rank(MPI_COMM_WORLD, &mpiRank);
+    MPI_Comm_size(MPI_COMM_WORLD, &mpiSize);
+
+    tictak_add((char*)"begin",0);
     for(int i=1; i<argc; i++){
-        tictak_add(argv[i],0);
         table_read(argv[i]);
+        tictak_add(argv[i],0);
+        float Seconds = tictak_total(0,0);
+        int Mps = (int)(45000.0 / Seconds * mpiSize);
+        cout << "file=" << argv[i];
+        cout << ",MBps=" << Mps;
+        cout << ",Seconds=" << Seconds;
+        cout << ",MpiSize=" << mpiSize;
+        cout << endl;
     }
 
-    tictak_add((char*)"End",0);
-    tictak_dump(0);
-
+    MPI_Finalize();
     return 0;
 }
 
