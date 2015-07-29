@@ -26,7 +26,7 @@ $(STMANFILES):
 	cd ..; make ln;
 
 cl:
-	rm -rf *.casa 
+	rm -rf *.casa *.out
 
 clean:cl
 	rm -rf $(TARGET) *.dSYM *.so
