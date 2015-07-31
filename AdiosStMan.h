@@ -49,8 +49,8 @@ namespace casacore {
     {
         public:
 
-//            AdiosStMan(string aMethod="POSIX", string aPara="", uint64_t writeBufsize=1000, uint64_t readBufsize=2000);
-            AdiosStMan(string aMethod="MPI_AGGREGATE", string aPara="num_aggregators=24, num_ost=12", uint64_t writeBufsize=1000, uint64_t readBufsize=2000);
+            AdiosStMan(string aMethod="POSIX", string aPara="", uint64_t writeBufsize=1000, uint64_t readBufsize=2000);
+//            AdiosStMan(string aMethod="MPI_AGGREGATE", string aPara="num_aggregators=24, num_ost=12", uint64_t writeBufsize=1000, uint64_t readBufsize=2000);
             ~AdiosStMan();
 
             virtual DataManager* clone() const;

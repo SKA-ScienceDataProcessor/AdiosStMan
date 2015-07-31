@@ -60,30 +60,39 @@ void write_table(){
 
     AdiosStMan stman;
 
+    printf("1\n");
     // define a table description & add a scalar column and an array column
     TableDesc td("", "1", TableDesc::Scratch);
     td.addColumn (ScalarColumnDesc<uInt>("index"));
     td.addColumn (ArrayColumnDesc<Float>("data", data_pos, ColumnDesc::Direct));
 
+    printf("2\n");
     // create a table instance, bind it to the storage manager & allocate rows
     SetupNewTable newtab(filename, td, Table::New);
     newtab.bindAll(stman);
     Table casa_table(newtab, NrRows);
 
+    printf("3\n");
     // define column objects and link them to the table
     ScalarColumn<uInt> index_col(casa_table, "index");
     ArrayColumn<Float> data_col(casa_table, "data");
 
+    printf("4\n");
+    printf("%d,%d\n",mpiRank, mpiSize);
+
     // each mpi rank writes a subset of the data
     for (uInt i=mpiRank; i<NrRows; i+=mpiSize) {
-        index_col.put (i, i);
+//        index_col.put (i, i);
         data_col.put (i, data_arr);
     }
 
+    printf("4\n");
 }
 
 
 int main (int argc, char **argv){
+
+    printf("main started");
 
     MPI_Init(0,0);
     MPI_Comm_rank(MPI_COMM_WORLD, &mpiRank);
@@ -140,7 +149,6 @@ int main (int argc, char **argv){
     }
 
     MPI_Finalize();
-
     return 0;
 }
 
