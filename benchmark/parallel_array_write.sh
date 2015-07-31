@@ -2,12 +2,8 @@
 
 QUOTA="5000000000" # in KB
 OUTPUT="$SCRATCH/tmp"
+writeBufSize=28000
 
-if [ "$VENDOR" == "cray" ]; then
-    RUN="aprun -n1"
-else
-    RUN="mpirun"
-fi
 
 if [ "$JOBSCHEDULER" == "slurm" ]; then
     JOBID=$SLURM_JOBID
@@ -28,7 +24,16 @@ do
                 echo "$CHECK bytes in $OUTPUT, reaching disk quota $QUOTA, cleaning up ..."
                 rm -rf $OUTPUT/*
             fi
-            RUNLINE="$RUN $JOBDIR/parallel_array_write $rows $length $length $OUTPUT/${rows}rows_${length}length_${JOBID}_${i}.casa"
+
+            if [ "$VENDOR" == "cray" ]; then
+                NP=$(wc -l $PBS_NODEFILE | awk '{print $1}')
+                echo "Total CPU count = $NP"
+                RUN="aprun -n$NP -N1"
+            else
+                RUN="mpirun"
+            fi
+
+            RUNLINE="$RUN $JOBDIR/parallel_array_write $rows $length $length $OUTPUT/${rows}rows_${length}length_${JOBID}_${i}.casa $writeBufSize"
             echo $RUNLINE
             $RUNLINE >> $JOBDIR/log
         done

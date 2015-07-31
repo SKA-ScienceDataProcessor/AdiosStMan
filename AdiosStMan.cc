@@ -265,16 +265,14 @@ namespace casacore {
     }
 
     Bool AdiosStMan::flush (AipsIO& ios, Bool doFsync){
-        logdbg("AdiosStMan::flush","begin func");
+        logdbg("AdiosStMan::flush","");
         for (int i=0; i<ncolumn(); i++){
             itsColumnPtrBlk[i]->flush();
         }
-        logdbg("AdiosStMan::flush","after itsColumnPtrBlk[i]->flush()");
         ios.putstart(itsDataManName, 2);
         ios << itsDataManName;
         ios << itsStManColumnType;
         ios.putend();
-        logdbg("AdiosStMan::flush","before adiosWriteClose()");
         adiosWriteClose();
         return true;
     }

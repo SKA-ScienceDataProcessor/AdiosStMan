@@ -48,63 +48,52 @@
 #include "tictak.h"
 
 
-int NrRows = 10;
+int NrRows;
 IPosition data_pos;
-string filename = "v.casa";
+string filename;
 
 int mpiRank, mpiSize;
 Array<Float> data_arr;
 
+int writeBufSize;
 
 void write_table(){
 
-    AdiosStMan stman;
+    AdiosStMan stman("MPI_AGGREGATE", "num_aggregators=24, num_ost=24", 30000, 2000);
 
-    printf("1\n");
     // define a table description & add a scalar column and an array column
     TableDesc td("", "1", TableDesc::Scratch);
-    td.addColumn (ScalarColumnDesc<uInt>("index"));
     td.addColumn (ArrayColumnDesc<Float>("data", data_pos, ColumnDesc::Direct));
 
-    printf("2\n");
     // create a table instance, bind it to the storage manager & allocate rows
     SetupNewTable newtab(filename, td, Table::New);
     newtab.bindAll(stman);
     Table casa_table(newtab, NrRows);
 
-    printf("3\n");
     // define column objects and link them to the table
-    ScalarColumn<uInt> index_col(casa_table, "index");
     ArrayColumn<Float> data_col(casa_table, "data");
-
-    printf("4\n");
-    printf("%d,%d\n",mpiRank, mpiSize);
 
     // each mpi rank writes a subset of the data
     for (uInt i=mpiRank; i<NrRows; i+=mpiSize) {
-//        index_col.put (i, i);
         data_col.put (i, data_arr);
     }
-
-    printf("4\n");
 }
 
 
 int main (int argc, char **argv){
 
-    printf("main started");
-
     MPI_Init(0,0);
     MPI_Comm_rank(MPI_COMM_WORLD, &mpiRank);
     MPI_Comm_size(MPI_COMM_WORLD, &mpiSize);
 
-    if(argc < 5){
-        cout << "./parallel_array_write (int)nrRows (int)arrayX (int)arrayY (string)filename" << endl;
+    if(argc < 6){
+        cout << "./parallel_array_write (int)nrRows (int)arrayX (int)arrayY (string)filename (int)writeBufSize" << endl;
         exit(1);
     }
 
     NrRows = atoi(argv[1]);
     filename = argv[4];
+    writeBufSize = atoi(argv[5]);
 
     data_pos = IPosition(2, atoi(argv[2]), atoi(argv[3]));
     data_arr = Array<Float>(data_pos);

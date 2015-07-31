@@ -2,10 +2,14 @@
 
 jobid=""
 
-for i in {1..9}
+for i in {2..9}
 do
     jobid_last=$jobid
-    jobid=$(qsub -A $PROJECT_ID -l walltime=2:00:00,select=${i}:ncpus=1:mpiprocs=1 -W depend=afterany:${jobid} parallel_array_write.sh)
+    if [ "$jobid" == "" ]; then
+        jobid=$(qsub -A $PROJECT_ID -l walltime=2:00:00,nodes=${i} parallel_array_write.sh)
+    else
+        jobid=$(qsub -A $PROJECT_ID -l walltime=2:00:00,nodes=${i} -W depend=afterany:${jobid} parallel_array_write.sh)
+    fi
     echo $jobid submitted with dependency $jobid_last
 done
 

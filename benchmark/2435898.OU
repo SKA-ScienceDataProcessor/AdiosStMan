@@ -1,0 +1,58 @@
+Total CPU count = 32
+aprun -n32 -N1 /lustre/atlas2/csc143/proj-shared/ska/AdiosStMan/benchmark/parallel_array_write 100 1000 1000 /lustre/atlas2/csc143/proj-shared/ska/tmp/100rows_1000length_2435898_1.casa 28000
+Total CPU count = 32
+aprun -n32 -N1 /lustre/atlas2/csc143/proj-shared/ska/AdiosStMan/benchmark/parallel_array_write 100 2000 2000 /lustre/atlas2/csc143/proj-shared/ska/tmp/100rows_2000length_2435898_1.casa 28000
+Total CPU count = 32
+aprun -n32 -N1 /lustre/atlas2/csc143/proj-shared/ska/AdiosStMan/benchmark/parallel_array_write 100 3000 3000 /lustre/atlas2/csc143/proj-shared/ska/tmp/100rows_3000length_2435898_1.casa 28000
+Total CPU count = 32
+aprun -n32 -N1 /lustre/atlas2/csc143/proj-shared/ska/AdiosStMan/benchmark/parallel_array_write 100 4000 4000 /lustre/atlas2/csc143/proj-shared/ska/tmp/100rows_4000length_2435898_1.casa 28000
+Total CPU count = 32
+aprun -n32 -N1 /lustre/atlas2/csc143/proj-shared/ska/AdiosStMan/benchmark/parallel_array_write 100 5000 5000 /lustre/atlas2/csc143/proj-shared/ska/tmp/100rows_5000length_2435898_1.casa 28000
+Total CPU count = 32
+aprun -n32 -N1 /lustre/atlas2/csc143/proj-shared/ska/AdiosStMan/benchmark/parallel_array_write 100 6000 6000 /lustre/atlas2/csc143/proj-shared/ska/tmp/100rows_6000length_2435898_1.casa 28000
+Total CPU count = 32
+aprun -n32 -N1 /lustre/atlas2/csc143/proj-shared/ska/AdiosStMan/benchmark/parallel_array_write 100 7000 7000 /lustre/atlas2/csc143/proj-shared/ska/tmp/100rows_7000length_2435898_1.casa 28000
+Total CPU count = 32
+aprun -n32 -N1 /lustre/atlas2/csc143/proj-shared/ska/AdiosStMan/benchmark/parallel_array_write 100 8000 8000 /lustre/atlas2/csc143/proj-shared/ska/tmp/100rows_8000length_2435898_1.casa 28000
+Total CPU count = 32
+aprun -n32 -N1 /lustre/atlas2/csc143/proj-shared/ska/AdiosStMan/benchmark/parallel_array_write 100 9000 9000 /lustre/atlas2/csc143/proj-shared/ska/tmp/100rows_9000length_2435898_1.casa 28000
+Total CPU count = 32
+aprun -n32 -N1 /lustre/atlas2/csc143/proj-shared/ska/AdiosStMan/benchmark/parallel_array_write 100 10000 10000 /lustre/atlas2/csc143/proj-shared/ska/tmp/100rows_10000length_2435898_1.casa 28000
+Total CPU count = 32
+aprun -n32 -N1 /lustre/atlas2/csc143/proj-shared/ska/AdiosStMan/benchmark/parallel_array_write 100 11000 11000 /lustre/atlas2/csc143/proj-shared/ska/tmp/100rows_11000length_2435898_1.casa 28000
+Total CPU count = 32
+aprun -n32 -N1 /lustre/atlas2/csc143/proj-shared/ska/AdiosStMan/benchmark/parallel_array_write 100 12000 12000 /lustre/atlas2/csc143/proj-shared/ska/tmp/100rows_12000length_2435898_1.casa 28000
+Total CPU count = 32
+aprun -n32 -N1 /lustre/atlas2/csc143/proj-shared/ska/AdiosStMan/benchmark/parallel_array_write 100 13000 13000 /lustre/atlas2/csc143/proj-shared/ska/tmp/100rows_13000length_2435898_1.casa 28000
+Total CPU count = 32
+aprun -n32 -N1 /lustre/atlas2/csc143/proj-shared/ska/AdiosStMan/benchmark/parallel_array_write 100 14000 14000 /lustre/atlas2/csc143/proj-shared/ska/tmp/100rows_14000length_2435898_1.casa 28000
+Total CPU count = 32
+aprun -n32 -N1 /lustre/atlas2/csc143/proj-shared/ska/AdiosStMan/benchmark/parallel_array_write 100 15000 15000 /lustre/atlas2/csc143/proj-shared/ska/tmp/100rows_15000length_2435898_1.casa 28000
+Total CPU count = 32
+aprun -n32 -N1 /lustre/atlas2/csc143/proj-shared/ska/AdiosStMan/benchmark/parallel_array_write 100 16000 16000 /lustre/atlas2/csc143/proj-shared/ska/tmp/100rows_16000length_2435898_1.casa 28000
+Total CPU count = 32
+aprun -n32 -N1 /lustre/atlas2/csc143/proj-shared/ska/AdiosStMan/benchmark/parallel_array_write 100 17000 17000 /lustre/atlas2/csc143/proj-shared/ska/tmp/100rows_17000length_2435898_1.casa 28000
+Total CPU count = 32
+aprun -n32 -N1 /lustre/atlas2/csc143/proj-shared/ska/AdiosStMan/benchmark/parallel_array_write 100 18000 18000 /lustre/atlas2/csc143/proj-shared/ska/tmp/100rows_18000length_2435898_1.casa 28000
+Total CPU count = 32
+aprun -n32 -N1 /lustre/atlas2/csc143/proj-shared/ska/AdiosStMan/benchmark/parallel_array_write 100 19000 19000 /lustre/atlas2/csc143/proj-shared/ska/tmp/100rows_19000length_2435898_1.casa 28000
+Total CPU count = 32
+aprun -n32 -N1 /lustre/atlas2/csc143/proj-shared/ska/AdiosStMan/benchmark/parallel_array_write 100 20000 20000 /lustre/atlas2/csc143/proj-shared/ska/tmp/100rows_20000length_2435898_1.casa 28000
+Total CPU count = 32
+aprun -n32 -N1 /lustre/atlas2/csc143/proj-shared/ska/AdiosStMan/benchmark/parallel_array_write 200 1000 1000 /lustre/atlas2/csc143/proj-shared/ska/tmp/200rows_1000length_2435898_1.casa 28000
+Total CPU count = 32
+aprun -n32 -N1 /lustre/atlas2/csc143/proj-shared/ska/AdiosStMan/benchmark/parallel_array_write 200 2000 2000 /lustre/atlas2/csc143/proj-shared/ska/tmp/200rows_2000length_2435898_1.casa 28000
+Total CPU count = 32
+aprun -n32 -N1 /lustre/atlas2/csc143/proj-shared/ska/AdiosStMan/benchmark/parallel_array_write 200 3000 3000 /lustre/atlas2/csc143/proj-shared/ska/tmp/200rows_3000length_2435898_1.casa 28000
+Total CPU count = 32
+aprun -n32 -N1 /lustre/atlas2/csc143/proj-shared/ska/AdiosStMan/benchmark/parallel_array_write 200 4000 4000 /lustre/atlas2/csc143/proj-shared/ska/tmp/200rows_4000length_2435898_1.casa 28000
+Total CPU count = 32
+aprun -n32 -N1 /lustre/atlas2/csc143/proj-shared/ska/AdiosStMan/benchmark/parallel_array_write 200 5000 5000 /lustre/atlas2/csc143/proj-shared/ska/tmp/200rows_5000length_2435898_1.casa 28000
+Total CPU count = 32
+aprun -n32 -N1 /lustre/atlas2/csc143/proj-shared/ska/AdiosStMan/benchmark/parallel_array_write 200 6000 6000 /lustre/atlas2/csc143/proj-shared/ska/tmp/200rows_6000length_2435898_1.casa 28000
+Total CPU count = 32
+aprun -n32 -N1 /lustre/atlas2/csc143/proj-shared/ska/AdiosStMan/benchmark/parallel_array_write 200 7000 7000 /lustre/atlas2/csc143/proj-shared/ska/tmp/200rows_7000length_2435898_1.casa 28000
+Total CPU count = 32
+aprun -n32 -N1 /lustre/atlas2/csc143/proj-shared/ska/AdiosStMan/benchmark/parallel_array_write 200 8000 8000 /lustre/atlas2/csc143/proj-shared/ska/tmp/200rows_8000length_2435898_1.casa 28000
+Total CPU count = 32
+aprun -n32 -N1 /lustre/atlas2/csc143/proj-shared/ska/AdiosStMan/benchmark/parallel_array_write 200 9000 9000 /lustre/atlas2/csc143/proj-shared/ska/tmp/200rows_9000length_2435898_1.casa 28000
