@@ -27,8 +27,7 @@ do
 
             if [ "$VENDOR" == "cray" ]; then
                 NP=$(wc -l $PBS_NODEFILE | awk '{print $1}')
-                echo "Total CPU count = $NP"
-                RUN="aprun -n$NP -N1"
+                RUN="aprun -n$(( $NP / 16  )) -N1"
             else
                 RUN="mpirun"
             fi
