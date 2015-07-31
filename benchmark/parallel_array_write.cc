@@ -76,11 +76,8 @@ void write_table(){
 
     // each mpi rank writes a subset of the data
     for (uInt i=mpiRank; i<NrRows; i+=mpiSize) {
-        //		if (i < NrRows/mpiSize*mpiSize )
-        //			MPI_Barrier(MPI_COMM_WORLD);
         index_col.put (i, i);
         data_col.put (i, data_arr);
-        //		cout << i << " rows finished from Rank " << mpiRank << endl;
     }
 
 }

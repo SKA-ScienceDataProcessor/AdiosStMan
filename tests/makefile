@@ -5,7 +5,7 @@ else
 endif
 
 CCFLAGS=
-LDFLAGS=-lcasa_tables -lcasa_casa 
+LDFLAGS=-lcasa_tables -lcasa_casa -lmxml
 STMANFILES=libadiosstman.so
 TARGET=writeScalar \
 	   writeDirArr \

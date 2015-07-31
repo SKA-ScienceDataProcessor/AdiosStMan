@@ -5,7 +5,7 @@ else
 endif
 
 CCFLAGS= 
-LDFLAGS=-ladios -lcasa_tables -lcasa_casa
+LDFLAGS=-ladios -lcasa_tables -lcasa_casa -lmxml
 STMANFILES=libadiosstman.so
 TARGET=serial_array_write \
 	   parallel_array_write \
@@ -20,7 +20,7 @@ $(STMANFILES):
 	cd ..; make ln;
 
 cl:
-	rm -rf *.casa *.eps *.e* *.o* *.log
+	rm -rf *.casa *.eps *.e* *.o* *.log *.ER *.OU
 
 clean:cl
 	rm -rf $(TARGET) *.dSYM *.so log
