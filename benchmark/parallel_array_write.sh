@@ -1,9 +1,10 @@
 #!/bin/bash
 
+. /lustre/atlas2/csc143/proj-shared/ska/ska_bashrc.sh
+
 QUOTA="5000000000" # in KB
 OUTPUT="$SCRATCH/tmp"
 writeBufSize=28000
-
 
 if [ "$JOBSCHEDULER" == "slurm" ]; then
     JOBID=$SLURM_JOBID
