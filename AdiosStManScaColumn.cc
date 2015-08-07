@@ -79,43 +79,43 @@ namespace casacore {
     // put
     void AdiosStManScaColumn::putBoolV (uInt rownr, const Bool* dataPtr){
         itsStManPtr->adiosWriteOpen();
-        adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , dataPtr);
+        adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , (void*)dataPtr);
     }
     void AdiosStManScaColumn::putuCharV (uInt rownr, const uChar* dataPtr){
         itsStManPtr->adiosWriteOpen();
-        adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , dataPtr);
+        adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , (void*)dataPtr);
     }
     void AdiosStManScaColumn::putShortV (uInt rownr, const Short* dataPtr){
         itsStManPtr->adiosWriteOpen();
-        adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , dataPtr);
+        adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , (void*)dataPtr);
     }
     void AdiosStManScaColumn::putuShortV (uInt rownr, const uShort* dataPtr){
         itsStManPtr->adiosWriteOpen();
-        adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , dataPtr);
+        adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , (void*)dataPtr);
     }
     void AdiosStManScaColumn::putIntV (uInt rownr, const Int* dataPtr){
         itsStManPtr->adiosWriteOpen();
-        adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , dataPtr);
+        adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , (void*)dataPtr);
     }
     void AdiosStManScaColumn::putuIntV (uInt rownr, const uInt* dataPtr){
         itsStManPtr->adiosWriteOpen();
-        adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , dataPtr);
+        adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , (void*)dataPtr);
     }
     void AdiosStManScaColumn::putfloatV (uInt rownr, const float* dataPtr){
         itsStManPtr->adiosWriteOpen();
-        adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , dataPtr);
+        adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , (void*)dataPtr);
     }
     void AdiosStManScaColumn::putdoubleV (uInt rownr, const double* dataPtr){
         itsStManPtr->adiosWriteOpen();
-        adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , dataPtr);
+        adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , (void*)dataPtr);
     }
     void AdiosStManScaColumn::putComplexV (uInt rownr, const Complex* dataPtr){
         itsStManPtr->adiosWriteOpen();
-        adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , dataPtr);
+        adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , (void*)dataPtr);
     }
     void AdiosStManScaColumn::putDComplexV (uInt rownr, const DComplex* dataPtr){
         itsStManPtr->adiosWriteOpen();
-        adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , dataPtr);
+        adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , (void*)dataPtr);
     }
     void AdiosStManScaColumn::putStringV (uInt rownr, const String* dataPtr){
         cout << "AdiosStManColumn Error: Sorry, AdiosStMan does not support string type at the moment!" << endl;
