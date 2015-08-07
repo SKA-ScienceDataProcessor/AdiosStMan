@@ -71,51 +71,51 @@ namespace casacore {
             }
         }
         if (itsAdiosWriteIDs){
-            delete itsAdiosWriteIDs;
+            delete [] itsAdiosWriteIDs;
         }
     }
 
     // *** access a row for a scalar column ***
     // put
     void AdiosStManScaColumn::putBoolV (uInt rownr, const Bool* dataPtr){
-        if(columnCache == 0) {columnCache = new Bool[itsStManPtr->getNrRows()];}
-        ((Bool*)columnCache)[rownr] = *dataPtr;
+        itsStManPtr->adiosWriteOpen();
+        adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , dataPtr);
     }
     void AdiosStManScaColumn::putuCharV (uInt rownr, const uChar* dataPtr){
-        if(columnCache == 0) {columnCache = new uChar[itsStManPtr->getNrRows()];}
-        ((uChar*)columnCache)[rownr] = *dataPtr;
+        itsStManPtr->adiosWriteOpen();
+        adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , dataPtr);
     }
     void AdiosStManScaColumn::putShortV (uInt rownr, const Short* dataPtr){
-        if(columnCache == 0) {columnCache = new Short[itsStManPtr->getNrRows()];}
-        ((Short*)columnCache)[rownr] = *dataPtr;
+        itsStManPtr->adiosWriteOpen();
+        adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , dataPtr);
     }
     void AdiosStManScaColumn::putuShortV (uInt rownr, const uShort* dataPtr){
-        if(columnCache == 0) {columnCache = new uShort[itsStManPtr->getNrRows()];}
-        ((uShort*)columnCache)[rownr] = *dataPtr;
+        itsStManPtr->adiosWriteOpen();
+        adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , dataPtr);
     }
     void AdiosStManScaColumn::putIntV (uInt rownr, const Int* dataPtr){
-        if(columnCache == 0) {columnCache = new Int[itsStManPtr->getNrRows()];}
-        ((Int*)columnCache)[rownr] = *dataPtr;
+        itsStManPtr->adiosWriteOpen();
+        adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , dataPtr);
     }
     void AdiosStManScaColumn::putuIntV (uInt rownr, const uInt* dataPtr){
-        if(columnCache == 0) {columnCache = new uInt[itsStManPtr->getNrRows()];}
-        ((uInt*)columnCache)[rownr] = *dataPtr;
+        itsStManPtr->adiosWriteOpen();
+        adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , dataPtr);
     }
     void AdiosStManScaColumn::putfloatV (uInt rownr, const float* dataPtr){
-        if(columnCache == 0) {columnCache = new float[itsStManPtr->getNrRows()];}
-        ((float*)columnCache)[rownr] = *dataPtr;
+        itsStManPtr->adiosWriteOpen();
+        adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , dataPtr);
     }
     void AdiosStManScaColumn::putdoubleV (uInt rownr, const double* dataPtr){
-        if(columnCache == 0) {columnCache = new double[itsStManPtr->getNrRows()];}
-        ((double*)columnCache)[rownr] = *dataPtr;
+        itsStManPtr->adiosWriteOpen();
+        adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , dataPtr);
     }
     void AdiosStManScaColumn::putComplexV (uInt rownr, const Complex* dataPtr){
-        if(columnCache == 0) {columnCache = new Complex[itsStManPtr->getNrRows()];}
-        ((Complex*)columnCache)[rownr] = *dataPtr;
+        itsStManPtr->adiosWriteOpen();
+        adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , dataPtr);
     }
     void AdiosStManScaColumn::putDComplexV (uInt rownr, const DComplex* dataPtr){
-        if(columnCache == 0) {columnCache = new DComplex[itsStManPtr->getNrRows()];}
-        ((DComplex*)columnCache)[rownr] = *dataPtr;
+        itsStManPtr->adiosWriteOpen();
+        adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , dataPtr);
     }
     void AdiosStManScaColumn::putStringV (uInt rownr, const String* dataPtr){
         cout << "AdiosStManColumn Error: Sorry, AdiosStMan does not support string type at the moment!" << endl;
@@ -182,12 +182,13 @@ namespace casacore {
     void AdiosStManScaColumn::initAdiosWrite(uInt aNrRows){
         itsStManPtr->logdbg("AdiosStManScaColumn::initAdiosWrite","start");
         if(!itsAdiosWriteIDs){
-            itsAdiosWriteIDs = new int64_t;
+            itsAdiosWriteIDs = new int64_t[aNrRows];
         }
         for(uInt j=0; j<aNrRows; j++){
-            stringstream NrRows;
+            stringstream NrRows, RowID;
             NrRows << aNrRows;
-            *itsAdiosWriteIDs = adios_define_var(itsStManPtr->getAdiosGroup(), itsColumnName.c_str(), "", itsAdiosDataType, NrRows.str().c_str(), NrRows.str().c_str(), "0" );
+            RowID << j;
+            itsAdiosWriteIDs[j] = adios_define_var(itsStManPtr->getAdiosGroup(), itsColumnName.c_str(), "", itsAdiosDataType, "1", NrRows.str().c_str(), RowID.str().c_str() );
         }
     }
 
@@ -209,9 +210,6 @@ namespace casacore {
     }
 
     void AdiosStManScaColumn::flush(){
-        itsStManPtr->logdbg("AdiosStManScaColumn::flush","");
-        itsStManPtr->adiosWriteOpen();
-        adios_write_byid(itsStManPtr->getAdiosFile(), *itsAdiosWriteIDs , (void*)columnCache);
     }
 }
 
