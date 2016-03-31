@@ -4,6 +4,9 @@
 //    Crawley, Perth WA 6009
 //    Australia
 //
+//    Shanghai Astronomical Observatory, Chinese Academy of Sciences
+//    80 Nandan Road, Shanghai 200030, China
+//
 //    This library is free software: you can redistribute it and/or
 //    modify it under the terms of the GNU General Public License as published
 //    by the Free Software Foundation, either version 3 of the License, or
@@ -18,7 +21,7 @@
 //    with this library. If not, see <http://www.gnu.org/licenses/>.
 //
 //    Any bugs, questions, concerns and/or suggestions please email to
-//    jason.wang@icrar.org
+//    lbq@shao.ac.cn, jason.wang@icrar.org
 
 #include "AdiosStManIndColumn.h"
 
@@ -43,10 +46,10 @@ namespace casacore {
         MPI_Comm_rank(MPI_COMM_WORLD, &mpiRank);
         for(uInt j=0; j<aNrRows; j++){
             if(itsAdiosWriteIDs == 0){
-                itsAdiosWriteIDs = new int64_t[aNrRows];
+                itsAdiosWriteIDs = new int64_t[itsStManPtr->getBufRows()];
             }
             stringstream varName;
-            varName << itsColumnName << "[" << j << "]";
+            varName << itsColumnName << "[" << (j+(itsStManPtr->getAdiosNrBufRows()-1)*itsStManPtr->getBufRows()) << "]";
             if (itsShape.nelements() == 0){
                 itsAdiosWriteIDs[j] = adios_define_var(itsStManPtr->getAdiosGroup(), varName.str().c_str(), itsColumnName.c_str(), itsAdiosDataType, "", "", ""); ////
             }
@@ -105,8 +108,11 @@ namespace casacore {
     }
 
     void AdiosStManIndColumn::putArrayMetaV (uint64_t row, const void* data){
-        itsStManPtr->adiosWriteOpen();
-        adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[row] , (void*)data);
+        if((row%itsStManPtr->getBufRows()<=(itsStManPtr->getmpiSize()-1))){
+           itsStManPtr->adiosWriteClose();
+         }
+        itsStManPtr->adiosWriteOpen(row);
+        adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[row-(itsStManPtr->getAdiosNrBufRows()-1)*itsStManPtr->getBufRows()] , (void*)data);
     }
 
     void AdiosStManIndColumn::flush(){

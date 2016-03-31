@@ -34,7 +34,7 @@ int main(int argc, char **argv){
     }
     string filename = argv[1];
 
-    int NrRows = 4;
+    int NrRows = 21;
 
     // define a storage manager
 //    AdiosStMan stman("MPI", "", 100);

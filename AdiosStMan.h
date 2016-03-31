@@ -4,6 +4,9 @@
 //    Crawley, Perth WA 6009
 //    Australia
 //
+//    Shanghai Astronomical Observatory, Chinese Academy of Sciences
+//    80 Nandan Road, Shanghai 200030, China
+//
 //    This library is free software: you can redistribute it and/or
 //    modify it under the terms of the GNU General Public License as published
 //    by the Free Software Foundation, either version 3 of the License, or
@@ -18,7 +21,7 @@
 //    with this library. If not, see <http://www.gnu.org/licenses/>.
 //
 //    Any bugs, questions, concerns and/or suggestions please email to
-//    jason.wang@icrar.org
+//    lbq@shao.ac.cn, jason.wang@icrar.org
 
 #ifndef ADIOSSTMAN_H
 #define ADIOSSTMAN_H
@@ -49,7 +52,8 @@ namespace casacore {
     {
         public:
 
-            AdiosStMan(string aMethod="POSIX", string aPara="", uint64_t writeBufsize=1000, uint64_t readBufsize=2000);
+              AdiosStMan(string aMethod="POSIX", string aPara="", uint64_t aBufRows=100);
+//            AdiosStMan(string aMethod="POSIX", string aPara="", uint64_t writeBufsize=1000, uint64_t readBufsize=2000);
 //            AdiosStMan(string aMethod="MPI_AGGREGATE", string aPara="num_aggregators=24, num_ost=24", uint64_t writeBufsize=1000, uint64_t readBufsize=2000);
             ~AdiosStMan();
 
@@ -73,13 +77,17 @@ namespace casacore {
             ADIOS_FILE* getAdiosReadFile();
 
             static DataManager* makeObject (const casa::String& aDataManType, const casa::Record& spec);
-
-            void adiosWriteOpen();
+            
+            void adiosWriteInit();
+            void adiosWriteOpen(uint64_t rownr); 
             void adiosWriteClose();
             uInt getNrRows();
             char getMode();
-            uint64_t getReadBufsize();
-
+//            uint64_t getReadBufsize();
+            uint64_t getBufRows();
+            uint64_t getAdiosNrBufRows();
+     
+            uint64_t getmpiSize();
             void logdbg(string func, string stat, int para=0);
 
         private:
@@ -90,12 +98,17 @@ namespace casacore {
             int64_t itsAdiosWriteFile;
             int64_t itsAdiosGroup;
             uint64_t itsNrAdiosFiles;
-            uint64_t itsAdiosWriteBufsize;
-            uint64_t itsAdiosReadBufsize;
+//            uint64_t itsAdiosWriteBufsize;
+//            uint64_t itsAdiosReadBufsize;
+            uint64_t itsAdiosBufRows;
+            uInt itsAdiosNrBufRows;
+            uint64_t itsAdiosBufsize;
+            uint64_t itsAdiosWriteRows;
             uint64_t itsAdiosGroupsize;
             uint64_t itsAdiosTotalsize;
             string itsAdiosTransMethod;
             string itsAdiosTransPara;
+            uInt itsAdiosStart;
 
             ADIOS_FILE *itsAdiosReadFile;
 
@@ -103,7 +116,7 @@ namespace casacore {
             int mpiSize;
             bool isMpiInitInternal;
             static int itsNrInstances;
-
+         
             PtrBlock<AdiosStManColumn*> itsColumnPtrBlk;
 
             uInt itsNrRows;
@@ -112,6 +125,8 @@ namespace casacore {
 
             char itsMode;
             int itsStManColumnType;
+
+//            char *itsAdiosWriteMode;
 
             string logdbgLast;
             uint64_t logdbgCount;

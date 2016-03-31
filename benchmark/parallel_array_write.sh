@@ -1,24 +1,29 @@
-#!/bin/bash
+#!/bin/bash --login
 
-. /lustre/atlas2/csc143/proj-shared/ska/ska_bashrc.sh
+#. /lustre/atlas2/csc143/proj-shared/ska/ska_bashrc.sh
+. /scratch/pawsey0129/AdiosStMan/bashrc
 
 QUOTA="5000000000" # in KB
-OUTPUT="$SCRATCH/tmp"
-writeBufSize=28000
+OUTPUT="/scratch/pawsey0129/AdiosStMan/data1"
+
+writeBufRows=10
 
 if [ "$JOBSCHEDULER" == "slurm" ]; then
     JOBID=$SLURM_JOBID
-    JOBDIR=$SLURM_SUBMIT_DIR
+#    JOBDIR=$SLURM_SUBMIT_DIR
 else
     JOBID=$PBS_JOBID
-    JOBDIR=$PBS_O_WORKDIR
+#    JOBDIR=$PBS_O_WORKDIR
 fi
+
+JOBDIR="/scratch/pawsey0129/AdiosStMan/AdiosStMan_update/benchmark"
+
 
 for i in $(seq 1 10)
 do
-    for rows in $(seq 100 100 1000)
+    for rows in $(seq 200 200 1000)
     do
-        for length in $(seq 1000 1000 20000)
+        for length in $(seq 9000 1000 9000)
         do
             CHECK=$(du -s $OUTPUT | cut -f1)
             if [ "$CHECK" -gt "$QUOTA" ]; then
@@ -28,12 +33,12 @@ do
 
             if [ "$VENDOR" == "cray" ]; then
                 NP=$(wc -l $PBS_NODEFILE | awk '{print $1}')
-                RUN="aprun -n$(( $NP / 16  )) -N1"
+                RUN="aprun -B"
             else
                 RUN="mpirun"
             fi
 
-            RUNLINE="$RUN $JOBDIR/parallel_array_write $rows $length $length $OUTPUT/${rows}rows_${length}length_${JOBID}_${i}.casa $writeBufSize"
+            RUNLINE="$RUN $JOBDIR/parallel_array_write $rows $length $length $OUTPUT/${rows}rows_${length}length_${i}.casa $writeBufRows"
             echo $RUNLINE
             $RUNLINE >> $JOBDIR/log
         done

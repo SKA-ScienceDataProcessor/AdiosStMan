@@ -37,10 +37,10 @@ import os
 #  ----------------- testing configuration
 #
 namesStMan = ['AdiosStMan', 'TiledShapeStMan', 'StandardStMan']
-nrRows = range(10, 100, 20)
-arrayS = range(100, 1000, 200)
+nrRows = range(200, 200, 4000)
+arrayS = range(2000, 1000, 3000)
 iters  = 1
-filepath = '/scratch/tmp'
+filepath = '/home/ska1/tmp'
 cleaning_threshould = 90  # in GB / if there is less disk space than this number, all casa files will be deleted upon writing requests
 
 

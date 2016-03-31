@@ -110,16 +110,38 @@ int main(int argc, char **argv){
     // write data into the column objects
     for (uInt i=0; i<NrRows; i++) {
         arr_Bool = 1; col_Bool.put(i, arr_Bool);
+    }
+    for (uInt i=0; i<NrRows; i++) {
         arr_uChar = 2; col_uChar.put(i, arr_uChar);
+    }
+    for (uInt i=0; i<NrRows; i++) {
         arr_Short = -3; col_Short.put(i, arr_Short);
+    }
+    for (uInt i=0; i<NrRows; i++) {
         arr_uShort = 4; col_uShort.put(i, arr_uShort);
+    }
+    for (uInt i=0; i<NrRows; i++) {
         indgen(arr_Int, (Int)i*100); col_Int.put(i, arr_Int);
-        indgen(arr_uInt, (uInt)i*100); col_uInt.put(i, arr_uInt);
+    }
+    for (uInt i=0; i<NrRows; i++) {
         indgen(arr_Float, (Float)i*100, (Float)0.1); col_Float.put(i, arr_Float);
+    }
+    for (uInt i=0; i<NrRows; i++) {
+        indgen(arr_uInt, (uInt)i*100); col_uInt.put(i, arr_uInt);
+    }
+    for (uInt i=0; i<NrRows; i++) {
         indgen(arr_Double, (Double)i*100, (Double)0.01); col_Double.put(i, arr_Double);
+    }
+    for (uInt i=0; i<NrRows; i++) {
         indgen(arr_Complex, (Complex)i*100, (Complex)0.001); col_Complex.put(i, arr_Complex);
+    }
+    for (uInt i=0; i<NrRows; i++) {
         arr_DComplex = 5; col_DComplex.put(i, arr_DComplex);
     }
+
+
+
+  
 
     return 0;
 }

@@ -4,6 +4,9 @@
 //    Crawley, Perth WA 6009
 //    Australia
 //
+//    Shanghai Astronomical Observatory, Chinese Academy of Sciences
+//    80 Nandan Road, Shanghai 200030, China
+//
 //    This library is free software: you can redistribute it and/or
 //    modify it under the terms of the GNU General Public License as published
 //    by the Free Software Foundation, either version 3 of the License, or
@@ -18,7 +21,7 @@
 //    with this library. If not, see <http://www.gnu.org/licenses/>.
 //
 //    Any bugs, questions, concerns and/or suggestions please email to
-//    jason.wang@icrar.org
+//    lbq@shao.ac.cn, jason.wang@icrar.org
 
 #include "AdiosStManColumn.h"
 
@@ -234,6 +237,7 @@ namespace casacore {
         itsStManPtr->logdbg("AdiosStManColumn::getColumnSliceV","");
         getArrayWrapper(0, itsStManPtr->getNrRows(), ns, dataPtr);
     }
+    
 
     void AdiosStManColumn::getArrayWrapper(uint64_t rowStart, uint64_t nrRows, const Slicer& ns, void* dataPtr){
         Bool deleteIt;

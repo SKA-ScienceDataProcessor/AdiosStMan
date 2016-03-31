@@ -4,6 +4,9 @@
 //    Crawley, Perth WA 6009
 //    Australia
 //
+//    Shanghai Astronomical Observatory, Chinese Academy of Sciences
+//    80 Nandan Road, Shanghai 200030, China
+//
 //    This library is free software: you can redistribute it and/or
 //    modify it under the terms of the GNU General Public License as published
 //    by the Free Software Foundation, either version 3 of the License, or
@@ -18,7 +21,7 @@
 //    with this library. If not, see <http://www.gnu.org/licenses/>.
 //
 //    Any bugs, questions, concerns and/or suggestions please email to
-//    jason.wang@icrar.org
+//    lbq@shao.ac.cn, jason.wang@icrar.org
 
 #include "AdiosStManScaColumn.h"
 
@@ -78,44 +81,74 @@ namespace casacore {
     // *** access a row for a scalar column ***
     // put
     void AdiosStManScaColumn::putBoolV (uInt rownr, const Bool* dataPtr){
-        itsStManPtr->adiosWriteOpen();
-        adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , (void*)dataPtr);
+        if(rownr%itsStManPtr->getBufRows()<=(itsStManPtr->getmpiSize()-1)){ 
+          itsStManPtr->adiosWriteClose();
+        }
+        itsStManPtr->adiosWriteOpen(rownr);
+        adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[(rownr-(itsStManPtr->getAdiosNrBufRows()-1)*itsStManPtr->getBufRows())] , (void*)dataPtr);
     }
     void AdiosStManScaColumn::putuCharV (uInt rownr, const uChar* dataPtr){
-        itsStManPtr->adiosWriteOpen();
-        adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , (void*)dataPtr);
+        if(rownr%itsStManPtr->getBufRows()<=(itsStManPtr->getmpiSize()-1)){    
+          itsStManPtr->adiosWriteClose();
+        }
+        itsStManPtr->adiosWriteOpen(rownr);
+        adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[(rownr-(itsStManPtr->getAdiosNrBufRows()-1)*itsStManPtr->getBufRows())] , (void*)dataPtr);
     }
     void AdiosStManScaColumn::putShortV (uInt rownr, const Short* dataPtr){
-        itsStManPtr->adiosWriteOpen();
-        adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , (void*)dataPtr);
+        if(rownr%itsStManPtr->getBufRows()<=(itsStManPtr->getmpiSize()-1)){    
+          itsStManPtr->adiosWriteClose();
+        }
+        itsStManPtr->adiosWriteOpen(rownr);
+        adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[(rownr-(itsStManPtr->getAdiosNrBufRows()-1)*itsStManPtr->getBufRows())] , (void*)dataPtr);
     }
     void AdiosStManScaColumn::putuShortV (uInt rownr, const uShort* dataPtr){
-        itsStManPtr->adiosWriteOpen();
-        adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , (void*)dataPtr);
+        if(rownr%itsStManPtr->getBufRows()<=(itsStManPtr->getmpiSize()-1)){    
+          itsStManPtr->adiosWriteClose();
+        }
+        itsStManPtr->adiosWriteOpen(rownr);
+        adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[(rownr-(itsStManPtr->getAdiosNrBufRows()-1)*itsStManPtr->getBufRows())] , (void*)dataPtr);
     }
     void AdiosStManScaColumn::putIntV (uInt rownr, const Int* dataPtr){
-        itsStManPtr->adiosWriteOpen();
-        adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , (void*)dataPtr);
+        if(rownr%itsStManPtr->getBufRows()<=(itsStManPtr->getmpiSize()-1)){    
+          itsStManPtr->adiosWriteClose();
+        }
+        itsStManPtr->adiosWriteOpen(rownr);
+        adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[(rownr-(itsStManPtr->getAdiosNrBufRows()-1)*itsStManPtr->getBufRows())] , (void*)dataPtr);
     }
     void AdiosStManScaColumn::putuIntV (uInt rownr, const uInt* dataPtr){
-        itsStManPtr->adiosWriteOpen();
-        adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , (void*)dataPtr);
+        if(rownr%itsStManPtr->getBufRows()<=(itsStManPtr->getmpiSize()-1)){    
+          itsStManPtr->adiosWriteClose();
+        }
+        itsStManPtr->adiosWriteOpen(rownr);
+        adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[(rownr-(itsStManPtr->getAdiosNrBufRows()-1)*itsStManPtr->getBufRows())] , (void*)dataPtr);
     }
     void AdiosStManScaColumn::putfloatV (uInt rownr, const float* dataPtr){
-        itsStManPtr->adiosWriteOpen();
-        adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , (void*)dataPtr);
+        if(rownr%itsStManPtr->getBufRows()<=(itsStManPtr->getmpiSize()-1)){    
+          itsStManPtr->adiosWriteClose();
+        }
+        itsStManPtr->adiosWriteOpen(rownr);
+        adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[(rownr-(itsStManPtr->getAdiosNrBufRows()-1)*itsStManPtr->getBufRows())] , (void*)dataPtr);
     }
     void AdiosStManScaColumn::putdoubleV (uInt rownr, const double* dataPtr){
-        itsStManPtr->adiosWriteOpen();
-        adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , (void*)dataPtr);
+        if(rownr%itsStManPtr->getBufRows()<=(itsStManPtr->getmpiSize()-1)){    
+          itsStManPtr->adiosWriteClose();
+        }
+        itsStManPtr->adiosWriteOpen(rownr);
+        adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[(rownr-(itsStManPtr->getAdiosNrBufRows()-1)*itsStManPtr->getBufRows())] , (void*)dataPtr);
     }
     void AdiosStManScaColumn::putComplexV (uInt rownr, const Complex* dataPtr){
-        itsStManPtr->adiosWriteOpen();
-        adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , (void*)dataPtr);
+        if(rownr%itsStManPtr->getBufRows()<=(itsStManPtr->getmpiSize()-1)){    
+          itsStManPtr->adiosWriteClose();
+        }
+        itsStManPtr->adiosWriteOpen(rownr);
+        adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[(rownr-(itsStManPtr->getAdiosNrBufRows()-1)*itsStManPtr->getBufRows())] , (void*)dataPtr);
     }
     void AdiosStManScaColumn::putDComplexV (uInt rownr, const DComplex* dataPtr){
-        itsStManPtr->adiosWriteOpen();
-        adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , (void*)dataPtr);
+        if(rownr%itsStManPtr->getBufRows()<=(itsStManPtr->getmpiSize()-1)){    
+          itsStManPtr->adiosWriteClose();
+        }
+        itsStManPtr->adiosWriteOpen(rownr);
+        adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[(rownr-(itsStManPtr->getAdiosNrBufRows()-1)*itsStManPtr->getBufRows())] , (void*)dataPtr);
     }
     void AdiosStManScaColumn::putStringV (uInt rownr, const String* dataPtr){
         cout << "AdiosStManColumn Error: Sorry, AdiosStMan does not support string type at the moment!" << endl;
@@ -182,13 +215,14 @@ namespace casacore {
     void AdiosStManScaColumn::initAdiosWrite(uInt aNrRows){
         itsStManPtr->logdbg("AdiosStManScaColumn::initAdiosWrite","start");
         if(!itsAdiosWriteIDs){
-            itsAdiosWriteIDs = new int64_t[aNrRows];
+            itsAdiosWriteIDs = new int64_t[itsStManPtr->getBufRows()];
         }
         for(uInt j=0; j<aNrRows; j++){
             stringstream NrRows, RowID;
             NrRows << aNrRows;
-            RowID << j;
+            RowID << j+(itsStManPtr->getAdiosNrBufRows()-1)*itsStManPtr->getBufRows();
             itsAdiosWriteIDs[j] = adios_define_var(itsStManPtr->getAdiosGroup(), itsColumnName.c_str(), "", itsAdiosDataType, "1", NrRows.str().c_str(), RowID.str().c_str() );
+            cout<<RowID.str().c_str()<<endl;
         }
     }
 

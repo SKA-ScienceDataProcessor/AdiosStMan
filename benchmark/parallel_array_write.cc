@@ -4,6 +4,9 @@
 //    Crawley, Perth WA 6009
 //    Australia
 //
+//    Shanghai Astronomical Observatory, Chinese Academy of Sciences
+//    80 Nandan Road, Shanghai 200030, China
+//
 //    This library is free software: you can redistribute it and/or
 //    modify it under the terms of the GNU General Public License as published
 //    by the Free Software Foundation, either version 3 of the License, or
@@ -18,7 +21,7 @@
 //    with this library. If not, see <http://www.gnu.org/licenses/>.
 //
 //    Any bugs, questions, concerns and/or suggestions please email to
-//    jason.wang@icrar.org
+//    lbq@shao.ac.cn, jason.wang@icrar.org
 
 
 
@@ -59,7 +62,8 @@ int writeBufSize;
 
 void write_table(){
 
-    AdiosStMan stman("MPI_AGGREGATE", "num_aggregators=24, num_ost=24", 30000, 2000);
+//    AdiosStMan stman("MPI_AGGREGATE", "num_aggregators=24, num_ost=24", 30000, 2000);
+     AdiosStMan stman("POSIX");
 
     // define a table description & add a scalar column and an array column
     TableDesc td("", "1", TableDesc::Scratch);
@@ -87,7 +91,7 @@ int main (int argc, char **argv){
     MPI_Comm_size(MPI_COMM_WORLD, &mpiSize);
 
     if(argc < 6){
-        cout << "./parallel_array_write (int)nrRows (int)arrayX (int)arrayY (string)filename (int)writeBufSize" << endl;
+        cout << "./parallel_array_write (int)nrRows (int)arrayX (int)arrayY (string)filename (int)writeBufNrRows" << endl;
         exit(1);
     }
 
@@ -106,7 +110,7 @@ int main (int argc, char **argv){
     // into /tmp and clean them up when job is finished
     if(mpiRank>0){
         stringstream filename_s;
-        filename_s << "/tmp/v" << mpiRank << ".casa";
+        filename_s << "/scratch/pawsey0129/AdiosStMan/tmp1/rank" << mpiRank << ".casa";
         filename = filename_s.str();
     }
 

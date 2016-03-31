@@ -4,6 +4,9 @@
 //    Crawley, Perth WA 6009
 //    Australia
 //
+//    Shanghai Astronomical Observatory, Chinese Academy of Sciences
+//    80 Nandan Road, Shanghai 200030, China
+//
 //    This library is free software: you can redistribute it and/or
 //    modify it under the terms of the GNU General Public License as published
 //    by the Free Software Foundation, either version 3 of the License, or
@@ -18,7 +21,8 @@
 //    with this library. If not, see <http://www.gnu.org/licenses/>.
 //
 //    Any bugs, questions, concerns and/or suggestions please email to
-//    jason.wang@icrar.org
+//    lbq@shao.ac.cn, jason.wang@icrar.org
+
 
 #include "AdiosStManDirColumn.h"
 
@@ -31,7 +35,7 @@ namespace casacore {
         readCacheStartRow(0),
         readCacheNrRows(0)
     {
-        readCacheNrRows = aParent->getReadBufsize();
+        readCacheNrRows = aParent->getBufRows();
     }
 
     AdiosStManDirColumn::~AdiosStManDirColumn (){
@@ -111,12 +115,12 @@ namespace casacore {
     void AdiosStManDirColumn::initAdiosWrite(uInt aNrRows){
         itsStManPtr->logdbg("AdiosStManDirColumn::initAdiosWrite","start");
         if(!itsAdiosWriteIDs){
-            itsAdiosWriteIDs = new int64_t[aNrRows];
-        }
+            itsAdiosWriteIDs = new int64_t[itsStManPtr->getBufRows()];
+         }
         for(uInt j=0; j<aNrRows; j++){
             stringstream NrRows, RowID;
             NrRows << aNrRows;
-            RowID << j;
+            RowID << j+(itsStManPtr->getAdiosNrBufRows()-1)*itsStManPtr->getBufRows();
             IPosition dimensions_pos;
             for (int k=itsShape.nelements() - 1; k>=0; k--){
                 dimensions_pos.append(IPosition(1, itsShape[k]));
@@ -133,8 +137,16 @@ namespace casacore {
     }
 
     void AdiosStManDirColumn::putArrayMetaV (uint64_t row, const void* data){
-        itsStManPtr->adiosWriteOpen();
-        adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[row] , (void*)data);
+        if((row%itsStManPtr->getBufRows())<=(itsStManPtr->getmpiSize()-1)){
+             itsStManPtr->adiosWriteClose();
+         }
+        itsStManPtr->adiosWriteOpen(row);
+        if(row<itsStManPtr->getBufRows()){
+           adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[row], (void*)data);
+        }
+       else{
+          adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[(row-(itsStManPtr->getAdiosNrBufRows()-1)*itsStManPtr->getBufRows())] , (void*)data);
+       }
     }
 
     bool AdiosStManDirColumn::checkReadCache (uint64_t rowStart, uint64_t nrRows, const Slicer& ns, void* data){
