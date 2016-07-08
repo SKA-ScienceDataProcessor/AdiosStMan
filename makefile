@@ -14,6 +14,9 @@ $(TARGET):$(SRC)
 ifdef CASA_LIB
 	cp $(TARGET) $(CASA_LIB)
 endif
+ifdef CASA_INC
+	cp *.h $(CASA_INC)/casacore/tables/DataMan
+endif
 
 all:$(TARGET) 
 	for d in $(DIRS); do(cd $$d; rm -f $(TARGET); ln -sf ../$(TARGET) ./; make);  done
