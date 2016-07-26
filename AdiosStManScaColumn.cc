@@ -81,70 +81,70 @@ namespace casacore {
     // *** access a row for a scalar column ***
     // put
     void AdiosStManScaColumn::putBoolV (uInt rownr, const Bool* dataPtr){
-        if(rownr%itsStManPtr->getBufRows()<=(itsStManPtr->getmpiSize()-1)){ 
+        if((rownr-itsStManPtr->getMpiRank()*itsStManPtr->getRowsPerProcess())%itsStManPtr->getBufRows()==0){ 
           itsStManPtr->adiosWriteClose();
         }
         itsStManPtr->adiosWriteOpen(rownr);
         adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[(rownr-(itsStManPtr->getAdiosNrBufRows()-1)*itsStManPtr->getBufRows())] , (void*)dataPtr);
     }
     void AdiosStManScaColumn::putuCharV (uInt rownr, const uChar* dataPtr){
-        if(rownr%itsStManPtr->getBufRows()<=(itsStManPtr->getmpiSize()-1)){    
+        if((rownr-itsStManPtr->getMpiRank()*itsStManPtr->getRowsPerProcess())%itsStManPtr->getBufRows()==0){    
           itsStManPtr->adiosWriteClose();
         }
         itsStManPtr->adiosWriteOpen(rownr);
         adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[(rownr-(itsStManPtr->getAdiosNrBufRows()-1)*itsStManPtr->getBufRows())] , (void*)dataPtr);
     }
     void AdiosStManScaColumn::putShortV (uInt rownr, const Short* dataPtr){
-        if(rownr%itsStManPtr->getBufRows()<=(itsStManPtr->getmpiSize()-1)){    
+        if((rownr-itsStManPtr->getMpiRank()*itsStManPtr->getRowsPerProcess())%itsStManPtr->getBufRows()==0){    
           itsStManPtr->adiosWriteClose();
         }
         itsStManPtr->adiosWriteOpen(rownr);
         adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[(rownr-(itsStManPtr->getAdiosNrBufRows()-1)*itsStManPtr->getBufRows())] , (void*)dataPtr);
     }
     void AdiosStManScaColumn::putuShortV (uInt rownr, const uShort* dataPtr){
-        if(rownr%itsStManPtr->getBufRows()<=(itsStManPtr->getmpiSize()-1)){    
+        if((rownr-itsStManPtr->getMpiRank()*itsStManPtr->getRowsPerProcess())%itsStManPtr->getBufRows()==0){    
           itsStManPtr->adiosWriteClose();
         }
         itsStManPtr->adiosWriteOpen(rownr);
         adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[(rownr-(itsStManPtr->getAdiosNrBufRows()-1)*itsStManPtr->getBufRows())] , (void*)dataPtr);
     }
     void AdiosStManScaColumn::putIntV (uInt rownr, const Int* dataPtr){
-        if(rownr%itsStManPtr->getBufRows()<=(itsStManPtr->getmpiSize()-1)){    
+        if((rownr-itsStManPtr->getMpiRank()*itsStManPtr->getRowsPerProcess())%itsStManPtr->getBufRows()==0){    
           itsStManPtr->adiosWriteClose();
         }
         itsStManPtr->adiosWriteOpen(rownr);
         adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[(rownr-(itsStManPtr->getAdiosNrBufRows()-1)*itsStManPtr->getBufRows())] , (void*)dataPtr);
     }
     void AdiosStManScaColumn::putuIntV (uInt rownr, const uInt* dataPtr){
-        if(rownr%itsStManPtr->getBufRows()<=(itsStManPtr->getmpiSize()-1)){    
+        if((rownr-itsStManPtr->getMpiRank()*itsStManPtr->getRowsPerProcess())%itsStManPtr->getBufRows()==0){    
           itsStManPtr->adiosWriteClose();
         }
         itsStManPtr->adiosWriteOpen(rownr);
         adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[(rownr-(itsStManPtr->getAdiosNrBufRows()-1)*itsStManPtr->getBufRows())] , (void*)dataPtr);
     }
     void AdiosStManScaColumn::putfloatV (uInt rownr, const float* dataPtr){
-        if(rownr%itsStManPtr->getBufRows()<=(itsStManPtr->getmpiSize()-1)){    
+        if((rownr-itsStManPtr->getMpiRank()*itsStManPtr->getRowsPerProcess())%itsStManPtr->getBufRows()==0){    
           itsStManPtr->adiosWriteClose();
         }
         itsStManPtr->adiosWriteOpen(rownr);
         adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[(rownr-(itsStManPtr->getAdiosNrBufRows()-1)*itsStManPtr->getBufRows())] , (void*)dataPtr);
     }
     void AdiosStManScaColumn::putdoubleV (uInt rownr, const double* dataPtr){
-        if(rownr%itsStManPtr->getBufRows()<=(itsStManPtr->getmpiSize()-1)){    
+        if((rownr-itsStManPtr->getMpiRank()*itsStManPtr->getRowsPerProcess())%itsStManPtr->getBufRows()==0){    
           itsStManPtr->adiosWriteClose();
         }
         itsStManPtr->adiosWriteOpen(rownr);
         adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[(rownr-(itsStManPtr->getAdiosNrBufRows()-1)*itsStManPtr->getBufRows())] , (void*)dataPtr);
     }
     void AdiosStManScaColumn::putComplexV (uInt rownr, const Complex* dataPtr){
-        if(rownr%itsStManPtr->getBufRows()<=(itsStManPtr->getmpiSize()-1)){    
+        if((rownr-itsStManPtr->getMpiRank()*itsStManPtr->getRowsPerProcess())%itsStManPtr->getBufRows()==0){    
           itsStManPtr->adiosWriteClose();
         }
         itsStManPtr->adiosWriteOpen(rownr);
         adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[(rownr-(itsStManPtr->getAdiosNrBufRows()-1)*itsStManPtr->getBufRows())] , (void*)dataPtr);
     }
     void AdiosStManScaColumn::putDComplexV (uInt rownr, const DComplex* dataPtr){
-        if(rownr%itsStManPtr->getBufRows()<=(itsStManPtr->getmpiSize()-1)){    
+        if((rownr-itsStManPtr->getMpiRank()*itsStManPtr->getRowsPerProcess())%itsStManPtr->getBufRows()==0){    
           itsStManPtr->adiosWriteClose();
         }
         itsStManPtr->adiosWriteOpen(rownr);

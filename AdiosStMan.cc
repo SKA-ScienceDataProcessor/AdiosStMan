@@ -31,7 +31,7 @@
 namespace casacore {
 
     int AdiosStMan::itsNrInstances = 0;
-    AdiosStMan::AdiosStMan(string aMethod, string aPara, uint64_t aBufRows)
+    AdiosStMan::AdiosStMan(string aMethod, string aPara, uint64_t aBufRows, uint64_t aRowsPerProcess)
         :DataManager(),
         itsDataManName("AdiosStMan"),
         itsAdiosWriteFile(0),
@@ -41,9 +41,8 @@ namespace casacore {
         itsAdiosTransMethod(aMethod),
         itsAdiosTransPara(aPara),
         itsAdiosBufRows(aBufRows),
-//        itsAdiosWriteBufsize(writeBufsize),
-//        itsAdiosReadBufsize(readBufsize),
-        isMpiInitInternal(false)
+        isMpiInitInternal(false),
+        rows_per_process(aRowsPerProcess)
     {
         AdiosStMan::itsNrInstances++;
         int isMpiInitialized;
@@ -68,8 +67,6 @@ namespace casacore {
         itsAdiosTransMethod(that.itsAdiosTransMethod),
         itsAdiosTransPara(that.itsAdiosTransPara),
         itsAdiosBufRows(that.itsAdiosBufRows),
-//        itsAdiosWriteBufsize(that.itsAdiosWriteBufsize),
-//        itsAdiosReadBufsize(that.itsAdiosReadBufsize),
         isMpiInitInternal(false)
     {
         AdiosStMan::itsNrInstances++;
@@ -147,22 +144,9 @@ namespace casacore {
     }
 
     void AdiosStMan::adiosWriteInit(){
-       // if(!itsAdiosGroupi){
             logdbg("AdiosStMan::adiosWriteInit","");
-            // broadcast the filename string from the master to slaves.
-    //        string itsFileName;
-    //        int itsFileNameLen;
-    //        if(mpiRank == 0){
-    //            itsFileName = fileName();
-    //            itsFileNameLen = itsFileName.length();
-    //        }
-    //        MPI_Bcast(&itsFileNameLen, 1, MPI_INT, 0, itsMpiComm);
-    //        char *itsFileNameChar = new char [itsFileNameLen + 1];
-    //        sprintf(itsFileNameChar,"%s", itsFileName.c_str());
-    //        MPI_Bcast(itsFileNameChar, itsFileNameLen + 1, MPI_CHAR, 0, itsMpiComm)
             // create ADIOS file
             adios_init_noxml(itsMpiComm);
-          //  adios_allocate_buffer(ADIOS_BUFFER_ALLOC_NOW, itsAdiosWriteBufsize);
             adios_declare_group(&itsAdiosGroup, "casatable", "", adios_flag_no);
             adios_select_method(itsAdiosGroup, itsAdiosTransMethod.c_str(), itsAdiosTransPara.c_str(), "");
             for (uInt i=0; i<itsNrCols; i++){
@@ -181,10 +165,6 @@ namespace casacore {
                     itsAdiosBufsize= itsAdiosBufRows* itsColumnPtrBlk[i]->getDataTypeSize() * itsColumnPtrBlk[i]->getShapeColumn().product()/1000000+1;
                 }
             }
-        //    adios_open(&itsAdiosWriteFile, "casatable", itsFileNameChar, "w", itsMpiComm);
-        //    adios_group_size(itsAdiosWriteFile, itsAdiosGroupsize, &itsAdiosTotalsize);
-          //  delete [] itsFileNameChar;
-      //  }
     }
 
     void AdiosStMan::adiosWriteOpen(uint64_t rownr){
@@ -193,14 +173,14 @@ namespace casacore {
         string itsFileName;
         int itsFileNameLen;
         
-        if(rownr<itsAdiosBufRows){
+        if((rownr-mpiRank*rows_per_process)<itsAdiosBufRows){
            sprintf(itsAdiosWriteMode,"%s","w");     
 
            itsAdiosWriteRows=itsAdiosBufRows;
            if(!itsAdiosWriteFile){
               if(mpiRank == 0){
                 itsFileName = fileName();
-               itsFileNameLen = itsFileName.length();
+                itsFileNameLen = itsFileName.length();
                }
 
               MPI_Bcast(&itsFileNameLen, 1, MPI_INT, 0, itsMpiComm); 
@@ -352,18 +332,20 @@ namespace casacore {
         return itsMode;
     }
 
-//    uiint64_t AdiosStMan::getReadBufsize (){
-//        return itsAdiosReadBufsize;
-//    }
-
     uint64_t AdiosStMan::getBufRows(){
           return itsAdiosBufRows;
     }
+
     uint64_t AdiosStMan::getAdiosNrBufRows(){
           return itsAdiosNrBufRows;
     }
-    uint64_t AdiosStMan::getmpiSize(){
-          return mpiSize;
+
+    uint64_t AdiosStMan::getMpiRank(){
+          return mpiRank;
+    }
+
+    uint64_t AdiosStMan::getRowsPerProcess(){
+          return rows_per_process;
     }
 
     String AdiosStMan::dataManagerName() const

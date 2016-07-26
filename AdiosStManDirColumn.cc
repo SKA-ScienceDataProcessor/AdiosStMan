@@ -137,16 +137,11 @@ namespace casacore {
     }
 
     void AdiosStManDirColumn::putArrayMetaV (uint64_t row, const void* data){
-        if((row%itsStManPtr->getBufRows())<=(itsStManPtr->getmpiSize()-1)){
+        if((row-itsStManPtr->getMpiRank()*itsStManPtr->getRowsPerProcess())%itsStManPtr->getBufRows()==0){
              itsStManPtr->adiosWriteClose();
          }
         itsStManPtr->adiosWriteOpen(row);
-        if(row<itsStManPtr->getBufRows()){
-           adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[row], (void*)data);
-        }
-       else{
-          adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[(row-(itsStManPtr->getAdiosNrBufRows()-1)*itsStManPtr->getBufRows())] , (void*)data);
-       }
+        adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[(row-(itsStManPtr->getAdiosNrBufRows()-1)*itsStManPtr->getBufRows())] , (void*)data);
     }
 
     bool AdiosStManDirColumn::checkReadCache (uint64_t rowStart, uint64_t nrRows, const Slicer& ns, void* data){

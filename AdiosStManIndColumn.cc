@@ -108,7 +108,7 @@ namespace casacore {
     }
 
     void AdiosStManIndColumn::putArrayMetaV (uint64_t row, const void* data){
-        if((row%itsStManPtr->getBufRows()<=(itsStManPtr->getmpiSize()-1))){
+        if((row-itsStManPtr->getMpiRank()*itsStManPtr->getRowsPerProcess())%itsStManPtr->getBufRows()==0){
            itsStManPtr->adiosWriteClose();
          }
         itsStManPtr->adiosWriteOpen(row);

@@ -52,9 +52,7 @@ namespace casacore {
     {
         public:
 
-              AdiosStMan(string aMethod="POSIX", string aPara="", uint64_t aBufRows=100);
-//            AdiosStMan(string aMethod="POSIX", string aPara="", uint64_t writeBufsize=1000, uint64_t readBufsize=2000);
-//            AdiosStMan(string aMethod="MPI_AGGREGATE", string aPara="num_aggregators=24, num_ost=24", uint64_t writeBufsize=1000, uint64_t readBufsize=2000);
+            AdiosStMan(string aMethod="POSIX", string aPara="", uint64_t aBufRows=100, uint64_t aRowsPerProcess = 0);
             ~AdiosStMan();
 
             virtual DataManager* clone() const;
@@ -83,11 +81,11 @@ namespace casacore {
             void adiosWriteClose();
             uInt getNrRows();
             char getMode();
-//            uint64_t getReadBufsize();
             uint64_t getBufRows();
             uint64_t getAdiosNrBufRows();
      
-            uint64_t getmpiSize();
+            uint64_t getMpiRank();
+            uint64_t getRowsPerProcess();
             void logdbg(string func, string stat, int para=0);
 
         private:
@@ -98,8 +96,6 @@ namespace casacore {
             int64_t itsAdiosWriteFile;
             int64_t itsAdiosGroup;
             uint64_t itsNrAdiosFiles;
-//            uint64_t itsAdiosWriteBufsize;
-//            uint64_t itsAdiosReadBufsize;
             uint64_t itsAdiosBufRows;
             uInt itsAdiosNrBufRows;
             uint64_t itsAdiosBufsize;
@@ -114,6 +110,7 @@ namespace casacore {
 
             int mpiRank;
             int mpiSize;
+            uint64_t rows_per_process;
             bool isMpiInitInternal;
             static int itsNrInstances;
          
@@ -125,8 +122,6 @@ namespace casacore {
 
             char itsMode;
             int itsStManColumnType;
-
-//            char *itsAdiosWriteMode;
 
             string logdbgLast;
             uint64_t logdbgCount;
