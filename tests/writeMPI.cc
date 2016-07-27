@@ -55,11 +55,17 @@ int main(int argc, char **argv){
 
     string filename = argv[1];
 
-    AdiosStMan stman;
+    AdiosStMan stman("POSIX", "", 10, 20);
 
     int mpiRank, mpiSize;
+//    MPI_Init(0,0);
     MPI_Comm_rank(MPI_COMM_WORLD, &mpiRank);
     MPI_Comm_size(MPI_COMM_WORLD, &mpiSize);
+    
+    int NrRows = 200;
+    int rows_per_process = NrRows/mpiSize;
+
+//    AdiosStMan stman("POSIX", "", 10, rows_per_process);
 
     // generate filenames for slave processes
     // these files are not used later on, so just put them
@@ -71,8 +77,7 @@ int main(int argc, char **argv){
     }
 
     // define a dimension object for the array column
-    IPosition data_pos = IPosition(2,5000,6000);
-    int NrRows = 500;
+    IPosition data_pos = IPosition(2,50,60);
     // define data arrays that actually hold the data
     Array<Float> data_arr(data_pos);
     // put some data into the data array
@@ -93,11 +98,13 @@ int main(int argc, char **argv){
     ArrayColumn<Float> data_col(casa_table, "data");
 
     // each mpi rank writes a subset of the data
-    for (uInt i=mpiRank; i<NrRows; i+=mpiSize) {
-        index_col.put (i, i);
-        data_col.put (i, data_arr);
-    }
+    for (uInt i=0; i<rows_per_process; i++) {
+        index_col.put (mpiRank * rows_per_process + i, i);
+        data_col.put (mpiRank * rows_per_process + i, data_arr);
+    }  
 
+ //   MPI_Finalize();
+  
     return 0;
 }
 

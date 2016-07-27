@@ -39,7 +39,7 @@ int main(int argc, char **argv){
     // define a storage manager
 //    AdiosStMan stman("MPI", "", 100);
 //    AdiosStMan stman("MPI_AGGREGATE", "num_aggregators=32", 100);
-    AdiosStMan stman;
+    AdiosStMan stman("POSIX", "", 10, NrRows);
 
     // define a table description and add a scalar column
     TableDesc td("", "1", TableDesc::Scratch);

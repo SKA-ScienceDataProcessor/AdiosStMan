@@ -36,14 +36,15 @@ int main(int argc, char **argv){
     }
     string filename = argv[1];
 
+    int NrRows = 21;
+
     // define a storage manager
 //    AdiosStMan stman("MPI", "", 100);
 //    AdiosStMan stman("MPI_AGGREGATE", "num_aggregators=32", 100);
-    AdiosStMan stman;
+    AdiosStMan stman("POSIX", "", 10, NrRows);
 //    TiledShapeStMan stman("Ti", data_pos);
 
     IPosition data_pos = IPosition(2,6,5);
-    int NrRows = 4;
 
     Array<Bool> arr_Bool(data_pos);
     Array<uChar> arr_uChar(data_pos);
