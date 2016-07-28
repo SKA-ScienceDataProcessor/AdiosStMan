@@ -58,12 +58,16 @@ string filename;
 int mpiRank, mpiSize;
 Array<Float> data_arr;
 
-int writeBufSize;
+int writeBufRows;
+
+int rows_per_process;
 
 void write_table(){
+     
+     rows_per_process = NrRows/mpiRank;
 
 //    AdiosStMan stman("MPI_AGGREGATE", "num_aggregators=24, num_ost=24", 30000, 2000);
-     AdiosStMan stman("POSIX");
+     AdiosStMan stman("POSIX", "", writeBufRows, rows_per_process);
 
     // define a table description & add a scalar column and an array column
     TableDesc td("", "1", TableDesc::Scratch);
@@ -78,8 +82,8 @@ void write_table(){
     ArrayColumn<Float> data_col(casa_table, "data");
 
     // each mpi rank writes a subset of the data
-    for (uInt i=mpiRank; i<NrRows; i+=mpiSize) {
-        data_col.put (i, data_arr);
+    for (uInt i=0; i<rows_per_process; i++) {
+        data_col.put (mpiRank * rows_per_process + i, data_arr);
     }
 }
 
@@ -97,7 +101,7 @@ int main (int argc, char **argv){
 
     NrRows = atoi(argv[1]);
     filename = argv[4];
-    writeBufSize = atoi(argv[5]);
+    writeBufRows = atoi(argv[5]);
 
     data_pos = IPosition(2, atoi(argv[2]), atoi(argv[3]));
     data_arr = Array<Float>(data_pos);

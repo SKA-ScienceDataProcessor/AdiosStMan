@@ -120,7 +120,7 @@ namespace casacore {
         for(uInt j=0; j<aNrRows; j++){
             stringstream NrRows, RowID;
             NrRows << aNrRows;
-            RowID << j+(itsStManPtr->getAdiosNrBufRows()-1)*itsStManPtr->getBufRows();
+            RowID << j + (itsStManPtr->getAdiosNrBufRows()-1)*itsStManPtr->getBufRows() + itsStManPtr->getMpiRank()*itsStManPtr->getRowsPerProcess();
             IPosition dimensions_pos;
             for (int k=itsShape.nelements() - 1; k>=0; k--){
                 dimensions_pos.append(IPosition(1, itsShape[k]));
@@ -139,9 +139,11 @@ namespace casacore {
     void AdiosStManDirColumn::putArrayMetaV (uint64_t row, const void* data){
         if((row-itsStManPtr->getMpiRank()*itsStManPtr->getRowsPerProcess())%itsStManPtr->getBufRows()==0){
              itsStManPtr->adiosWriteClose();
+             itsAdiosWriteIDs = 0;
+             delete [] itsAdiosWriteIDs;
          }
         itsStManPtr->adiosWriteOpen(row);
-        adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[(row-(itsStManPtr->getAdiosNrBufRows()-1)*itsStManPtr->getBufRows())] , (void*)data);
+        adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[(row-itsStManPtr->getMpiRank()*itsStManPtr->getRowsPerProcess())%itsStManPtr->getBufRows()] , (void*)data);
     }
 
     bool AdiosStManDirColumn::checkReadCache (uint64_t rowStart, uint64_t nrRows, const Slicer& ns, void* data){

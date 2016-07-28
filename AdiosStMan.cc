@@ -153,18 +153,20 @@ namespace casacore {
                 itsColumnPtrBlk[i]->initAdiosWrite(itsAdiosWriteRows);
             }
             itsAdiosGroupsize = 0;
+            itsAdiosBufsize = 0;
             for (uInt i=0; i<itsNrCols; i++){
                 // if scalar column
                 if (itsColumnPtrBlk[i]->getShapeColumn().nelements() == 0){
-                     itsAdiosGroupsize = itsAdiosWriteRows * itsColumnPtrBlk[i]->getDataTypeSize();
-                     itsAdiosBufsize=itsAdiosBufRows * itsColumnPtrBlk[i]->getDataTypeSize()/1000000+1;
+                     itsAdiosGroupsize = itsAdiosGroupsize + itsAdiosWriteRows * itsColumnPtrBlk[i]->getDataTypeSize();
+                     itsAdiosBufsize =  itsAdiosBufsize + itsAdiosBufRows * itsColumnPtrBlk[i]->getDataTypeSize()/1000000+1;
                 }
                 // if array column
                 else{
-                    itsAdiosGroupsize = itsAdiosWriteRows * itsColumnPtrBlk[i]->getDataTypeSize() * itsColumnPtrBlk[i]->getShapeColumn().product();
-                    itsAdiosBufsize= itsAdiosBufRows* itsColumnPtrBlk[i]->getDataTypeSize() * itsColumnPtrBlk[i]->getShapeColumn().product()/1000000+1;
+                    itsAdiosGroupsize = itsAdiosGroupsize + itsAdiosWriteRows * itsColumnPtrBlk[i]->getDataTypeSize() * itsColumnPtrBlk[i]->getShapeColumn().product();
+                    itsAdiosBufsize = itsAdiosBufsize + itsAdiosBufRows * itsColumnPtrBlk[i]->getDataTypeSize() * itsColumnPtrBlk[i]->getShapeColumn().product()/1000000+1;
                 }
             }
+           //cout<<itsAdiosBufRows<<endl;
     }
 
     void AdiosStMan::adiosWriteOpen(uint64_t rownr){
@@ -197,7 +199,6 @@ namespace casacore {
               }  
               adios_open(&itsAdiosWriteFile, "casatable", itsFileNameChar, itsAdiosWriteMode, itsMpiComm);
               adios_group_size(itsAdiosWriteFile, itsAdiosGroupsize, &itsAdiosTotalsize);
-            //  adios_allocate_buffer(ADIOS_BUFFER_ALLOC_NOW, itsAdiosTotalsize);
               delete [] itsFileNameChar;     
            }
          }
@@ -219,10 +220,9 @@ namespace casacore {
 
               MPI_Bcast(itsFileNameChar, itsFileNameLen + 1, MPI_CHAR, 0, itsMpiComm);
               adiosWriteInit();
-            //  adios_allocate_buffer(ADIOS_BUFFER_ALLOC_NOW, itsAdiosGroupsize);
+              adios_allocate_buffer(ADIOS_BUFFER_ALLOC_NOW, itsAdiosBufsize);
               adios_open(&itsAdiosWriteFile, "casatable", itsFileNameChar, itsAdiosWriteMode, itsMpiComm);
               adios_group_size(itsAdiosWriteFile, itsAdiosGroupsize, &itsAdiosTotalsize);
-            //  adios_allocate_buffer(ADIOS_BUFFER_ALLOC_NOW, itsAdiosTotalsize);
            
              delete [] itsFileNameChar;
              }

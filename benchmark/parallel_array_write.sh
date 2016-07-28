@@ -1,7 +1,8 @@
 #!/bin/bash --login
 
 #. /lustre/atlas2/csc143/proj-shared/ska/ska_bashrc.sh
-. /scratch/pawsey0129/AdiosStMan/bashrc
+
+source /home/blao/bashrc_AdiosStMan
 
 QUOTA="5000000000" # in KB
 OUTPUT="/scratch/pawsey0129/AdiosStMan/data1"
@@ -16,12 +17,12 @@ else
 #    JOBDIR=$PBS_O_WORKDIR
 fi
 
-JOBDIR="/scratch/pawsey0129/AdiosStMan/AdiosStMan_update/benchmark"
+JOBDIR="/home/blao/AdiosStMan_u2/AdiosStMan/benchmark"
 
 
-for i in $(seq 1 10)
+for i in $(seq 1 1)
 do
-    for rows in $(seq 200 200 1000)
+    for rows in $(seq 1000 200 1000)
     do
         for length in $(seq 9000 1000 9000)
         do
