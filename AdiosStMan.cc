@@ -143,91 +143,55 @@ namespace casacore {
         cout << "AdiosStMan Error: addRow not supported!" << endl;
     }
 
-    void AdiosStMan::adiosWriteInit(){
-            logdbg("AdiosStMan::adiosWriteInit","");
-            // create ADIOS file
-            adios_init_noxml(itsMpiComm);
-            adios_declare_group(&itsAdiosGroup, "casatable", "", adios_flag_no);
-            adios_select_method(itsAdiosGroup, itsAdiosTransMethod.c_str(), itsAdiosTransPara.c_str(), "");
-            for (uInt i=0; i<itsNrCols; i++){
-                itsColumnPtrBlk[i]->initAdiosWrite(itsAdiosWriteRows);
-            }
-            itsAdiosGroupsize = 0;
-            itsAdiosBufsize = 0;
-            for (uInt i=0; i<itsNrCols; i++){
-                // if scalar column
-                if (itsColumnPtrBlk[i]->getShapeColumn().nelements() == 0){
-                     itsAdiosGroupsize = itsAdiosGroupsize + itsAdiosWriteRows * itsColumnPtrBlk[i]->getDataTypeSize();
-                     itsAdiosBufsize =  itsAdiosBufsize + itsAdiosBufRows * itsColumnPtrBlk[i]->getDataTypeSize()/1000000+1;
-                }
-                // if array column
-                else{
-                    itsAdiosGroupsize = itsAdiosGroupsize + itsAdiosWriteRows * itsColumnPtrBlk[i]->getDataTypeSize() * itsColumnPtrBlk[i]->getShapeColumn().product();
-                    itsAdiosBufsize = itsAdiosBufsize + itsAdiosBufRows * itsColumnPtrBlk[i]->getDataTypeSize() * itsColumnPtrBlk[i]->getShapeColumn().product()/1000000+1;
-                }
-            }
-           //cout<<itsAdiosBufRows<<endl;
-    }
-
     void AdiosStMan::adiosWriteOpen(uint64_t rownr){
+     if(!itsAdiosWriteFile){
         logdbg("AdiosStMan::adiosWriteOpen","");
-        char *itsAdiosWriteMode=new char[1];  
+        char *itsAdiosWriteMode=new char[1];
         string itsFileName;
         int itsFileNameLen;
-        
-        if((rownr-mpiRank*rows_per_process)<itsAdiosBufRows){
-           sprintf(itsAdiosWriteMode,"%s","w");     
 
-           itsAdiosWriteRows=itsAdiosBufRows;
-           if(!itsAdiosWriteFile){
-              if(mpiRank == 0){
-                itsFileName = fileName();
-                itsFileNameLen = itsFileName.length();
-               }
+        sprintf(itsAdiosWriteMode,"%s","u");
 
-              MPI_Bcast(&itsFileNameLen, 1, MPI_INT, 0, itsMpiComm); 
-              char *itsFileNameChar = new char [itsFileNameLen + 1];
-              sprintf(itsFileNameChar,"%s", itsFileName.c_str());
+        itsAdiosWriteRows=itsAdiosBufRows;
+        itsAdiosNrBufRows=itsAdiosNrBufRows+1;
+        if(mpiRank == 0){
+           itsFileName = fileName();
+           itsFileNameLen = itsFileName.length();
+        }
 
-              MPI_Bcast(itsFileNameChar, itsFileNameLen + 1, MPI_CHAR, 0, itsMpiComm);  
-              adiosWriteInit();
-              if(itsAdiosStart==1){ 
-   
-                 adios_allocate_buffer(ADIOS_BUFFER_ALLOC_NOW, itsAdiosBufsize);
-                 itsAdiosStart=0;
-          
-              }  
-              adios_open(&itsAdiosWriteFile, "casatable", itsFileNameChar, itsAdiosWriteMode, itsMpiComm);
-              adios_group_size(itsAdiosWriteFile, itsAdiosGroupsize, &itsAdiosTotalsize);
-              delete [] itsFileNameChar;     
-           }
-         }
-        else { 
-           sprintf(itsAdiosWriteMode,"%s","u");
+        MPI_Bcast(&itsFileNameLen, 1, MPI_INT, 0, itsMpiComm);
+        char *itsFileNameChar = new char [itsFileNameLen + 1];
+        sprintf(itsFileNameChar,"%s", itsFileName.c_str());
+        MPI_Bcast(itsFileNameChar, itsFileNameLen + 1, MPI_CHAR, 0, itsMpiComm);
+        // create ADIOS file
+        adios_init_noxml(itsMpiComm);
+        adios_declare_group(&itsAdiosGroup, "casatable", "", adios_flag_no);
+        adios_select_method(itsAdiosGroup, itsAdiosTransMethod.c_str(), itsAdiosTransPara.c_str(), "");
+        for (uInt i=0; i<itsNrCols; i++){
+            itsColumnPtrBlk[i]->initAdiosWrite(itsAdiosWriteRows);
+        }
+        itsAdiosGroupsize = 0;
+        itsAdiosBufsize = 0;
+        for (uInt i=0; i<itsNrCols; i++){
+          // if scalar column
+          if (itsColumnPtrBlk[i]->getShapeColumn().nelements() == 0){
+             itsAdiosGroupsize = itsAdiosGroupsize + itsAdiosWriteRows * itsColumnPtrBlk[i]->getDataTypeSize();
+             itsAdiosBufsize =  itsAdiosBufsize + itsAdiosBufRows * itsColumnPtrBlk[i]->getDataTypeSize()/1000000+1;
+          }
+          // if array column
+          else{
+               itsAdiosGroupsize = itsAdiosGroupsize + itsAdiosWriteRows * itsColumnPtrBlk[i]->getDataTypeSize() * itsColumnPtrBlk[i]->getShapeColumn().product();
+               itsAdiosBufsize = itsAdiosBufsize + itsAdiosBufRows * itsColumnPtrBlk[i]->getDataTypeSize() * itsColumnPtrBlk[i]->getShapeColumn().product()/1000000+1;
+          }
+        }
 
-           itsAdiosWriteRows=itsAdiosBufRows;
-           
-           if(!itsAdiosWriteFile){
-              itsAdiosNrBufRows=itsAdiosNrBufRows+1;
-              if(mpiRank == 0){
-                 itsFileName = fileName();
-                 itsFileNameLen = itsFileName.length();
-              }
+        adios_allocate_buffer(ADIOS_BUFFER_ALLOC_NOW, itsAdiosBufsize);
 
-              MPI_Bcast(&itsFileNameLen, 1, MPI_INT, 0, itsMpiComm);
-              char *itsFileNameChar = new char [itsFileNameLen + 1];
-              sprintf(itsFileNameChar,"%s", itsFileName.c_str());
+        adios_open(&itsAdiosWriteFile, "casatable", itsFileNameChar, itsAdiosWriteMode, itsMpiComm);
+        adios_group_size(itsAdiosWriteFile, itsAdiosGroupsize, &itsAdiosTotalsize);
+        delete [] itsFileNameChar;
+      }
 
-              MPI_Bcast(itsFileNameChar, itsFileNameLen + 1, MPI_CHAR, 0, itsMpiComm);
-              adiosWriteInit();
-              adios_allocate_buffer(ADIOS_BUFFER_ALLOC_NOW, itsAdiosBufsize);
-              adios_open(&itsAdiosWriteFile, "casatable", itsFileNameChar, itsAdiosWriteMode, itsMpiComm);
-              adios_group_size(itsAdiosWriteFile, itsAdiosGroupsize, &itsAdiosTotalsize);
-           
-             delete [] itsFileNameChar;
-             }
-         }   
-      delete [] itsAdiosWriteMode;
     }
 
     void AdiosStMan::adiosWriteClose(){
