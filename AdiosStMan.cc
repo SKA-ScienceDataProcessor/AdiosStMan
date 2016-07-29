@@ -204,7 +204,7 @@ namespace casacore {
     void AdiosStMan::create (uInt aNrRows){
         logdbg("AdiosStMan::create","");
         itsMode = 'w';
-        itsAdiosNrBufRows=1;
+        itsAdiosNrBufRows=0;
         itsNrRows = aNrRows;
         itsNrCols = ncolumn();
         itsAdiosStart=1;
