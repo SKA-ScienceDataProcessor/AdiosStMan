@@ -49,7 +49,7 @@ namespace casacore {
                 itsAdiosWriteIDs = new int64_t[itsStManPtr->getBufRows()];
             }
             stringstream varName;
-            varName << itsColumnName << "[" << j << "]";
+            varName << itsColumnName << "[" << j + (itsStManPtr->getAdiosNrBufRows()-1)*itsStManPtr->getBufRows() + itsStManPtr->getMpiRank()*itsStManPtr->getRowsPerProcess() << "]";
             if (itsShape.nelements() == 0){
                 itsAdiosWriteIDs[j] = adios_define_var(itsStManPtr->getAdiosGroup(), varName.str().c_str(), itsColumnName.c_str(), itsAdiosDataType, "", "", ""); ////
             }

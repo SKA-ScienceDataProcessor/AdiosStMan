@@ -240,9 +240,8 @@ namespace casacore {
         for(uInt j=0; j<aNrRows; j++){
             stringstream NrRows, RowID;
             NrRows << aNrRows;
-            RowID << j;
+            RowID << j + (itsStManPtr->getAdiosNrBufRows()-1)*itsStManPtr->getBufRows() + itsStManPtr->getMpiRank()*itsStManPtr->getRowsPerProcess();
             itsAdiosWriteIDs[j] = adios_define_var(itsStManPtr->getAdiosGroup(), itsColumnName.c_str(), "", itsAdiosDataType, "1", NrRows.str().c_str(), RowID.str().c_str() );
-          //  cout<<RowID.str().c_str()<<endl;
         }
     }
 
