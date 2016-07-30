@@ -104,7 +104,6 @@ namespace casacore {
             uint64_t itsAdiosTotalsize;
             string itsAdiosTransMethod;
             string itsAdiosTransPara;
-            uInt itsAdiosStart;
 
             ADIOS_FILE *itsAdiosReadFile;
 

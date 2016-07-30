@@ -207,7 +207,6 @@ namespace casacore {
         itsAdiosNrBufRows=0;
         itsNrRows = aNrRows;
         itsNrCols = ncolumn();
-        itsAdiosStart=1;
         MPI_Bcast(&itsNrCols, 1, MPI_UNSIGNED, 0, itsMpiComm);
         MPI_Bcast(&aNrRows, 1, MPI_UNSIGNED, 0, itsMpiComm);
     } // end of void AdiosStMan::create (uInt aNrRows)
