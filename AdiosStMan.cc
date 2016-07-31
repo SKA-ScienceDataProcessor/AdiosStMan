@@ -164,9 +164,12 @@ namespace casacore {
         sprintf(itsFileNameChar,"%s", itsFileName.c_str());
         MPI_Bcast(itsFileNameChar, itsFileNameLen + 1, MPI_CHAR, 0, itsMpiComm);
         // create ADIOS file
-        adios_init_noxml(itsMpiComm);
-        adios_declare_group(&itsAdiosGroup, "casatable", "", adios_flag_no);
-        adios_select_method(itsAdiosGroup, itsAdiosTransMethod.c_str(), itsAdiosTransPara.c_str(), "");
+        if(itsAdiosStart == 1){
+          adios_init_noxml(itsMpiComm);
+          adios_declare_group(&itsAdiosGroup, "casatable", "", adios_flag_no);
+          adios_select_method(itsAdiosGroup, itsAdiosTransMethod.c_str(), itsAdiosTransPara.c_str(), "");
+          itsAdiosStart = 0;
+        }
         for (uInt i=0; i<itsNrCols; i++){
             itsColumnPtrBlk[i]->initAdiosWrite(itsAdiosWriteRows);
         }
@@ -204,7 +207,8 @@ namespace casacore {
     void AdiosStMan::create (uInt aNrRows){
         logdbg("AdiosStMan::create","");
         itsMode = 'w';
-        itsAdiosNrBufRows=0;
+        itsAdiosNrBufRows = 0;
+        itsAdiosStart = 1;
         itsNrRows = aNrRows;
         itsNrCols = ncolumn();
         MPI_Bcast(&itsNrCols, 1, MPI_UNSIGNED, 0, itsMpiComm);
