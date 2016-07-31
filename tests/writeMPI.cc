@@ -99,7 +99,7 @@ int main(int argc, char **argv){
 
     // each mpi rank writes a subset of the data
     for (uInt i=0; i<rows_per_process; i++) {
-//        index_col.put (mpiRank * rows_per_process + i, i);
+        index_col.put (mpiRank * rows_per_process + i, i);
         data_col.put (mpiRank * rows_per_process + i, data_arr);
     }
   
