@@ -83,8 +83,6 @@ namespace casacore {
     void AdiosStManScaColumn::putBoolV (uInt rownr, const Bool* dataPtr){
         if((rownr-itsStManPtr->getMpiRank()*itsStManPtr->getRowsPerProcess())%itsStManPtr->getBufRows()==0){ 
           itsStManPtr->adiosWriteClose();
-        //  itsAdiosWriteIDs = 0;
-        //  delete [] itsAdiosWriteIDs;    
         }
         itsStManPtr->adiosWriteOpen(rownr);
         adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , (void*)dataPtr);
@@ -92,8 +90,6 @@ namespace casacore {
     void AdiosStManScaColumn::putuCharV (uInt rownr, const uChar* dataPtr){
         if((rownr-itsStManPtr->getMpiRank()*itsStManPtr->getRowsPerProcess())%itsStManPtr->getBufRows()==0){    
           itsStManPtr->adiosWriteClose();
-        //  itsAdiosWriteIDs = 0;
-        //  delete [] itsAdiosWriteIDs;
         }
         itsStManPtr->adiosWriteOpen(rownr);
         adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , (void*)dataPtr);
@@ -101,8 +97,6 @@ namespace casacore {
     void AdiosStManScaColumn::putShortV (uInt rownr, const Short* dataPtr){
         if((rownr-itsStManPtr->getMpiRank()*itsStManPtr->getRowsPerProcess())%itsStManPtr->getBufRows()==0){    
           itsStManPtr->adiosWriteClose();
-         // itsAdiosWriteIDs = 0;
-         // delete [] itsAdiosWriteIDs;
         }
         itsStManPtr->adiosWriteOpen(rownr);
         adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , (void*)dataPtr);
@@ -110,8 +104,6 @@ namespace casacore {
     void AdiosStManScaColumn::putuShortV (uInt rownr, const uShort* dataPtr){
         if((rownr-itsStManPtr->getMpiRank()*itsStManPtr->getRowsPerProcess())%itsStManPtr->getBufRows()==0){    
           itsStManPtr->adiosWriteClose();
-        //  itsAdiosWriteIDs = 0;
-        //  delete [] itsAdiosWriteIDs;
         }
         itsStManPtr->adiosWriteOpen(rownr);
         adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , (void*)dataPtr);
@@ -119,8 +111,6 @@ namespace casacore {
     void AdiosStManScaColumn::putIntV (uInt rownr, const Int* dataPtr){
         if((rownr-itsStManPtr->getMpiRank()*itsStManPtr->getRowsPerProcess())%itsStManPtr->getBufRows()==0){    
           itsStManPtr->adiosWriteClose();
-        //  itsAdiosWriteIDs = 0;
-        //  delete [] itsAdiosWriteIDs;
         }
         itsStManPtr->adiosWriteOpen(rownr);
         adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , (void*)dataPtr);
@@ -128,8 +118,6 @@ namespace casacore {
     void AdiosStManScaColumn::putuIntV (uInt rownr, const uInt* dataPtr){
         if((rownr-itsStManPtr->getMpiRank()*itsStManPtr->getRowsPerProcess())%itsStManPtr->getBufRows()==0){    
           itsStManPtr->adiosWriteClose();
-        //  itsAdiosWriteIDs = 0;
-        //  delete [] itsAdiosWriteIDs;
         }
         itsStManPtr->adiosWriteOpen(rownr);
         adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , (void*)dataPtr);
@@ -137,8 +125,6 @@ namespace casacore {
     void AdiosStManScaColumn::putfloatV (uInt rownr, const float* dataPtr){
         if((rownr-itsStManPtr->getMpiRank()*itsStManPtr->getRowsPerProcess())%itsStManPtr->getBufRows()==0){    
           itsStManPtr->adiosWriteClose();
-        //  itsAdiosWriteIDs = 0;
-        //  delete [] itsAdiosWriteIDs;
         }
         itsStManPtr->adiosWriteOpen(rownr);
         adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , (void*)dataPtr);
@@ -146,8 +132,6 @@ namespace casacore {
     void AdiosStManScaColumn::putdoubleV (uInt rownr, const double* dataPtr){
         if((rownr-itsStManPtr->getMpiRank()*itsStManPtr->getRowsPerProcess())%itsStManPtr->getBufRows()==0){    
           itsStManPtr->adiosWriteClose();
-        //  itsAdiosWriteIDs = 0;
-        //  delete [] itsAdiosWriteIDs;
         }
         itsStManPtr->adiosWriteOpen(rownr);
         adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , (void*)dataPtr);
@@ -155,8 +139,6 @@ namespace casacore {
     void AdiosStManScaColumn::putComplexV (uInt rownr, const Complex* dataPtr){
         if((rownr-itsStManPtr->getMpiRank()*itsStManPtr->getRowsPerProcess())%itsStManPtr->getBufRows()==0){    
           itsStManPtr->adiosWriteClose();
-        //  itsAdiosWriteIDs = 0;
-        //  delete [] itsAdiosWriteIDs;
         }
         itsStManPtr->adiosWriteOpen(rownr);
         adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , (void*)dataPtr);
@@ -164,8 +146,6 @@ namespace casacore {
     void AdiosStManScaColumn::putDComplexV (uInt rownr, const DComplex* dataPtr){
         if((rownr-itsStManPtr->getMpiRank()*itsStManPtr->getRowsPerProcess())%itsStManPtr->getBufRows()==0){    
           itsStManPtr->adiosWriteClose();
-        //  itsAdiosWriteIDs = 0;
-        //  delete [] itsAdiosWriteIDs;
         }
         itsStManPtr->adiosWriteOpen(rownr);
         adios_write_byid(itsStManPtr->getAdiosFile(), itsAdiosWriteIDs[rownr] , (void*)dataPtr);
@@ -240,7 +220,7 @@ namespace casacore {
         for(uInt j=0; j<aNrRows; j++){
             stringstream NrRows, RowID;
             NrRows << aNrRows;
-            RowID << j; //+ (itsStManPtr->getAdiosNrBufRows()-1)*itsStManPtr->getBufRows() + itsStManPtr->getMpiRank()*itsStManPtr->getRowsPerProcess();
+            RowID << j;
             itsAdiosWriteIDs[j] = adios_define_var(itsStManPtr->getAdiosGroup(), itsColumnName.c_str(), "", itsAdiosDataType, "1", NrRows.str().c_str(), RowID.str().c_str() );
         }
     }
