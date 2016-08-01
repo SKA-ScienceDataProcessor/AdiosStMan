@@ -146,11 +146,8 @@ namespace casacore {
     void AdiosStMan::adiosWriteOpen(uint64_t rownr){
      if(!itsAdiosWriteFile){
         logdbg("AdiosStMan::adiosWriteOpen","");
-        char *itsAdiosWriteMode=new char[1];
         string itsFileName;
         int itsFileNameLen;
-
-        sprintf(itsAdiosWriteMode,"%s","u");
 
         itsAdiosWriteRows=itsAdiosBufRows;
         itsAdiosNrBufRows=itsAdiosNrBufRows+1;
@@ -168,10 +165,10 @@ namespace casacore {
           adios_init_noxml(itsMpiComm);
           adios_declare_group(&itsAdiosGroup, "casatable", "", adios_flag_no);
           adios_select_method(itsAdiosGroup, itsAdiosTransMethod.c_str(), itsAdiosTransPara.c_str(), "");
+          for (uInt i=0; i<itsNrCols; i++){
+             itsColumnPtrBlk[i]->initAdiosWrite(itsNrRows);
+          }
           itsAdiosStart = 0;
-        }
-        for (uInt i=0; i<itsNrCols; i++){
-            itsColumnPtrBlk[i]->initAdiosWrite(itsAdiosWriteRows);
         }
         itsAdiosGroupsize = 0;
         itsAdiosBufsize = 0;
@@ -190,7 +187,7 @@ namespace casacore {
 
         adios_allocate_buffer(ADIOS_BUFFER_ALLOC_NOW, itsAdiosBufsize);
 
-        adios_open(&itsAdiosWriteFile, "casatable", itsFileNameChar, itsAdiosWriteMode, itsMpiComm);
+        adios_open(&itsAdiosWriteFile, "casatable", itsFileNameChar, "u", itsMpiComm);
         adios_group_size(itsAdiosWriteFile, itsAdiosGroupsize, &itsAdiosTotalsize);
         delete [] itsFileNameChar;
       }

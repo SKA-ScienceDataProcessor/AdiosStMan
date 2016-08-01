@@ -64,7 +64,7 @@ int rows_per_process;
 
 void write_table(){
      
-     rows_per_process = NrRows/mpiRank;
+     rows_per_process = NrRows/mpiSize;
 
 //    AdiosStMan stman("MPI_AGGREGATE", "num_aggregators=24, num_ost=24", 30000, 2000);
      AdiosStMan stman("POSIX", "", writeBufRows, rows_per_process);
