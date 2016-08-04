@@ -20,9 +20,9 @@ fi
 JOBDIR="/home/blao/AdiosStMan_u2/AdiosStMan/benchmark"
 
 
-for i in $(seq 1 1)
+for i in $(seq 1 10)
 do
-    for rows in $(seq 1000 200 1000)
+    for rows in $(seq 2000 2000 10000)
     do
         for length in $(seq 9000 1000 9000)
         do
