@@ -22,7 +22,7 @@ JOBDIR="/home/blao/AdiosStMan_u2/AdiosStMan/benchmark"
 
 for i in $(seq 1 10)
 do
-    for rows in $(seq 2000 2000 10000)
+    for rows in $(seq 1000 1000 1000)
     do
         for length in $(seq 9000 1000 9000)
         do
@@ -35,6 +35,8 @@ do
             if [ "$VENDOR" == "cray" ]; then
                 NP=$(wc -l $PBS_NODEFILE | awk '{print $1}')
                 RUN="aprun -B"
+            elif [ "$VENDOR" == "Tianhe2" ]; then
+                RUN="yhrun -N $1 -n $2"
             else
                 RUN="mpirun"
             fi
