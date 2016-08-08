@@ -1,6 +1,6 @@
 #!/bin/bash 
 
-export VENDOR = "Tianhe2"
+export VENDOR="Tianhe2"
 
 for i in $(seq 500 -100 100)
 do
