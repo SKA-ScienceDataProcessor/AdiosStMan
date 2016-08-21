@@ -185,7 +185,7 @@ namespace casacore {
           }
         }
 
-        adios_allocate_buffer(ADIOS_BUFFER_ALLOC_NOW, itsAdiosBufsize);
+        adios_set_max_buffer_size(itsAdiosBufsize);
 
         adios_open(&itsAdiosWriteFile, "casatable", itsFileNameChar, "u", itsMpiComm);
         adios_group_size(itsAdiosWriteFile, itsAdiosGroupsize, &itsAdiosTotalsize);
