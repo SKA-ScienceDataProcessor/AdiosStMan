@@ -163,7 +163,7 @@ namespace casacore {
         // create ADIOS file
         if(itsAdiosStart == 1){
           adios_init_noxml(itsMpiComm);
-          adios_declare_group(&itsAdiosGroup, "casatable", "", adios_flag_no);
+          adios_declare_group(&itsAdiosGroup, "casatable", "", adios_stat_no);
           adios_select_method(itsAdiosGroup, itsAdiosTransMethod.c_str(), itsAdiosTransPara.c_str(), "");
           for (uInt i=0; i<itsNrCols; i++){
              itsColumnPtrBlk[i]->initAdiosWrite(itsNrRows);
