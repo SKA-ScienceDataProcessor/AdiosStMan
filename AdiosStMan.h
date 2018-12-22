@@ -74,16 +74,16 @@ namespace casacore {
             int64_t getAdiosGroup();
             ADIOS_FILE* getAdiosReadFile();
 
-            static DataManager* makeObject (const casa::String& aDataManType, const casa::Record& spec);
-            
+            static DataManager* makeObject (const String& aDataManType, const Record& spec);
+
             void adiosWriteInit();
-            void adiosWriteOpen(uint64_t rownr); 
+            void adiosWriteOpen(uint64_t rownr);
             void adiosWriteClose();
             uInt getNrRows();
             char getMode();
             uint64_t getBufRows();
             uint64_t getAdiosNrBufRows();
-     
+
             uint64_t getMpiRank();
             uint64_t getRowsPerProcess();
             void logdbg(string func, string stat, int para=0);
@@ -113,7 +113,7 @@ namespace casacore {
             uint64_t rows_per_process;
             bool isMpiInitInternal;
             static int itsNrInstances;
-         
+
             PtrBlock<AdiosStManColumn*> itsColumnPtrBlk;
 
             uInt itsNrRows;

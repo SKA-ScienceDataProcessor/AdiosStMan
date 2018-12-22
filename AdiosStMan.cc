@@ -74,7 +74,7 @@ namespace casacore {
         MPI_Comm_size(MPI_COMM_WORLD, &mpiSize);
     }
 
-    DataManager* AdiosStMan::makeObject (const casa::String& aDataManType, const casa::Record& spec){
+    DataManager* AdiosStMan::makeObject (const String& aDataManType, const Record& spec){
         return new AdiosStMan();
     }
 
