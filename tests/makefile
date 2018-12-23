@@ -4,7 +4,7 @@ else
 	CC=mpic++
 endif
 
-CCFLAGS=
+CCFLAGS=-std=c++11
 LDFLAGS=-lcasa_tables -lcasa_casa
 STMANFILES=libadiosstman.so
 TARGET=writeScalar \
@@ -20,9 +20,9 @@ TARGET=writeScalar \
 all: $(TARGET) cl
 
 $(TARGET): $(TARGET:=.cc) $(STMANFILES)
-	$(CC) $@.cc -o $@ $(CCFLAGS) $(LDFLAGS) $(STMANFILES) 
+	$(CC) $@.cc -o $@ $(CCFLAGS) $(LDFLAGS) $(STMANFILES)
 
-$(STMANFILES):  
+$(STMANFILES):
 	cd ..; make ln;
 
 cl:
